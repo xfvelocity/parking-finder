@@ -1,0 +1,8 @@
+{
+  "name": "PintFinder",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite",
+  "id": "5435d136"
+}
