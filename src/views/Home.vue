@@ -55,8 +55,12 @@ const mapResults = ref<MapLocationResult[]>([]);
 
 // ** Methods **
 const selectLocation = (result: MapLocationResult): void => {
-  location.value.position = result.position;
-  locationSearch.value = "";
+  location.value = {
+    name: result.name.split(",")[0],
+    position: result.position,
+  };
+
+  locationSearch.value = location.value.name;
   mapResults.value = [];
 };
 
