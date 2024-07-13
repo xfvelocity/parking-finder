@@ -7,7 +7,7 @@
       <slot />
     </IonContent>
 
-    <Footer />
+    <!-- <Footer /> -->
   </IonPage>
 </template>
 

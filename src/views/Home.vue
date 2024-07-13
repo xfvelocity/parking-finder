@@ -27,16 +27,18 @@
       </IonHeader>
     </template>
 
-    <Map :location="mapLocation" />
+    <Map :location="location.position" />
   </PageLayout>
 </template>
 
 <script lang="ts" setup>
-import type { MapLocation, MapLocationResult } from "@/types/app.types";
+import type { MapLocationResult } from "@/types/map.types";
 
 import { IonHeader, IonToolbar } from "@ionic/vue";
 import { ref } from "vue";
 import { debounce } from "@/composables/generic";
+import { useMapStore } from "@/stores/map";
+import { storeToRefs } from "pinia";
 import axios from "axios";
 
 import TextInput from "@/components/basic/inputs/TextInput.vue";
@@ -44,16 +46,16 @@ import PageLayout from "@/components/page-layout/PageLayout.vue";
 import Map from "@/components/map/Map.vue";
 
 // ** Data **
-const locationSearch = ref<string>("");
-const mapLocation = ref<MapLocation>({
-  lat: 51.5072,
-  lng: -0.1276,
-});
+const mapStore = useMapStore();
+
+const { location } = storeToRefs(mapStore);
+
+const locationSearch = ref<string>(location.value.name);
 const mapResults = ref<MapLocationResult[]>([]);
 
 // ** Methods **
 const selectLocation = (result: MapLocationResult): void => {
-  mapLocation.value = result.location;
+  location.value.position = result.position;
   locationSearch.value = "";
   mapResults.value = [];
 };
@@ -66,7 +68,7 @@ const onLocationSearch = debounce(async (value: string): Promise<void> => {
 
     mapResults.value = res?.data?.items.map((item: any) => ({
       name: item.title,
-      location: item.position,
+      position: item.position,
     }));
   }
 }, 300);
