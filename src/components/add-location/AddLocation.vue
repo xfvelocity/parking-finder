@@ -17,11 +17,17 @@
     </IonHeader>
 
     <div class="add-location-content">
-      <Select label="Pub" autocomplete />
+      <Select
+        v-model="location.pub"
+        label="Pub"
+        placeholder="Search for a pub"
+        :outside-request="findPub"
+        autocomplete
+      />
 
-      <div v-if="pints.length" class="add-location-pints">
+      <div v-if="location.pints.length" class="add-location-pints">
         <div
-          v-for="(pint, i) in pints"
+          v-for="(pint, i) in location.pints"
           :key="i"
           class="add-location-pints-item"
         >
@@ -41,24 +47,44 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import { useMapStore } from "@/stores/map";
 
 import { IonHeader, IonToolbar } from "@ionic/vue";
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 import Select from "@/components/basic/inputs/Select.vue";
 import Icon from "@/components/basic/icon/Icon.vue";
+import axios from "axios";
 
 // ** Emits **
 defineEmits(["close"]);
 
 // ** Data **
-const pints = ref<any[]>([]);
+const mapStore = useMapStore();
+
+const location = ref<any>({
+  name: "",
+  pints: [],
+});
 
 // ** Methods **
 const addPint = (): void => {
-  pints.value.push({
+  location.value.pints.push({
     name: "",
     price: 0,
   });
+};
+
+const findPub = async (searchText: string): Promise<void> => {
+  const { lat, lng } = mapStore.location.position;
+
+  const res = await axios.get(
+    `https://discover.search.hereapi.com/v1/discover?at=${lat},${lng}&q=${searchText}&in=countryCode:GBR&apiKey=${import.meta.env.VITE_MAPS_API_KEY}`
+  );
+
+  return res?.data?.items?.map((item: any) => ({
+    text: item.title,
+    value: item.id,
+  }));
 };
 </script>
 

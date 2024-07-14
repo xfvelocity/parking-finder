@@ -7,6 +7,7 @@
     }"
   >
     <input
+      ref="textInput"
       :value="modelValue"
       @input="emitValue"
       @focus="onFocus"
@@ -24,7 +25,7 @@
 import { ref } from "vue";
 
 // ** Props **
-defineProps({
+const props = defineProps({
   label: {
     type: String,
     default: "",
@@ -42,6 +43,10 @@ defineProps({
     type: String,
     default: "",
   },
+  selectOnFocus: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // ** Emits **
@@ -54,11 +59,16 @@ const emit = defineEmits([
 
 // ** Data **
 const isActive = ref<boolean>(false);
+const textInput = ref<HTMLInputElement>();
 
 // ** Methods **
 const onFocus = (event: FocusEvent): void => {
   emit("focus", event);
   isActive.value = true;
+
+  if (props.selectOnFocus && textInput.value) {
+    textInput.value.select();
+  }
 };
 
 const onBlur = (event: FocusEvent): void => {

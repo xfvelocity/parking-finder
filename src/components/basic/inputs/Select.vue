@@ -4,7 +4,7 @@
       <div
         class="select-toggle input"
         :class="{
-          'input-populated': !!modelValue || autocompleteSearch,
+          'input-populated': modelValue || autocompleteSearch || placeholder,
           'input-active': isSelectActive,
         }"
         @click="toggleSelect(true)"
@@ -17,6 +17,7 @@
           v-model="autocompleteSearch"
           class="select-input"
           ref="autocompleteInput"
+          :placeholder="placeholder"
           @input="autocompleteChange"
           @focus="toggleSelect(true)"
         />
@@ -28,8 +29,8 @@
         <Icon
           class="select-arrow"
           :class="{ 'xf-select-arrow-active': isSelectActive }"
-          :size="14"
           src="chevron-down"
+          fill="black"
           @click.stop="toggleSelect(!isSelectActive)"
         />
       </div>
@@ -77,6 +78,10 @@ const props = defineProps({
     type: String,
     default: "",
     required: true,
+  },
+  placeholder: {
+    type: String,
+    default: "",
   },
   options: {
     type: Array as PropType<SelectOption[]>,
@@ -239,10 +244,6 @@ watch(
   &:focus {
     border: 0;
     outline: none;
-
-    .xf-select-toggle {
-      border-bottom: 2px solid $border;
-    }
   }
 
   &-input {
@@ -264,19 +265,24 @@ watch(
 
     &-item {
       cursor: pointer;
-      padding: 5px 10px;
+      padding: 5px 0 7px 10px;
       display: flex;
       align-items: center;
+      font-size: 12px;
 
       &:hover {
         background: rgb(238, 238, 238);
+      }
+
+      &:not(:last-child) {
+        border-bottom: 1px solid $border;
       }
     }
   }
 
   &-arrow {
-    margin-bottom: 5px;
-    margin-right: 5px;
+    margin-bottom: 6px;
+    margin-right: 10px;
     transition: all 0.4s ease-out;
 
     &-active {

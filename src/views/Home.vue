@@ -8,6 +8,7 @@
               v-model="locationSearch"
               label="Location"
               placeholder="Search for a location"
+              select-on-focus
               @update:modelValue="onLocationSearch"
             />
 
