@@ -1,13 +1,47 @@
 <template>
-  <input :value="modelValue" :placeholder="placeholder" @input="emitValue" />
+  <div
+    class="input"
+    :class="{
+      'input-populated': !!modelValue || modelValue === 0,
+      'input-active': isActive,
+    }"
+  >
+    <input
+      :value="modelValue"
+      :name="name"
+      :type="type"
+      :disabled="disabled"
+      :autocomplete="autocomplete"
+      :placeholder="placeholder"
+      @input="emitValue"
+      @focus="onFocus"
+      @blur="onBlur"
+      @keydown.enter="disabled ? '' : $emit('keydown.enter')"
+    />
+
+    <label v-if="label" :for="name">
+      {{ label }}
+    </label>
+  </div>
 </template>
 
 <script lang="ts" setup>
+import { PropType, ref } from "vue";
+
 // ** Props **
 defineProps({
-  modelValue: {
+  label: {
     type: String,
     default: "",
+  },
+  modelValue: {
+    type: [String, Number, null],
+    default: "",
+    required: true,
+  },
+  colour: {
+    type: String,
+    default: "black",
   },
   placeholder: {
     type: String,
@@ -16,22 +50,28 @@ defineProps({
 });
 
 // ** Emits **
-const emits = defineEmits(["update:modelValue"]);
+const emit = defineEmits([
+  "update:modelValue",
+  "keydown.enter",
+  "focus",
+  "blur",
+]);
+
+// ** Data **
+const isActive = ref<boolean>(false);
 
 // ** Methods **
+const onFocus = (event: FocusEvent): void => {
+  emit("focus", event);
+  isActive.value = true;
+};
+
+const onBlur = (event: FocusEvent): void => {
+  emit("blur", event);
+  isActive.value = false;
+};
+
 const emitValue = (event: Event): void => {
-  emits("update:modelValue", (event.target as HTMLInputElement).value);
+  emit("update:modelValue", (event.target as HTMLInputElement).value);
 };
 </script>
-
-<style lang="scss" scoped>
-input {
-  background: rgb(240, 240, 240);
-  border: 0;
-  border-radius: 5px;
-  padding: 7px;
-  text-indent: 5px;
-  font-size: 12px;
-  width: 100%;
-}
-</style>

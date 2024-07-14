@@ -28,6 +28,29 @@
     </template>
 
     <Map :location="location.position" />
+
+    <IonFab class="home-add-location" @click="addLocationModalOpen = true">
+      <IonFabButton size="small">
+        <Icon src="plus" fill="white" />
+      </IonFabButton>
+    </IonFab>
+
+    <IonModal :is-open="addLocationModalOpen">
+      <div>
+        <div class="home-add-location-modal-header">
+          <Icon
+            class="hover"
+            src="chevron-left"
+            fill="blue"
+            @click="addLocationModalOpen = false"
+          />
+
+          <h5>Add Location</h5>
+        </div>
+
+        <AddLocation />
+      </div>
+    </IonModal>
   </PageLayout>
 </template>
 
@@ -41,9 +64,12 @@ import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
 import axios from "axios";
 
+import { IonFab, IonFabButton, IonModal } from "@ionic/vue";
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 import PageLayout from "@/components/page-layout/PageLayout.vue";
 import Map from "@/components/map/Map.vue";
+import Icon from "@/components/basic/icon/Icon.vue";
+import AddLocation from "@/components/add-location/AddLocation.vue";
 
 // ** Data **
 const mapStore = useMapStore();
@@ -52,6 +78,7 @@ const { location } = storeToRefs(mapStore);
 
 const locationSearch = ref<string>(location.value.name);
 const mapResults = ref<MapLocationResult[]>([]);
+const addLocationModalOpen = ref<boolean>(false);
 
 // ** Methods **
 const selectLocation = (result: MapLocationResult): void => {
@@ -107,6 +134,27 @@ const onLocationSearch = debounce(async (value: string): Promise<void> => {
           &:not(:last-child) {
             border-bottom: 1px solid rgb(230, 230, 230);
           }
+        }
+      }
+    }
+  }
+
+  &-add-location {
+    position: absolute;
+    z-index: 99;
+    bottom: 10px;
+    left: 10px;
+
+    &-modal {
+      &-header {
+        display: grid;
+        grid-template-columns: 30px 1fr 30px;
+        padding: 10px;
+
+        h5 {
+          margin: 0;
+          text-align: center;
+          font-size: 14px;
         }
       }
     }
