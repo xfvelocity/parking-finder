@@ -2,31 +2,26 @@
   <div
     class="input"
     :class="{
-      'input-populated': !!modelValue || modelValue === 0,
+      'input-populated': modelValue,
       'input-active': isActive,
     }"
   >
     <input
       :value="modelValue"
-      :name="name"
-      :type="type"
-      :disabled="disabled"
-      :autocomplete="autocomplete"
-      :placeholder="placeholder"
       @input="emitValue"
       @focus="onFocus"
       @blur="onBlur"
-      @keydown.enter="disabled ? '' : $emit('keydown.enter')"
+      @keydown.enter="$emit('keydown.enter')"
     />
 
-    <label v-if="label" :for="name">
+    <label v-if="label">
       {{ label }}
     </label>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { PropType, ref } from "vue";
+import { ref } from "vue";
 
 // ** Props **
 defineProps({
@@ -35,7 +30,7 @@ defineProps({
     default: "",
   },
   modelValue: {
-    type: [String, Number, null],
+    type: String,
     default: "",
     required: true,
   },

@@ -10,4 +10,14 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData(source, fp) {
+          if (fp.endsWith("variables.scss")) return source;
+          return `@import "@/theme/variables.scss"; ${source}`;
+        },
+      },
+    },
+  },
 });

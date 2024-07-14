@@ -231,7 +231,7 @@ watch(
     display: flex;
     align-items: flex-end;
     padding: 5px 0;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid $border;
     position: relative;
     color: black;
   }
@@ -241,7 +241,7 @@ watch(
     outline: none;
 
     .xf-select-toggle {
-      border-bottom: 2px solid black;
+      border-bottom: 2px solid $border;
     }
   }
 

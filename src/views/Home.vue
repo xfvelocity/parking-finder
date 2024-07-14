@@ -6,6 +6,7 @@
           <div class="home-header">
             <TextInput
               v-model="locationSearch"
+              label="Location"
               placeholder="Search for a location"
               @update:modelValue="onLocationSearch"
             />
@@ -36,20 +37,7 @@
     </IonFab>
 
     <IonModal :is-open="addLocationModalOpen">
-      <div>
-        <div class="home-add-location-modal-header">
-          <Icon
-            class="hover"
-            src="chevron-left"
-            fill="blue"
-            @click="addLocationModalOpen = false"
-          />
-
-          <h5>Add Location</h5>
-        </div>
-
-        <AddLocation />
-      </div>
+      <AddLocation @close="addLocationModalOpen = false" />
     </IonModal>
   </PageLayout>
 </template>
@@ -144,20 +132,6 @@ const onLocationSearch = debounce(async (value: string): Promise<void> => {
     z-index: 99;
     bottom: 10px;
     left: 10px;
-
-    &-modal {
-      &-header {
-        display: grid;
-        grid-template-columns: 30px 1fr 30px;
-        padding: 10px;
-
-        h5 {
-          margin: 0;
-          text-align: center;
-          font-size: 14px;
-        }
-      }
-    }
   }
 }
 </style>
