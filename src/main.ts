@@ -1,6 +1,8 @@
 import { createApp } from "vue";
 import { IonicVue } from "@ionic/vue";
 import { createPinia } from "pinia";
+import { initGoogle } from "./composables/google";
+
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 
 import App from "./App.vue";
@@ -41,3 +43,5 @@ const app = createApp(App).use(IonicVue).use(router).use(pinia);
 router.isReady().then(() => {
   app.mount("#app");
 });
+
+initGoogle();

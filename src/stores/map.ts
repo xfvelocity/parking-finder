@@ -9,6 +9,9 @@ export const useMapStore = defineStore("map", {
         lng: -0.1276,
       },
     },
+    filters: {
+      hours: [],
+    },
   }),
   persist: true,
 });

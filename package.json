@@ -21,6 +21,7 @@
     "@capacitor/status-bar": "6.0.0",
     "@ionic/vue": "^8.2.5",
     "@ionic/vue-router": "^8.2.5",
+    "@types/google.maps": "^3.55.11",
     "@vueuse/core": "^10.11.0",
     "axios": "^1.7.2",
     "ionicons": "^7.4.0",
