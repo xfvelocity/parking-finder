@@ -4,25 +4,27 @@
       <IonHeader>
         <IonToolbar>
           <div class="home-header">
-            <TextInput
+            <Select
               v-model="locationSearch"
               label="Location"
               placeholder="Search for a location"
-              select-on-focus
-              @update:modelValue="onLocationSearch"
+              :outside-request="onLocationSearch"
+              autocomplete
+              @update:modelValue="selectLocation"
             />
 
-            <div v-if="mapResults.length" class="home-header-results">
-              <ul>
-                <li
-                  v-for="(result, i) in mapResults"
-                  :key="i"
-                  class="hover"
-                  @click="selectLocation(result)"
-                >
-                  {{ result.name }}
-                </li>
-              </ul>
+            <div class="home-header-filters">
+              <div
+                v-for="(filter, i) in filtersList"
+                :key="i"
+                class="home-header-filter hover"
+                :class="{
+                  'home-header-filter-selected': isFiltersMatching(filter),
+                }"
+                @click="selectFilter(filter)"
+              >
+                {{ formatFilterText(filter) }}
+              </div>
             </div>
           </div>
         </IonToolbar>
@@ -30,16 +32,6 @@
     </template>
 
     <Map :location="location.position" />
-
-    <IonFab class="home-add-location" @click="addLocationModalOpen = true">
-      <IonFabButton size="small">
-        <Icon src="plus" fill="white" />
-      </IonFabButton>
-    </IonFab>
-
-    <IonModal :is-open="addLocationModalOpen">
-      <AddLocation @close="addLocationModalOpen = false" />
-    </IonModal>
   </PageLayout>
 </template>
 
@@ -48,50 +40,61 @@ import type { MapLocationResult } from "@/types/map.types";
 
 import { IonHeader, IonToolbar } from "@ionic/vue";
 import { ref } from "vue";
-import { debounce } from "@/composables/generic";
 import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
-import axios from "axios";
+import { searchLocation } from "@/composables/here";
 
-import { IonFab, IonFabButton, IonModal } from "@ionic/vue";
-import TextInput from "@/components/basic/inputs/TextInput.vue";
+import Select from "@/components/basic/inputs/Select.vue";
 import PageLayout from "@/components/page-layout/PageLayout.vue";
 import Map from "@/components/map/Map.vue";
-import Icon from "@/components/basic/icon/Icon.vue";
-import AddLocation from "@/components/add-location/AddLocation.vue";
 
 // ** Data **
 const mapStore = useMapStore();
 
-const { location } = storeToRefs(mapStore);
+const { location, filters } = storeToRefs(mapStore);
 
 const locationSearch = ref<string>(location.value.name);
-const mapResults = ref<MapLocationResult[]>([]);
-const addLocationModalOpen = ref<boolean>(false);
+const filtersList = [[0, 1], [1, 2], [2, 3], [3, 4], [5]];
 
 // ** Methods **
 const selectLocation = (result: MapLocationResult): void => {
   location.value = {
-    name: result.name.split(",")[0],
-    position: result.position,
+    name: result.text.split(",")[0],
+    position: result.value,
   };
 
   locationSearch.value = location.value.name;
-  mapResults.value = [];
 };
 
-const onLocationSearch = debounce(async (value: string): Promise<void> => {
-  if (value.length > 2) {
-    const res = await axios.get(
-      `https://geocode.search.hereapi.com/v1/geocode?q=${value}&in=countryCode:GBR&apiKey=${import.meta.env.VITE_MAPS_API_KEY}`
-    );
+const onLocationSearch = async (value: string): Promise<void> => {
+  return await searchLocation(value);
+};
 
-    mapResults.value = res?.data?.items.map((item: any) => ({
-      name: item.title,
-      position: item.position,
-    }));
+const formatFilterText = (filter: number[]): any => {
+  if (filter.length === 1) {
+    return `${filter[0]}+ hours`;
+  } else {
+    if (filter[1] === 1) {
+      return `${filter[1]} hour`;
+    } else {
+      return `${filter[1]} hours`;
+    }
   }
-}, 300);
+};
+
+const selectFilter = (filter: number[]): void => {
+  if (isFiltersMatching(filter)) {
+    filters.value.hours = [];
+  } else {
+    filters.value.hours = filter;
+  }
+};
+
+const isFiltersMatching = (filter: number[]): boolean => {
+  return (
+    filter[0] === filters.value.hours[0] && filter[1] === filters.value.hours[1]
+  );
+};
 </script>
 
 <style lang="scss" scoped>
@@ -99,40 +102,22 @@ const onLocationSearch = debounce(async (value: string): Promise<void> => {
   &-header {
     padding: 15px;
 
-    &-results {
-      width: 100%;
-      border-radius: 5px;
-      padding: 7px 10px;
-      border: 1px solid rgb(230, 230, 230);
+    &-filters {
+      display: flex;
+      gap: 5px;
       margin-top: 5px;
+    }
 
-      ul {
-        padding: 0;
-        margin: 0;
-        list-style: none;
+    &-filter {
+      font-size: 10px;
+      border-radius: 7px;
+      border: 1px solid $border;
+      padding: 5px 10px;
 
-        li {
-          font-size: 12px;
-          color: rgb(100, 100, 100);
-          padding: 10px 0;
-
-          &:last-child {
-            padding-bottom: 10px;
-          }
-
-          &:not(:last-child) {
-            border-bottom: 1px solid rgb(230, 230, 230);
-          }
-        }
+      &-selected {
+        border: 1px solid black;
       }
     }
-  }
-
-  &-add-location {
-    position: absolute;
-    z-index: 99;
-    bottom: 10px;
-    left: 10px;
   }
 }
 </style>

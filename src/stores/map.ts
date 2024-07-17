@@ -1,7 +1,8 @@
+import { MapStore } from "@/types/map.types";
 import { defineStore } from "pinia";
 
 export const useMapStore = defineStore("map", {
-  state: () => ({
+  state: (): MapStore => ({
     location: {
       name: "London, UK",
       position: {

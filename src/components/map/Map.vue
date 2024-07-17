@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { MapLocation } from "@/types/map.types";
+import type { MapPosition } from "@/types/map.types";
 
 import { ref, onMounted, watch, PropType } from "vue";
 import { debounce, getImageUrl } from "@/composables/generic";
@@ -15,7 +15,7 @@ import axios from "axios";
 // ** Props **
 const props = defineProps({
   location: {
-    type: Object as PropType<MapLocation>,
+    type: Object as PropType<MapPosition>,
     default: () => ({}),
   },
 });
@@ -45,7 +45,7 @@ const initMap = async (): Promise<void> => {
     "idle",
     debounce(async () => {
       await getItems();
-    }, 300)
+    }, 500)
   );
 
   await getItems();
