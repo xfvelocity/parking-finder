@@ -31,15 +31,15 @@
       </IonHeader>
     </template>
 
-    <Map :location="location.position" />
+    <Map :location="updatedLocation.position" />
   </PageLayout>
 </template>
 
 <script lang="ts" setup>
-import type { MapLocationResult } from "@/types/map.types";
+import { MapLocation, type MapLocationResult } from "@/types/map.types";
 
 import { IonHeader, IonToolbar } from "@ionic/vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
 import { searchLocation } from "@/composables/here";
@@ -55,12 +55,16 @@ const { location, filters } = storeToRefs(mapStore);
 
 const locationSearch = ref<string>(location.value.name);
 const filtersList = [[0, 1], [1, 2], [2, 3], [3, 4], [5]];
+const updatedLocation = ref<MapLocation>({ ...location.value });
 
 // ** Methods **
 const selectLocation = (result: MapLocationResult): void => {
   location.value = {
     name: result.text.split(",")[0],
     position: result.value,
+  };
+  updatedLocation.value = {
+    ...location.value,
   };
 
   locationSearch.value = location.value.name;
@@ -95,6 +99,11 @@ const isFiltersMatching = (filter: number[]): boolean => {
     filter[0] === filters.value.hours[0] && filter[1] === filters.value.hours[1]
   );
 };
+
+watch(location, () => {
+  console.log("firing");
+  locationSearch.value = location.value.name;
+});
 </script>
 
 <style lang="scss" scoped>

@@ -10,9 +10,16 @@ export const useMapStore = defineStore("map", {
         lng: -0.1276,
       },
     },
+    bounds: {
+      left_corner_latitude: 0,
+      left_corner_longitude: 0,
+      right_corner_latitude: 0,
+      right_corner_longitude: 0,
+    },
     filters: {
       hours: [],
     },
+    mapZoom: 13,
   }),
   persist: true,
 });

@@ -11,6 +11,7 @@ import { ref, onMounted, watch, PropType } from "vue";
 import { debounce, getImageUrl } from "@/composables/generic";
 import { useMapStore } from "@/stores/map";
 import axios from "axios";
+import { searchName } from "@/composables/here";
 
 // ** Props **
 const props = defineProps({
@@ -24,13 +25,14 @@ const props = defineProps({
 const mapStore = useMapStore();
 
 let map: google.maps.Map;
+let mapController: AbortController = new AbortController();
 const hereMap = ref<HTMLDivElement>();
 
 // ** Methods **
 const initMap = async (): Promise<void> => {
   map = new google.maps.Map(hereMap.value as HTMLElement, {
     center: props.location,
-    zoom: 13,
+    zoom: mapStore.mapZoom,
     maxZoom: 17,
     minZoom: 13,
     clickableIcons: false,
@@ -38,17 +40,16 @@ const initMap = async (): Promise<void> => {
     mapTypeControl: false,
     fullscreenControl: false,
     mapId: import.meta.env.VITE_GOOGLE_MAP_ID,
-    styles: [{ stylers: [{}] }],
   });
+
+  await getItems();
 
   map.addListener(
     "idle",
     debounce(async () => {
-      await getItems();
+      await mapMoved();
     }, 500)
   );
-
-  await getItems();
 };
 
 const addMarker = (lat: number, lng: number, text: string): void => {
@@ -71,7 +72,49 @@ const addMarker = (lat: number, lng: number, text: string): void => {
   });
 };
 
+const mapMoved = async (): Promise<void> => {
+  const bounds: google.maps.LatLngBounds | undefined = map?.getBounds();
+  const mapCoords = map.getCenter();
+
+  if (bounds && mapCoords) {
+    const newLat = mapCoords.lat();
+    const newLng = mapCoords.lng();
+
+    const thresholdExceeded: boolean = distanceExceedsThreshold(
+      mapStore.location.position,
+      {
+        lat: newLat,
+        lng: newLng,
+      }
+    );
+
+    mapStore.bounds = {
+      left_corner_latitude: bounds.getNorthEast().lat(),
+      left_corner_longitude: bounds.getSouthWest().lng(),
+      right_corner_latitude: bounds.getSouthWest().lat(),
+      right_corner_longitude: bounds.getNorthEast().lng(),
+    };
+
+    mapStore.mapZoom = map.getZoom() || 13;
+
+    if (thresholdExceeded) {
+      mapStore.location = {
+        name: await searchName(mapCoords.lat(), mapCoords.lng()),
+        position: {
+          lat: mapCoords.lat(),
+          lng: mapCoords.lng(),
+        },
+      };
+
+      await getItems();
+    }
+  }
+};
+
 const getItems = async (): Promise<void> => {
+  mapController.abort();
+  mapController = new AbortController();
+
   const res = await axios.get(
     `${import.meta.env.VITE_API_URL}/api/map?lat=${props.location.lat}&lng=${props.location.lng}`
   );
@@ -79,6 +122,25 @@ const getItems = async (): Promise<void> => {
   res?.data?.forEach((d: any) => {
     addMarker(d.location.coordinates[1], d.location.coordinates[0], d.name);
   });
+};
+
+const distanceExceedsThreshold = (
+  from: MapPosition,
+  to: MapPosition
+): boolean => {
+  const distance = google.maps.geometry.spherical.computeDistanceBetween(
+    from,
+    to
+  );
+
+  const thresholds: Record<number, number> = {
+    13: 1000,
+    14: 750,
+    16: 500,
+    17: 250,
+  };
+
+  return distance > thresholds[mapStore.mapZoom];
 };
 
 // ** Lifecycle **
@@ -89,7 +151,7 @@ watch(
   () => props.location,
   async () => {
     map.setCenter(props.location);
-    map.setZoom(14);
+    map.setZoom(13);
   }
 );
 </script>

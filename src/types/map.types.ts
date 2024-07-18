@@ -17,7 +17,16 @@ export interface MapFilters {
   hours: number[];
 }
 
+export interface MapBounds {
+  left_corner_latitude: number;
+  left_corner_longitude: number;
+  right_corner_latitude: number;
+  right_corner_longitude: number;
+}
+
 export interface MapStore {
   location: MapLocation;
   filters: MapFilters;
+  bounds: MapBounds;
+  mapZoom: number;
 }
