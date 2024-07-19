@@ -4,14 +4,26 @@
       <IonHeader>
         <IonToolbar>
           <div class="home-header">
-            <Select
+            <TextInput
               v-model="locationSearch"
               label="Location"
               placeholder="Search for a location"
-              :outside-request="onLocationSearch"
-              autocomplete
-              @update:modelValue="selectLocation"
+              select-on-focus
+              @update:modelValue="onLocationSearch"
             />
+
+            <div v-if="mapResults.length" class="home-header-results">
+              <ul>
+                <li
+                  v-for="(result, i) in mapResults"
+                  :key="i"
+                  class="hover"
+                  @click="selectLocation(result)"
+                >
+                  {{ result.text }}
+                </li>
+              </ul>
+            </div>
 
             <div class="home-header-filters">
               <div
@@ -44,7 +56,7 @@ import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
 import { searchLocation } from "@/composables/here";
 
-import Select from "@/components/basic/inputs/Select.vue";
+import TextInput from "@/components/basic/inputs/TextInput.vue";
 import PageLayout from "@/components/page-layout/PageLayout.vue";
 import Map from "@/components/map/Map.vue";
 
@@ -56,6 +68,7 @@ const { location, filters } = storeToRefs(mapStore);
 const locationSearch = ref<string>(location.value.name);
 const filtersList = [[0, 1], [1, 2], [2, 3], [3, 4], [5]];
 const updatedLocation = ref<MapLocation>({ ...location.value });
+const mapResults = ref<MapLocationResult[]>([]);
 
 // ** Methods **
 const selectLocation = (result: MapLocationResult): void => {
@@ -68,10 +81,11 @@ const selectLocation = (result: MapLocationResult): void => {
   };
 
   locationSearch.value = location.value.name;
+  mapResults.value = [];
 };
 
 const onLocationSearch = async (value: string): Promise<void> => {
-  return await searchLocation(value);
+  mapResults.value = await searchLocation(value);
 };
 
 const formatFilterText = (filter: number[]): any => {
@@ -101,7 +115,6 @@ const isFiltersMatching = (filter: number[]): boolean => {
 };
 
 watch(location, () => {
-  console.log("firing");
   locationSearch.value = location.value.name;
 });
 </script>
@@ -125,6 +138,34 @@ watch(location, () => {
 
       &-selected {
         border: 1px solid black;
+      }
+    }
+
+    &-results {
+      width: 100%;
+      border-radius: 5px;
+      padding: 7px 10px;
+      border: 1px solid rgb(230, 230, 230);
+      margin-top: 5px;
+
+      ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+
+        li {
+          font-size: 12px;
+          color: rgb(100, 100, 100);
+          padding: 10px 0;
+
+          &:last-child {
+            padding-bottom: 10px;
+          }
+
+          &:not(:last-child) {
+            border-bottom: 1px solid rgb(230, 230, 230);
+          }
+        }
       }
     }
   }

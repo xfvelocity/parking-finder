@@ -8,7 +8,11 @@
 import type { MapPosition } from "@/types/map.types";
 
 import { ref, onMounted, watch, PropType } from "vue";
-import { debounce, getImageUrl } from "@/composables/generic";
+import {
+  debounce,
+  getImageUrl,
+  isFiltersMatching,
+} from "@/composables/generic";
 import { useMapStore } from "@/stores/map";
 import axios from "axios";
 import { searchName } from "@/composables/here";
@@ -27,6 +31,7 @@ const mapStore = useMapStore();
 let map: google.maps.Map;
 let mapController: AbortController = new AbortController();
 const hereMap = ref<HTMLDivElement>();
+const markers = ref<any[]>([]);
 
 // ** Methods **
 const initMap = async (): Promise<void> => {
@@ -52,24 +57,33 @@ const initMap = async (): Promise<void> => {
   );
 };
 
-const addMarker = (lat: number, lng: number, text: string): void => {
+const addMarker = (lat: number, lng: number, prices: any): void => {
   let content;
 
   if (mapStore.filters?.hours?.length) {
     content = document.createElement("div");
     content.classList.add("map-item");
-    content.innerHTML = text;
+
+    const text = prices.map((price: any) => {
+      if (isFiltersMatching(price.hours)) {
+        return price.price;
+      }
+    });
+
+    content.innerHTML = `£${text}` || "";
   } else {
     content = document.createElement("img");
     const src = getImageUrl("icons/parking.svg");
     content.src = src;
   }
 
-  new google.maps.marker.AdvancedMarkerElement({
+  const marker = new google.maps.marker.AdvancedMarkerElement({
     map,
     position: { lat, lng },
     content,
   });
+
+  markers.value.push(marker);
 };
 
 const mapMoved = async (): Promise<void> => {
@@ -106,21 +120,37 @@ const mapMoved = async (): Promise<void> => {
         },
       };
 
-      await getItems();
+      await refreshMarkers();
     }
   }
+};
+
+const refreshMarkers = async (): Promise<void> => {
+  markers.value.forEach((marker) => marker.setMap(null));
+  markers.value = [];
+
+  await getItems();
 };
 
 const getItems = async (): Promise<void> => {
   mapController.abort();
   mapController = new AbortController();
 
-  const res = await axios.get(
-    `${import.meta.env.VITE_API_URL}/api/map?lat=${props.location.lat}&lng=${props.location.lng}`
-  );
+  let res;
+  const hours = mapStore.filters.hours;
+
+  if (hours.length) {
+    res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/map?lat=${props.location.lat}&lng=${props.location.lng}&hours[0]=${hours[0]}&hours[1]=${hours[1]}`
+    );
+  } else {
+    res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/map?lat=${props.location.lat}&lng=${props.location.lng}`
+    );
+  }
 
   res?.data?.forEach((d: any) => {
-    addMarker(d.location.coordinates[1], d.location.coordinates[0], d.name);
+    addMarker(d.location.coordinates[1], d.location.coordinates[0], d.prices);
   });
 };
 
@@ -154,6 +184,13 @@ watch(
     map.setZoom(13);
   }
 );
+
+watch(
+  () => mapStore.filters.hours,
+  async () => {
+    await refreshMarkers();
+  }
+);
 </script>
 
 <style lang="scss" scoped>
@@ -167,8 +204,11 @@ watch(
 <style lang="scss">
 .map-item {
   background: white;
-  padding: 5px;
+  padding: 3px 15px;
   font-size: 10px;
-  border-radius: 5px;
+  border-radius: 20px;
+  border: 2px solid $cheap;
+  color: $cheap;
+  font-weight: 600;
 }
 </style>
