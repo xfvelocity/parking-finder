@@ -1,2 +1,22 @@
 $border: #dcdcdc;
 $cheap: #399700;
+
+// Mixins
+@mixin center($horizontal: true, $vertical: true) {
+  position: absolute;
+
+  @if ($horizontal and $vertical) {
+    top: 50% !important;
+    left: 50% !important;
+    -webkit-transform: translate(-50%, -50%) !important;
+    transform: translate(-50%, -50%) !important;
+  } @else if ($horizontal) {
+    left: 50% !important;
+    -webkit-transform: translate(-50%, 0) !important;
+    transform: translate(-50%, 0) !important;
+  } @else if ($vertical) {
+    top: 50% !important;
+    -webkit-transform: translate(0, -50%) !important;
+    transform: translate(0, -50%) !important;
+  }
+}

@@ -1,6 +1,23 @@
 <template>
   <div class="map-container">
     <div ref="hereMap" class="map" />
+
+    <div v-if="selectedParking" class="map-selected">
+      <h5>{{ selectedParking.name }}</h5>
+
+      <div>
+        <p>Prices</p>
+        <ul>
+          <li v-for="(price, i) in selectedParking.prices">
+            <div>
+              {{ formatFilterText(price.hours) }}
+            </div>
+
+            <div>£{{ price.price.toFixed(2) }}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -12,6 +29,7 @@ import {
   debounce,
   getImageUrl,
   isFiltersMatching,
+  formatFilterText,
 } from "@/composables/generic";
 import { useMapStore } from "@/stores/map";
 import axios from "axios";
@@ -32,6 +50,7 @@ let map: google.maps.Map;
 let mapController: AbortController = new AbortController();
 const hereMap = ref<HTMLDivElement>();
 const markers = ref<any[]>([]);
+const selectedParking = ref<any>();
 
 // ** Methods **
 const initMap = async (): Promise<void> => {
@@ -55,22 +74,28 @@ const initMap = async (): Promise<void> => {
       await mapMoved();
     }, 500)
   );
+
+  map.addListener("click", () => {
+    selectedParking.value = null;
+  });
 };
 
-const addMarker = (lat: number, lng: number, prices: any): void => {
+const addMarker = (lat: number, lng: number, location: any): void => {
   let content;
 
   if (mapStore.filters?.hours?.length) {
     content = document.createElement("div");
     content.classList.add("map-item");
 
-    const text = prices.map((price: any) => {
-      if (isFiltersMatching(price.hours)) {
-        return price.price;
-      }
-    });
+    const text = location.prices
+      .map((price: any) => {
+        if (isFiltersMatching(price.hours)) {
+          return price.price;
+        }
+      })
+      .filter((item: any) => item)[0];
 
-    content.innerHTML = `£${text}` || "";
+    content.innerHTML = `£${text.toFixed(2)}` || "";
   } else {
     content = document.createElement("img");
     const src = getImageUrl("icons/parking.svg");
@@ -81,6 +106,10 @@ const addMarker = (lat: number, lng: number, prices: any): void => {
     map,
     position: { lat, lng },
     content,
+  });
+
+  marker.addListener("click", () => {
+    selectedParking.value = location;
   });
 
   markers.value.push(marker);
@@ -150,7 +179,7 @@ const getItems = async (): Promise<void> => {
   }
 
   res?.data?.forEach((d: any) => {
-    addMarker(d.location.coordinates[1], d.location.coordinates[0], d.prices);
+    addMarker(d.location.coordinates[1], d.location.coordinates[0], d);
   });
 };
 
@@ -198,17 +227,56 @@ watch(
 .map-container {
   height: 100%;
   width: 100%;
+  position: relative;
 }
 </style>
 
 <style lang="scss">
-.map-item {
-  background: white;
-  padding: 3px 15px;
-  font-size: 10px;
-  border-radius: 20px;
-  border: 2px solid $cheap;
-  color: $cheap;
-  font-weight: 600;
+.map {
+  &-item {
+    background: white;
+    padding: 3px 15px;
+    font-size: 10px;
+    border-radius: 20px;
+    border: 2px solid $cheap;
+    color: $cheap;
+    font-weight: 600;
+  }
+
+  &-selected {
+    bottom: 30px;
+    background: white;
+    padding: 10px;
+    width: 90%;
+    border-radius: 10px;
+    @include center(true, false);
+
+    h5 {
+      font-size: 10px;
+    }
+
+    p {
+      margin-top: 5px;
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    &-price {
+      margin-left: auto;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 10px;
+      }
+    }
+  }
 }
 </style>

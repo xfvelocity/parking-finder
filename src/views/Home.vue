@@ -55,6 +55,7 @@ import { ref, watch } from "vue";
 import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
 import { searchLocation } from "@/composables/here";
+import { formatFilterText } from "@/composables/generic";
 
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 import PageLayout from "@/components/page-layout/PageLayout.vue";
@@ -86,18 +87,6 @@ const selectLocation = (result: MapLocationResult): void => {
 
 const onLocationSearch = async (value: string): Promise<void> => {
   mapResults.value = await searchLocation(value);
-};
-
-const formatFilterText = (filter: number[]): any => {
-  if (filter.length === 1) {
-    return `${filter[0]}+ hours`;
-  } else {
-    if (filter[1] === 1) {
-      return `${filter[1]} hour`;
-    } else {
-      return `${filter[1]} hours`;
-    }
-  }
 };
 
 const selectFilter = (filter: number[]): void => {
