@@ -3,9 +3,9 @@
     <div ref="hereMap" class="map" />
 
     <div v-if="selectedParking" class="map-selected">
-      <h5>{{ selectedParking.name }}</h5>
+      <h5>{{ selectedParking.displayName.text }}</h5>
 
-      <div>
+      <div v-if="selectedParking.prices">
         <p>Prices</p>
         <ul>
           <li v-for="(price, i) in selectedParking.prices">
@@ -30,6 +30,7 @@ import {
   getImageUrl,
   isFiltersMatching,
   formatFilterText,
+  calculateArea,
 } from "@/composables/generic";
 import { useMapStore } from "@/stores/map";
 import axios from "axios";
@@ -51,6 +52,8 @@ let mapController: AbortController = new AbortController();
 const hereMap = ref<HTMLDivElement>();
 const markers = ref<any[]>([]);
 const selectedParking = ref<any>();
+const distanceMovedSinceUpdate = ref<number>(0);
+const mapArea = ref<number>(0);
 
 // ** Methods **
 const initMap = async (): Promise<void> => {
@@ -58,7 +61,7 @@ const initMap = async (): Promise<void> => {
     center: props.location,
     zoom: mapStore.mapZoom,
     maxZoom: 17,
-    minZoom: 13,
+    minZoom: 15,
     clickableIcons: false,
     streetViewControl: false,
     mapTypeControl: false,
@@ -66,7 +69,9 @@ const initMap = async (): Promise<void> => {
     mapId: import.meta.env.VITE_GOOGLE_MAP_ID,
   });
 
-  await getItems();
+  setTimeout(async () => {
+    await mapMoved(true);
+  }, 200);
 
   map.addListener(
     "idle",
@@ -115,32 +120,29 @@ const addMarker = (lat: number, lng: number, location: any): void => {
   markers.value.push(marker);
 };
 
-const mapMoved = async (): Promise<void> => {
+const mapMoved = async (firstLoad: boolean = false): Promise<void> => {
   const bounds: google.maps.LatLngBounds | undefined = map?.getBounds();
   const mapCoords = map.getCenter();
 
   if (bounds && mapCoords) {
-    const newLat = mapCoords.lat();
-    const newLng = mapCoords.lng();
-
     const thresholdExceeded: boolean = distanceExceedsThreshold(
       mapStore.location.position,
       {
-        lat: newLat,
-        lng: newLng,
+        lat: mapCoords.lat(),
+        lng: mapCoords.lng(),
       }
     );
 
-    mapStore.bounds = {
-      left_corner_latitude: bounds.getNorthEast().lat(),
-      left_corner_longitude: bounds.getSouthWest().lng(),
-      right_corner_latitude: bounds.getSouthWest().lat(),
-      right_corner_longitude: bounds.getNorthEast().lng(),
-    };
-
     mapStore.mapZoom = map.getZoom() || 13;
 
-    if (thresholdExceeded) {
+    if (thresholdExceeded || firstLoad) {
+      mapArea.value = calculateArea(
+        bounds.getNorthEast().lat(),
+        bounds.getNorthEast().lng(),
+        bounds.getSouthWest().lat(),
+        bounds.getSouthWest().lng()
+      );
+
       mapStore.location = {
         name: await searchName(mapCoords.lat(), mapCoords.lng()),
         position: {
@@ -170,16 +172,16 @@ const getItems = async (): Promise<void> => {
 
   if (hours.length) {
     res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/map?lat=${props.location.lat}&lng=${props.location.lng}&hours[0]=${hours[0]}&hours[1]=${hours[1]}`
+      `${import.meta.env.VITE_API_URL}/api/map?lat=${mapStore.location.position.lat}&lng=${mapStore.location.position.lng}&hours[0]=${hours[0]}&hours[1]=${hours[1]}`
     );
   } else {
     res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/map?lat=${props.location.lat}&lng=${props.location.lng}`
+      `${import.meta.env.VITE_API_URL}/api/map?lat=${mapStore.location.position.lat}&lng=${mapStore.location.position.lng}&radius=${mapArea.value}`
     );
   }
 
   res?.data?.forEach((d: any) => {
-    addMarker(d.location.coordinates[1], d.location.coordinates[0], d);
+    addMarker(d.location.latitude, d.location.longitude, d);
   });
 };
 
@@ -192,14 +194,20 @@ const distanceExceedsThreshold = (
     to
   );
 
+  distanceMovedSinceUpdate.value += distance;
+
   const thresholds: Record<number, number> = {
-    13: 1000,
-    14: 750,
+    15: 750,
     16: 500,
     17: 250,
   };
 
-  return distance > thresholds[mapStore.mapZoom];
+  if (distanceMovedSinceUpdate.value > thresholds[mapStore.mapZoom]) {
+    distanceMovedSinceUpdate.value = 0;
+    return true;
+  } else {
+    return false;
+  }
 };
 
 // ** Lifecycle **
@@ -210,7 +218,7 @@ watch(
   () => props.location,
   async () => {
     map.setCenter(props.location);
-    map.setZoom(13);
+    map.setZoom(14);
   }
 );
 
