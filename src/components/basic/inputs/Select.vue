@@ -12,6 +12,9 @@
         <label>
           {{ label }}
         </label>
+
+        <Icon v-if="icon" class="select-pre-icon" :src="icon" />
+
         <input
           v-if="autocomplete"
           v-model="autocompleteSearch"
@@ -21,18 +24,22 @@
           @input="autocompleteChange"
           @focus="toggleSelect(true)"
         />
+
         <span v-else class="select-selected">
           {{ selected }}
         </span>
 
-        <Loading v-if="loading" class="select-loading" :size="16" />
-        <Icon
-          class="select-arrow"
-          :class="{ 'xf-select-arrow-active': isSelectActive }"
-          src="chevron-down"
-          fill="black"
-          @click.stop="toggleSelect(!isSelectActive)"
-        />
+        <div class="select-icons">
+          <Loading v-if="loading" class="select-loading" :size="12" />
+          <Icon
+            class="select-arrow"
+            :class="{ 'xf-select-arrow-active': isSelectActive }"
+            src="chevron-down"
+            :size="10"
+            fill="grey"
+            @click.stop="toggleSelect(!isSelectActive)"
+          />
+        </div>
       </div>
 
       <div
@@ -95,6 +102,10 @@ const props = defineProps({
   outsideRequest: {
     type: Function,
     default: undefined,
+  },
+  icon: {
+    type: String,
+    default: "",
   },
 });
 
@@ -223,9 +234,18 @@ watch(
 <style lang="scss" scoped>
 .select {
   position: relative;
+  font-size: 10px;
 
   &-loading {
     margin-right: 10px;
+  }
+
+  &-icons {
+    margin-left: auto;
+  }
+
+  &-pre-icon {
+    margin-left: 10px;
   }
 
   &-selected {
@@ -234,7 +254,7 @@ watch(
 
   &-toggle {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     padding: 5px 0;
     border-bottom: 1px solid $border;
     position: relative;
@@ -281,8 +301,8 @@ watch(
   }
 
   &-arrow {
-    margin-bottom: 6px;
-    margin-right: 10px;
+    margin-top: 5px;
+    margin-right: 5px;
     transition: all 0.4s ease-out;
 
     &-active {

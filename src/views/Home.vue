@@ -1,46 +1,23 @@
 <template>
   <PageLayout>
     <template #header>
-      <IonHeader>
-        <IonToolbar>
-          <div class="home-header">
-            <TextInput
-              v-model="locationSearch"
-              label="Location"
-              placeholder="Search for a location"
-              select-on-focus
-              @update:modelValue="onLocationSearch"
-            />
+      <div class="home-header">
+        <TextInput
+          v-model="locationSearch"
+          label="Location"
+          icon="search"
+          placeholder="Search for a location"
+          select-on-focus
+          @update:modelValue="onLocationSearch"
+        />
 
-            <div v-if="mapResults.length" class="home-header-results">
-              <ul>
-                <li
-                  v-for="(result, i) in mapResults"
-                  :key="i"
-                  class="hover"
-                  @click="selectLocation(result)"
-                >
-                  {{ result.text }}
-                </li>
-              </ul>
-            </div>
-
-            <div class="home-header-filters">
-              <div
-                v-for="(filter, i) in filtersList"
-                :key="i"
-                class="home-header-filter hover"
-                :class="{
-                  'home-header-filter-selected': isFiltersMatching(filter),
-                }"
-                @click="selectFilter(filter)"
-              >
-                {{ formatFilterText(filter) }}
-              </div>
-            </div>
-          </div>
-        </IonToolbar>
-      </IonHeader>
+        <Select
+          v-model="filters.hours"
+          class="home-header-time"
+          icon="time"
+          :options="timeOptions"
+        />
+      </div>
     </template>
 
     <Map :location="updatedLocation.position" />
@@ -50,13 +27,12 @@
 <script lang="ts" setup>
 import { MapLocation, type MapLocationResult } from "@/types/map.types";
 
-import { IonHeader, IonToolbar } from "@ionic/vue";
 import { ref, watch } from "vue";
 import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
 import { searchLocation } from "@/composables/here";
-import { formatFilterText } from "@/composables/generic";
 
+import Select from "@/components/basic/inputs/Select.vue";
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 import PageLayout from "@/components/page-layout/PageLayout.vue";
 import Map from "@/components/map/Map.vue";
@@ -67,9 +43,14 @@ const mapStore = useMapStore();
 const { location, filters } = storeToRefs(mapStore);
 
 const locationSearch = ref<string>(location.value.name);
-const filtersList = [[0, 1], [1, 2], [2, 3], [3, 4], [5]];
 const updatedLocation = ref<MapLocation>({ ...location.value });
 const mapResults = ref<MapLocationResult[]>([]);
+const timeOptions = [
+  { text: "Any", value: 0 },
+  { text: "1 hour", value: 1 },
+  { text: "2 hour", value: 2 },
+  { text: "3 hour", value: 3 },
+];
 
 // ** Methods **
 const selectLocation = (result: MapLocationResult): void => {
@@ -89,19 +70,11 @@ const onLocationSearch = async (value: string): Promise<void> => {
   mapResults.value = await searchLocation(value);
 };
 
-const selectFilter = (filter: number[]): void => {
-  if (isFiltersMatching(filter)) {
-    filters.value.hours = [];
-  } else {
-    filters.value.hours = filter;
-  }
-};
-
-const isFiltersMatching = (filter: number[]): boolean => {
-  return (
-    filter[0] === filters.value.hours[0] && filter[1] === filters.value.hours[1]
-  );
-};
+// const isFiltersMatching = (filter: number[]): boolean => {
+//   return (
+//     filter[0] === filters.value.hours[0] && filter[1] === filters.value.hours[1]
+//   );
+// };
 
 watch(location, () => {
   locationSearch.value = location.value.name;
@@ -111,7 +84,20 @@ watch(location, () => {
 <style lang="scss" scoped>
 .home {
   &-header {
-    padding: 15px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+
+    .input {
+      width: 100%;
+      margin-right: 10px;
+    }
+
+    :deep(.select) {
+      width: 100px;
+    }
 
     &-filters {
       display: flex;

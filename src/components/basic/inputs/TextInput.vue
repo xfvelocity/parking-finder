@@ -2,27 +2,37 @@
   <div
     class="input"
     :class="{
+      'input-icon': icon,
       'input-populated': modelValue,
       'input-active': isActive,
     }"
   >
+    <Icon v-if="icon" :src="icon" :fill="iconColour" />
+
     <input
       ref="textInput"
       :value="modelValue"
+      :placeholder="placeholder"
       @input="emitValue"
       @focus="onFocus"
       @blur="onBlur"
       @keydown.enter="$emit('keydown.enter')"
     />
 
-    <label v-if="label">
-      {{ label }}
-    </label>
+    <Icon
+      v-if="modelValue"
+      class="input-close"
+      src="close"
+      :size="8"
+      @click="$emit('update:modelValue', '')"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
+
+import Icon from "@/components/basic/icon/Icon.vue";
 
 // ** Props **
 const props = defineProps({
@@ -46,6 +56,14 @@ const props = defineProps({
   selectOnFocus: {
     type: Boolean,
     default: false,
+  },
+  icon: {
+    type: String,
+    default: "",
+  },
+  iconColour: {
+    type: String,
+    default: "",
   },
 });
 

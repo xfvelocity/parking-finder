@@ -14,7 +14,7 @@ export interface MapLocation {
 }
 
 export interface MapFilters {
-  hours: number[];
+  hours: number;
 }
 
 export interface MapBounds {
