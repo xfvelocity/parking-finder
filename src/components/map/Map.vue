@@ -88,7 +88,7 @@ const initMap = async (): Promise<void> => {
 const addMarker = (lat: number, lng: number, location: any): void => {
   let content;
 
-  if (mapStore.filters?.hours?.length) {
+  if (mapStore.filters?.hours) {
     content = document.createElement("div");
     content.classList.add("map-item");
 
@@ -103,6 +103,7 @@ const addMarker = (lat: number, lng: number, location: any): void => {
     content.innerHTML = `£${text.toFixed(2)}` || "";
   } else {
     content = document.createElement("img");
+    content.classList.add("map-icon");
     const src = getImageUrl("icons/parking.svg");
     content.src = src;
   }
@@ -170,9 +171,9 @@ const getItems = async (): Promise<void> => {
   let res;
   const hours = mapStore.filters.hours;
 
-  if (hours.length) {
+  if (hours > 0) {
     res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/map?lat=${mapStore.location.position.lat}&lng=${mapStore.location.position.lng}&hours[0]=${hours[0]}&hours[1]=${hours[1]}`
+      `${import.meta.env.VITE_API_URL}/api/map?lat=${mapStore.location.position.lat}&lng=${mapStore.location.position.lng}&hours=${mapStore.filters.hours}`
     );
   } else {
     res = await axios.get(
@@ -218,7 +219,9 @@ watch(
   () => props.location,
   async () => {
     map.setCenter(props.location);
-    map.setZoom(14);
+    map.setZoom(15);
+
+    await refreshMarkers();
   }
 );
 
@@ -249,6 +252,10 @@ watch(
     border: 2px solid $cheap;
     color: $cheap;
     font-weight: 600;
+  }
+
+  &-icon {
+    box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.1);
   }
 
   &-selected {

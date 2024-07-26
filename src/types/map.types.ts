@@ -4,8 +4,9 @@ export interface MapPosition {
 }
 
 export interface MapLocationResult {
-  text: string;
-  value: MapPosition;
+  title: string;
+  desc: string;
+  position: MapPosition;
 }
 
 export interface MapLocation {

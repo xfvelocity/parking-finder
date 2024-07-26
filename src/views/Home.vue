@@ -1,126 +1,88 @@
 <template>
   <PageLayout>
     <template #header>
-      <div class="home-header">
-        <TextInput
-          v-model="locationSearch"
-          label="Location"
-          icon="search"
-          placeholder="Search for a location"
-          select-on-focus
-          @update:modelValue="onLocationSearch"
-        />
-
-        <Select
-          v-model="filters.hours"
-          class="home-header-time"
-          icon="time"
-          :options="timeOptions"
-        />
-      </div>
+      <MapHeader
+        :is-location-open="isLocationOpen"
+        @toggle:modal="isLocationOpen = $event"
+        @location:search="updateLocation"
+      />
     </template>
 
     <Map :location="updatedLocation.position" />
+
+    <div v-if="isLocationOpen" class="home-location-modal">
+      <div class="home-header-results">
+        <ul>
+          <li
+            v-for="(result, i) in mapResults"
+            :key="i"
+            class="hover"
+            @click="selectLocation(result)"
+          >
+            <Icon src="location-pin" :size="18" />
+
+            <div>
+              <h5>{{ result.title }}</h5>
+              <p>{{ result.desc }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
   </PageLayout>
 </template>
 
 <script lang="ts" setup>
-import { MapLocation, type MapLocationResult } from "@/types/map.types";
+import type { MapLocation, MapLocationResult } from "@/types/map.types";
 
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useMapStore } from "@/stores/map";
-import { storeToRefs } from "pinia";
-import { searchLocation } from "@/composables/here";
 
-import Select from "@/components/basic/inputs/Select.vue";
-import TextInput from "@/components/basic/inputs/TextInput.vue";
 import PageLayout from "@/components/page-layout/PageLayout.vue";
 import Map from "@/components/map/Map.vue";
+import MapHeader from "@/components/map/MapHeader.vue";
+import Icon from "@/components/basic/icon/Icon.vue";
 
 // ** Data **
 const mapStore = useMapStore();
 
-const { location, filters } = storeToRefs(mapStore);
-
-const locationSearch = ref<string>(location.value.name);
-const updatedLocation = ref<MapLocation>({ ...location.value });
+const isLocationOpen = ref<boolean>(false);
+const updatedLocation = ref<MapLocation>({ ...mapStore.location });
 const mapResults = ref<MapLocationResult[]>([]);
-const timeOptions = [
-  { text: "Any", value: 0 },
-  { text: "1 hour", value: 1 },
-  { text: "2 hour", value: 2 },
-  { text: "3 hour", value: 3 },
-];
 
 // ** Methods **
+const updateLocation = (results: MapLocationResult[]): void => {
+  mapResults.value = results;
+};
+
 const selectLocation = (result: MapLocationResult): void => {
-  location.value = {
-    name: result.text.split(",")[0],
-    position: result.value,
+  mapStore.location = {
+    name: result.title,
+    position: result.position,
   };
   updatedLocation.value = {
-    ...location.value,
+    ...mapStore.location,
   };
 
-  locationSearch.value = location.value.name;
-  mapResults.value = [];
+  isLocationOpen.value = false;
 };
-
-const onLocationSearch = async (value: string): Promise<void> => {
-  mapResults.value = await searchLocation(value);
-};
-
-// const isFiltersMatching = (filter: number[]): boolean => {
-//   return (
-//     filter[0] === filters.value.hours[0] && filter[1] === filters.value.hours[1]
-//   );
-// };
-
-watch(location, () => {
-  locationSearch.value = location.value.name;
-});
 </script>
 
 <style lang="scss" scoped>
 .home {
+  &-location-modal {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: calc(100vh - 54px);
+    background-color: white;
+    animation: extendHeight 0.5s forwards;
+  }
+
   &-header {
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.15);
-    z-index: 10;
-
-    .input {
-      width: 100%;
-      margin-right: 10px;
-    }
-
-    :deep(.select) {
-      width: 100px;
-    }
-
-    &-filters {
-      display: flex;
-      gap: 5px;
-      margin-top: 5px;
-    }
-
-    &-filter {
-      font-size: 10px;
-      border-radius: 7px;
-      border: 1px solid $border;
-      padding: 5px 10px;
-
-      &-selected {
-        border: 1px solid black;
-      }
-    }
-
     &-results {
       width: 100%;
-      border-radius: 5px;
-      padding: 7px 10px;
-      border: 1px solid rgb(230, 230, 230);
       margin-top: 5px;
 
       ul {
@@ -129,20 +91,40 @@ watch(location, () => {
         list-style: none;
 
         li {
-          font-size: 12px;
+          font-size: 10px;
           color: rgb(100, 100, 100);
-          padding: 10px 0;
+          padding: 15px;
+          display: flex;
+          align-items: center;
+
+          .icon {
+            margin-right: 5px;
+          }
+
+          h5,
+          p {
+            font-size: 10px;
+          }
 
           &:last-child {
             padding-bottom: 10px;
           }
 
           &:not(:last-child) {
-            border-bottom: 1px solid rgb(230, 230, 230);
+            border-bottom: 1px solid #e9eaf2;
           }
         }
       }
     }
+  }
+}
+
+@keyframes extendHeight {
+  from {
+    height: 0;
+  }
+  to {
+    height: 100%;
   }
 }
 </style>
