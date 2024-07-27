@@ -25,7 +25,11 @@
       <h5>Info</h5>
     </div>
 
-    <Button icon="directions"> Directions </Button>
+    <a
+      :href="`https://www.google.com/maps/dir/?api=1&destination=${selectedParking.formattedAddress}`"
+    >
+      <Button icon="directions"> Directions </Button>
+    </a>
   </div>
 </template>
 
