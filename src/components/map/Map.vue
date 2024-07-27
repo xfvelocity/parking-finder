@@ -2,22 +2,15 @@
   <div class="map-container">
     <div ref="hereMap" class="map" />
 
-    <div v-if="selectedParking" class="map-selected">
-      <h5>{{ selectedParking.displayName.text }}</h5>
-
-      <div v-if="selectedParking.prices">
-        <p>Prices</p>
-        <ul>
-          <li v-for="(price, i) in selectedParking.prices">
-            <div>
-              {{ formatFilterText(price.hours) }}
-            </div>
-
-            <div>£{{ price.price.toFixed(2) }}</div>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <IonModal
+      :is-open="!!selectedParking"
+      :breakpoints="[0.4]"
+      :initial-breakpoint="0.4"
+      :handle="false"
+      @did-dismiss="selectedParking = false"
+    >
+      <MapSelected :selected-parking="selectedParking" />
+    </IonModal>
   </div>
 </template>
 
@@ -25,16 +18,13 @@
 import type { MapPosition } from "@/types/map.types";
 
 import { ref, onMounted, watch, PropType } from "vue";
-import {
-  debounce,
-  getImageUrl,
-  isFiltersMatching,
-  formatFilterText,
-  calculateArea,
-} from "@/composables/generic";
+import { debounce, getImageUrl, calculateArea } from "@/composables/generic";
 import { useMapStore } from "@/stores/map";
-import axios from "axios";
 import { searchName } from "@/composables/here";
+import axios from "axios";
+
+import { IonModal } from "@ionic/vue";
+import MapSelected from "@/components/map/MapSelected.vue";
 
 // ** Props **
 const props = defineProps({
@@ -91,15 +81,13 @@ const addMarker = (lat: number, lng: number, location: any): void => {
   if (mapStore.filters?.hours) {
     content = document.createElement("div");
     content.classList.add("map-item");
-
     const text = location.prices
       .map((price: any) => {
-        if (isFiltersMatching(price.hours)) {
+        if (price.hours === mapStore.filters.hours) {
           return price.price;
         }
       })
       .filter((item: any) => item)[0];
-
     content.innerHTML = `£${text.toFixed(2)}` || "";
   } else {
     content = document.createElement("img");
@@ -256,42 +244,6 @@ watch(
 
   &-icon {
     box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.1);
-  }
-
-  &-selected {
-    bottom: 30px;
-    background: white;
-    padding: 10px;
-    width: 90%;
-    border-radius: 10px;
-    @include center(true, false);
-
-    h5 {
-      font-size: 10px;
-    }
-
-    p {
-      margin-top: 5px;
-      font-size: 10px;
-      font-weight: 500;
-    }
-
-    &-price {
-      margin-left: auto;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-
-      li {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 10px;
-      }
-    }
   }
 }
 </style>

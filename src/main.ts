@@ -37,11 +37,11 @@ import "@ionic/vue/css/display.css";
 
 import "./theme/index.scss";
 
-await initGoogle();
-
 const pinia = createPinia().use(piniaPluginPersistedstate);
 const app = createApp(App).use(IonicVue).use(router).use(pinia);
 
-router.isReady().then(() => {
+router.isReady().then(async () => {
+  await initGoogle();
+
   app.mount("#app");
 });
