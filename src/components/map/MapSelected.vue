@@ -1,7 +1,7 @@
 <template>
   <div class="map-selected">
     <div class="map-selected-header">
-      <Icon src="chevron-left" fill="grey" />
+      <Icon v-if="showChevron" src="chevron-left" fill="grey" />
 
       <h4>{{ selectedParking.displayName.text }}</h4>
     </div>
@@ -25,11 +25,9 @@
       <h5>Info</h5>
     </div>
 
-    <a
-      :href="`https://www.google.com/maps/dir/?api=1&destination=${selectedParking.formattedAddress}`"
-    >
-      <Button icon="directions"> Directions </Button>
-    </a>
+    <CustomButton icon="directions" @click="openDirections">
+      Directions
+    </CustomButton>
   </div>
 </template>
 
@@ -37,15 +35,26 @@
 import type { PropType } from "vue";
 
 import Icon from "@/components/basic/icon/Icon.vue";
-import Button from "@/components/basic/button/Button.vue";
+import CustomButton from "@/components/basic/button/CustomButton.vue";
 
 // ** Props **
-defineProps({
+const props = defineProps({
   selectedParking: {
     type: Object as PropType<any>,
     default: () => ({}),
   },
+  showChevron: {
+    type: Boolean,
+    default: false,
+  },
 });
+
+// ** Methods **
+const openDirections = (): void => {
+  window.open(
+    `https://www.google.com/maps/dir/?api=1&destination=${props.selectedParking.formattedAddress}`
+  );
+};
 </script>
 
 <style lang="scss" scoped>
@@ -65,6 +74,7 @@ defineProps({
 
   h4 {
     font-size: 14px;
+    grid-column-start: 2;
     text-align: center;
   }
 

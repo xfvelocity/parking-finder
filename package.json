@@ -1,6 +1,6 @@
 {
-  "name": "pint-finder",
-  "description": "Pint Finder",
+  "name": "parking-finder",
+  "description": "Parking Finder",
   "private": true,
   "version": "0.0.1",
   "type": "module",
