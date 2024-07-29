@@ -8,6 +8,7 @@
     }"
   >
     <Icon v-if="icon" :src="icon" :fill="iconColour" />
+    <slot name="prepend" />
 
     <input
       ref="textInput"
@@ -20,7 +21,7 @@
     />
 
     <Icon
-      v-if="modelValue"
+      v-if="modelValue && clearButton"
       class="input-close"
       src="close"
       :size="8"
@@ -64,6 +65,10 @@ const props = defineProps({
   iconColour: {
     type: String,
     default: "",
+  },
+  clearButton: {
+    type: Boolean,
+    default: true,
   },
 });
 

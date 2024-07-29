@@ -9,7 +9,9 @@
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "prettier": "prettier . --write",
-    "sync": "ionic capacitor sync"
+    "sync": "ionic capacitor sync",
+    "open:android": "ionic capacitor open android",
+    "open:ios": "ionic capacitor open ios"
   },
   "dependencies": {
     "@capacitor/android": "^6.1.0",

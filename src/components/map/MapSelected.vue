@@ -6,23 +6,40 @@
       <h4>{{ selectedParking.displayName.text }}</h4>
     </div>
 
-    <hr class="divider" />
+    <div>
+      <hr class="divider" />
 
-    <div v-if="selectedParking.prices" class="map-selected-parking">
-      <h5>Prices</h5>
-      <ul>
-        <li v-for="(price, i) in selectedParking.prices" :key="i">
-          <div>{{ price.hours }} hours</div>
+      <div>
+        <h5>Prices</h5>
 
-          <div>£{{ price.price.toFixed(2) }}</div>
-        </li>
-      </ul>
+        <ul v-if="selectedParking.prices">
+          <li v-for="(price, i) in selectedParking.prices" :key="i">
+            <div>{{ price.hours }} hours</div>
+
+            <div>£{{ price.price.toFixed(2) }}</div>
+          </li>
+        </ul>
+
+        <div v-else-if="!addingPrice" class="map-selected-price-add">
+          <p>No prices added</p>
+          <p
+            class="map-selected-price-add-btn hover"
+            @click="addingPrice = true"
+          >
+            Add prices
+          </p>
+        </div>
+
+        <AddPrices v-if="addingPrice" @close="addingPrice = false" />
+      </div>
     </div>
 
-    <hr class="divider" />
+    <div v-if="selectedParking.info">
+      <hr class="divider" />
 
-    <div class="map-selected-info">
-      <h5>Info</h5>
+      <div class="map-selected-info">
+        <h5>Info</h5>
+      </div>
     </div>
 
     <CustomButton icon="directions" @click="openDirections">
@@ -32,10 +49,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from "vue";
+import { ref, type PropType } from "vue";
 
 import Icon from "@/components/basic/icon/Icon.vue";
 import CustomButton from "@/components/basic/button/CustomButton.vue";
+import AddPrices from "@/components/add-prices/AddPrices.vue";
 
 // ** Props **
 const props = defineProps({
@@ -48,6 +66,9 @@ const props = defineProps({
     default: false,
   },
 });
+
+// ** Data **
+const addingPrice = ref<boolean>(false);
 
 // ** Methods **
 const openDirections = (): void => {
@@ -82,8 +103,20 @@ const openDirections = (): void => {
     font-size: 14px;
   }
 
-  &-price {
-    margin-left: auto;
+  &-price-add {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5px;
+
+    &-btn {
+      color: $primary;
+      text-decoration: underline;
+    }
+  }
+
+  .button {
+    margin-top: 10px;
   }
 
   ul {
@@ -95,7 +128,6 @@ const openDirections = (): void => {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 10px;
       margin-top: 5px;
     }
   }

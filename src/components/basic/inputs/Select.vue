@@ -1,64 +1,62 @@
 <template>
-  <div>
-    <div class="select" ref="selectElement" @focus="toggleSelect(true)">
-      <div
-        class="select-toggle input"
-        :class="{
-          'input-populated': modelValue || autocompleteSearch || placeholder,
-          'input-active': isSelectActive,
-        }"
-        @click="toggleSelect(true)"
-      >
-        <label>
-          {{ label }}
-        </label>
+  <div class="select" ref="selectElement" @focus="toggleSelect(true)">
+    <div
+      class="select-toggle input"
+      :class="{
+        'input-populated': modelValue || autocompleteSearch || placeholder,
+        'input-active': isSelectActive,
+      }"
+      @click="toggleSelect(true)"
+    >
+      <label>
+        {{ label }}
+      </label>
 
-        <Icon v-if="icon" class="select-pre-icon" :src="icon" />
+      <Icon v-if="icon" class="select-pre-icon" :src="icon" />
 
-        <input
-          v-if="autocomplete"
-          v-model="autocompleteSearch"
-          class="select-input"
-          ref="autocompleteInput"
-          :placeholder="placeholder"
-          @input="autocompleteChange"
-          @focus="toggleSelect(true)"
+      <input
+        v-if="autocomplete"
+        v-model="autocompleteSearch"
+        class="select-input"
+        ref="autocompleteInput"
+        :placeholder="placeholder"
+        @input="autocompleteChange"
+        @focus="toggleSelect(true)"
+      />
+
+      <span v-else class="select-selected">
+        {{ selected }}
+      </span>
+
+      <div class="select-icons">
+        <Loading v-if="loading" class="select-loading" :size="12" />
+        <Icon
+          class="select-arrow"
+          :class="{ 'xf-select-arrow-active': isSelectActive }"
+          src="chevron-down"
+          :size="10"
+          fill="grey"
+          @click.stop="toggleSelect(!isSelectActive)"
         />
+      </div>
+    </div>
 
-        <span v-else class="select-selected">
-          {{ selected }}
-        </span>
-
-        <div class="select-icons">
-          <Loading v-if="loading" class="select-loading" :size="12" />
-          <Icon
-            class="select-arrow"
-            :class="{ 'xf-select-arrow-active': isSelectActive }"
-            src="chevron-down"
-            :size="10"
-            fill="grey"
-            @click.stop="toggleSelect(!isSelectActive)"
-          />
+    <div
+      v-if="isSelectActive && (showOptions.length || noResults)"
+      class="select-items"
+    >
+      <template v-if="showOptions.length">
+        <div
+          v-for="(option, i) in showOptions"
+          :key="i"
+          class="select-items-item"
+          @click="optionSelected(option)"
+        >
+          {{ option.text }}
         </div>
-      </div>
+      </template>
 
-      <div
-        v-if="isSelectActive && (showOptions.length || noResults)"
-        class="select-items"
-      >
-        <template v-if="showOptions.length">
-          <div
-            v-for="(option, i) in showOptions"
-            :key="i"
-            class="select-items-item"
-            @click="optionSelected(option)"
-          >
-            {{ option.text }}
-          </div>
-        </template>
-
-        <p v-else-if="noResults" class="text-center">No results</p>
-      </div>
+      <p v-else-if="noResults" class="text-center">No results</p>
     </div>
   </div>
 </template>
