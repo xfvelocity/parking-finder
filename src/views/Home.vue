@@ -19,7 +19,7 @@
             class="hover"
             @click="selectLocation(result)"
           >
-            <Icon src="location-pin" :size="18" />
+            <Icon class="mr-1" src="location-pin" :size="18" />
 
             <div>
               <h5>{{ result.title }}</h5>
@@ -96,10 +96,6 @@ const selectLocation = (result: MapLocationResult): void => {
           padding: 15px;
           display: flex;
           align-items: center;
-
-          .icon {
-            margin-right: 5px;
-          }
 
           h5,
           p {

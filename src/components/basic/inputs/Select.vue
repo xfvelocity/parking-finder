@@ -12,7 +12,7 @@
         {{ label }}
       </label>
 
-      <Icon v-if="icon" class="select-pre-icon" :src="icon" />
+      <Icon v-if="icon" class="ml-2" :src="icon" />
 
       <input
         v-if="autocomplete"
@@ -24,12 +24,12 @@
         @focus="toggleSelect(true)"
       />
 
-      <span v-else class="select-selected">
+      <span v-else class="pl-2">
         {{ selected }}
       </span>
 
-      <div class="select-icons">
-        <Loading v-if="loading" class="select-loading" :size="12" />
+      <div class="ml-auto">
+        <Loading v-if="loading" class="mr-2" :size="12" />
         <Icon
           class="select-arrow"
           :class="{ 'xf-select-arrow-active': isSelectActive }"
@@ -234,27 +234,11 @@ watch(
   position: relative;
   font-size: 10px;
 
-  &-loading {
-    margin-right: 10px;
-  }
-
-  &-icons {
-    margin-left: auto;
-  }
-
-  &-pre-icon {
-    margin-left: 10px;
-  }
-
-  &-selected {
-    padding-left: 10px;
-  }
-
   &-toggle {
     display: flex;
     align-items: center;
     padding: 5px 0;
-    border-bottom: 1px solid $border;
+    border-bottom: 1px solid map-get($colours, "border");
     position: relative;
     color: black;
   }
@@ -293,7 +277,7 @@ watch(
       }
 
       &:not(:last-child) {
-        border-bottom: 1px solid $border;
+        border-bottom: 1px solid map-get($colours, "border");
       }
     }
   }

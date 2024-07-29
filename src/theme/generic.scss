@@ -29,13 +29,22 @@ p {
 
 p,
 label,
-li {
+li,
+button {
   font-size: 10px;
 }
 
 .divider {
-  background: $divider;
+  background: map-get($colours, "divider");
   width: 100%;
   height: 2px;
   margin: 10px 0;
+}
+
+@each $prop, $abbrev in (color: text-, background-color: bg-) {
+  @each $name, $colour in $colours {
+    .#{$abbrev}#{$name} {
+      #{$prop}: #{$colour} !important;
+    }
+  }
 }

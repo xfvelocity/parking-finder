@@ -16,7 +16,10 @@
       </div>
     </div>
 
-    <p class="add-location-price-add hover" @click="addPrice">Add price</p>
+    <p class="add-location-price-add hover mt-1" @click="addPrice">Add price</p>
+
+    <CustomButton class="mt-2"> Submit </CustomButton>
+    <CustomButton class="mt-1"> Cancel </CustomButton>
   </div>
 </template>
 
@@ -25,6 +28,7 @@ import { ref } from "vue";
 
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 import Select from "@/components/basic/inputs/Select.vue";
+import CustomButton from "@/components/basic/button/CustomButton.vue";
 
 // ** Emits **
 defineEmits(["close"]);
@@ -54,7 +58,7 @@ const hourOptions = [
 // ** Methods **
 const addPrice = (): void => {
   prices.value.push({
-    hours: 0,
+    hours: 1,
     price: 0,
   });
 };
@@ -80,9 +84,8 @@ const addPrice = (): void => {
 
     &-add {
       text-align: right;
-      color: $primary;
+      color: map-get($colours, "primary");
       text-decoration: underline;
-      margin-top: 5px;
     }
   }
 }

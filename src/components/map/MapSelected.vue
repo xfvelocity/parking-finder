@@ -37,12 +37,17 @@
     <div v-if="selectedParking.info">
       <hr class="divider" />
 
-      <div class="map-selected-info">
+      <div class="mb-2">
         <h5>Info</h5>
       </div>
     </div>
 
-    <CustomButton icon="directions" @click="openDirections">
+    <CustomButton
+      v-if="!addingPrice"
+      class="mt-2"
+      icon="directions"
+      @click="openDirections"
+    >
       Directions
     </CustomButton>
   </div>
@@ -89,10 +94,6 @@ const openDirections = (): void => {
     grid-template-columns: 30px 1fr 30px;
   }
 
-  &-info {
-    margin-bottom: 10px;
-  }
-
   h4 {
     font-size: 14px;
     grid-column-start: 2;
@@ -110,13 +111,9 @@ const openDirections = (): void => {
     margin-top: 5px;
 
     &-btn {
-      color: $primary;
+      color: map-get($colours, "primary");
       text-decoration: underline;
     }
-  }
-
-  .button {
-    margin-top: 10px;
   }
 
   ul {

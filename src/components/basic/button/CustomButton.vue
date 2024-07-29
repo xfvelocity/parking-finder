@@ -1,6 +1,6 @@
 <template>
-  <button class="button hover">
-    <Icon v-if="icon" :src="icon" :size="14" />
+  <button class="button hover" :class="`bg-${background}`">
+    <Icon v-if="icon" class="mr-1" :src="icon" :size="14" />
 
     <slot />
   </button>
@@ -15,6 +15,14 @@ defineProps({
     type: String,
     default: "",
   },
+  outlined: {
+    type: Boolean,
+    default: true,
+  },
+  background: {
+    type: String,
+    default: "primary",
+  },
 });
 </script>
 
@@ -23,15 +31,10 @@ defineProps({
   height: 30px;
   width: 100%;
   border-radius: 5px;
-  background: #{$primary};
   font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-
-  .icon {
-    margin-right: 5px;
-  }
 }
 </style>
