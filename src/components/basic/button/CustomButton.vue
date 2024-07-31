@@ -1,13 +1,27 @@
 <template>
-  <button class="button hover" :class="`bg-${background}`">
+  <button
+    class="button"
+    :class="[
+      outlined
+        ? `button-border text-${backgroundColour} border-${backgroundColour}`
+        : `text-${textColour} bg-${backgroundColour}`,
+      {
+        hover: !disabled,
+      },
+    ]"
+    :disabled="disabled || loading"
+  >
     <Icon v-if="icon" class="mr-1" :src="icon" :size="14" />
 
     <slot />
+
+    <Loading v-if="loading" class="ml-1" colour="white" :size="14" />
   </button>
 </template>
 
 <script lang="ts" setup>
 import Icon from "@/components/basic/icon/Icon.vue";
+import Loading from "@/components/basic/loading/Loading.vue";
 
 // ** Props **
 defineProps({
@@ -17,11 +31,23 @@ defineProps({
   },
   outlined: {
     type: Boolean,
-    default: true,
+    default: false,
   },
-  background: {
+  backgroundColour: {
     type: String,
     default: "primary",
+  },
+  textColour: {
+    type: String,
+    default: "whtite",
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
   },
 });
 </script>
@@ -35,6 +61,10 @@ defineProps({
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+
+  &-border {
+    border: 1px solid;
+    background: none;
+  }
 }
 </style>

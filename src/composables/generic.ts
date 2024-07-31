@@ -18,7 +18,7 @@ export const calculateArea = (
   northeastLat: number,
   northeastLng: number,
   southwestLat: number,
-  southwestLng: number
+  southwestLng: number,
 ): number => {
   const R = 6371000; // Radius of the Earth in meters
 

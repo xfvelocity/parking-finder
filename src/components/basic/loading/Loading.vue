@@ -3,6 +3,7 @@
     <span class="text-center">
       <svg
         class="loading-icon"
+        :class="`icon-stroke-${colour}`"
         :style="`width: ${size}px; height: ${size}px`"
         viewBox="0 0 50 50"
       >
@@ -25,6 +26,10 @@ defineProps({
   size: {
     type: Number,
     default: 32,
+  },
+  colour: {
+    type: String,
+    default: "black",
   },
 });
 </script>

@@ -18,22 +18,38 @@
 
     <p class="add-location-price-add hover mt-1" @click="addPrice">Add price</p>
 
-    <CustomButton class="mt-2"> Submit </CustomButton>
-    <CustomButton class="mt-1"> Cancel </CustomButton>
+    <div class="mt-auto">
+      <CustomButton :loading="isSubmitLoading" @click="submitPrices">
+        Submit
+      </CustomButton>
+      <CustomButton class="mt-1" :disabled="isSubmitLoading" outlined>
+        Cancel
+      </CustomButton>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { PropType, ref } from "vue";
 
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 import Select from "@/components/basic/inputs/Select.vue";
 import CustomButton from "@/components/basic/button/CustomButton.vue";
+import axios from "axios";
+
+// ** Props **
+const props = defineProps({
+  selectedParking: {
+    type: Object as PropType<any>,
+    default: null,
+  },
+});
 
 // ** Emits **
-defineEmits(["close"]);
+const emits = defineEmits(["close"]);
 
 // ** Data **
+const isSubmitLoading = ref<boolean>(false);
 const prices = ref<any[]>([
   {
     hours: 1,
@@ -62,6 +78,24 @@ const addPrice = (): void => {
     price: 0,
   });
 };
+
+const submitPrices = async (): Promise<void> => {
+  isSubmitLoading.value = true;
+
+  await axios.post(
+    `${import.meta.env.VITE_API_URL}/api/add-prices/${props.selectedParking.id}`,
+    {
+      prices: prices.value,
+    },
+  );
+
+  setTimeout(() => {
+    prices.value = [];
+    emits("close");
+
+    isSubmitLoading.value = false;
+  }, 3000);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -70,6 +104,12 @@ const addPrice = (): void => {
 }
 
 .add-location {
+  &-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
   &-price {
     &-item {
       display: flex;

@@ -9,7 +9,7 @@ export const initGoogle = async (): Promise<boolean> => {
         manual: true,
         async: true,
         defer: true,
-      }
+      },
     );
     await load();
 

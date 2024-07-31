@@ -41,10 +41,29 @@ button {
   margin: 10px 0;
 }
 
-@each $prop, $abbrev in (color: text-, background-color: bg-) {
+@each $prop,
+  $abbrev in (color: text-, background-color: bg-, border-color: border-)
+{
   @each $name, $colour in $colours {
     .#{$abbrev}#{$name} {
       #{$prop}: #{$colour} !important;
+    }
+  }
+}
+
+@each $name, $colour in $colours {
+  .icon {
+    &--#{$name} {
+      path {
+        fill: #{$colour};
+      }
+    }
+
+    &-stroke-#{$name} {
+      path,
+      circle {
+        stroke: #{$colour};
+      }
     }
   }
 }

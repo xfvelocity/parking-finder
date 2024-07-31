@@ -1,12 +1,16 @@
 <template>
-  <div class="map-selected">
-    <div class="map-selected-header">
-      <Icon v-if="showChevron" src="chevron-left" fill="grey" />
+  <SlideUpModal
+    :model-value="selectedParking"
+    height="300px"
+    @update:model-value="$emit('update:selectedParking', null)"
+  >
+    <div class="map-selected">
+      <div class="map-selected-header">
+        <Icon v-if="showChevron" src="chevron-left" fill="grey" />
 
-      <h4>{{ selectedParking.displayName.text }}</h4>
-    </div>
+        <h4>{{ selectedParking.displayName.text }}</h4>
+      </div>
 
-    <div>
       <hr class="divider" />
 
       <div>
@@ -29,28 +33,29 @@
             Add prices
           </p>
         </div>
+      </div>
 
-        <AddPrices v-if="addingPrice" @close="addingPrice = false" />
+      <AddPrices
+        v-if="addingPrice"
+        :selected-parking="selectedParking"
+        @close="addingPrice = false"
+      />
+
+      <div v-if="selectedParking.info && !addingPrice">
+        <hr class="divider" />
+
+        <div class="mb-2">
+          <h5>Info</h5>
+        </div>
+      </div>
+
+      <div v-if="!addingPrice" class="mt-auto">
+        <CustomButton icon="directions" @click="openDirections">
+          Directions
+        </CustomButton>
       </div>
     </div>
-
-    <div v-if="selectedParking.info">
-      <hr class="divider" />
-
-      <div class="mb-2">
-        <h5>Info</h5>
-      </div>
-    </div>
-
-    <CustomButton
-      v-if="!addingPrice"
-      class="mt-2"
-      icon="directions"
-      @click="openDirections"
-    >
-      Directions
-    </CustomButton>
-  </div>
+  </SlideUpModal>
 </template>
 
 <script lang="ts" setup>
@@ -59,12 +64,13 @@ import { ref, type PropType } from "vue";
 import Icon from "@/components/basic/icon/Icon.vue";
 import CustomButton from "@/components/basic/button/CustomButton.vue";
 import AddPrices from "@/components/add-prices/AddPrices.vue";
+import SlideUpModal from "@/components/basic/modal/SlideUpModal.vue";
 
 // ** Props **
 const props = defineProps({
   selectedParking: {
     type: Object as PropType<any>,
-    default: () => ({}),
+    default: null,
   },
   showChevron: {
     type: Boolean,
@@ -78,15 +84,17 @@ const addingPrice = ref<boolean>(false);
 // ** Methods **
 const openDirections = (): void => {
   window.open(
-    `https://www.google.com/maps/dir/?api=1&destination=${props.selectedParking.formattedAddress}`
+    `https://www.google.com/maps/dir/?api=1&destination=${props.selectedParking.formattedAddress}`,
   );
 };
 </script>
 
 <style lang="scss" scoped>
 .map-selected {
-  margin-top: 10px;
-  padding: 5px 20px;
+  padding: 15px 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
   &-header {
     display: grid;
