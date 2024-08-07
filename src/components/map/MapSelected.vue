@@ -120,9 +120,11 @@ const addingPrice = ref<boolean>(false);
 
 // ** Computed **
 const formattedPrices = computed<any>(() => {
-  const app = props.selectedParking.prices.filter((price) => price.appPrice);
+  const app = props.selectedParking.prices.filter(
+    (price: any) => price.appPrice
+  );
   const prices = props.selectedParking.prices.filter(
-    (price) => !price.appPrice
+    (price: any) => !price.appPrice
   );
 
   return {
@@ -132,11 +134,15 @@ const formattedPrices = computed<any>(() => {
 });
 
 // ** Methods **
-const formatOpeningHours = (hours: string[]): any => {
-  if (hours[0] === "0" && hours[1] === "24") {
-    return "24 hours";
+const formatOpeningHours = (hours: string[]): string => {
+  if (hours.length) {
+    if (hours[0] === "00:00" && hours[1] === "24:00") {
+      return "24 hours";
+    } else {
+      return `${hours[0]} - ${hours[1]}`;
+    }
   } else {
-    return `${hours[0]} - ${hours[1]}`;
+    return "";
   }
 };
 

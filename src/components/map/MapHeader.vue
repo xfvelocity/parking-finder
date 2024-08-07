@@ -35,6 +35,7 @@ import { ref, watch } from "vue";
 import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
 import { searchLocation } from "@/composables/here";
+import { debounce } from "@/composables/generic";
 
 import Icon from "@/components/basic/icon/Icon.vue";
 import Select from "@/components/basic/inputs/Select.vue";
@@ -65,11 +66,11 @@ const timeOptions = [
 ];
 
 // ** Methods **
-const onLocationSearch = async (value: string): Promise<void> => {
+const onLocationSearch = debounce(async (value: string): Promise<void> => {
   const results = await searchLocation(value);
 
   emits("location:search", results);
-};
+}, 500);
 
 watch(location, () => {
   locationSearch.value = location.value.name;
