@@ -1,14 +1,18 @@
 <template>
   <SlideUpModal
-    :model-value="selectedParking"
-    height="300px"
+    :model-value="!!selectedParking"
+    height="100%"
     @update:model-value="$emit('update:selectedParking', null)"
   >
     <div class="map-selected">
       <div class="map-selected-header">
-        <Icon v-if="showChevron" src="chevron-left" fill="grey" />
+        <Icon
+          src="chevron-left"
+          fill="grey"
+          @click="$emit('update:selectedParking', null)"
+        />
 
-        <h4>{{ selectedParking.displayName.text }}</h4>
+        <h4>{{ selectedParking.name }}</h4>
       </div>
 
       <hr class="divider" />
@@ -16,8 +20,8 @@
       <div>
         <h5>Prices</h5>
 
-        <ul v-if="selectedParking.prices">
-          <li v-for="(price, i) in selectedParking.prices" :key="i">
+        <ul v-if="selectedParking.prices.length">
+          <li v-for="(price, i) in formattedPrices.prices" :key="i">
             <div>{{ price.hours }} hours</div>
 
             <div>£{{ price.price.toFixed(2) }}</div>
@@ -35,6 +39,20 @@
         </div>
       </div>
 
+      <template v-if="formattedPrices.app.length">
+        <hr class="divider" />
+
+        <h5>App Prices</h5>
+
+        <ul>
+          <li v-for="(price, i) in formattedPrices.app" :key="i">
+            <div>{{ price.hours }} hours</div>
+
+            <div>£{{ price.price.toFixed(2) }}</div>
+          </li>
+        </ul>
+      </template>
+
       <AddPrices
         v-if="addingPrice"
         :selected-parking="selectedParking"
@@ -46,6 +64,25 @@
 
         <div class="mb-2">
           <h5>Info</h5>
+
+          <ul>
+            <li
+              v-for="(openingTime, i) in Object.keys(
+                selectedParking.info.openingHours
+              )"
+              :key="i"
+            >
+              <span class="text-transform-capitalize">
+                {{ openingTime }}:
+              </span>
+
+              {{
+                formatOpeningHours(
+                  selectedParking.info.openingHours[openingTime]
+                )
+              }}
+            </li>
+          </ul>
         </div>
       </div>
 
@@ -59,7 +96,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, type PropType } from "vue";
+import { computed, ref, type PropType } from "vue";
 
 import Icon from "@/components/basic/icon/Icon.vue";
 import CustomButton from "@/components/basic/button/CustomButton.vue";
@@ -81,10 +118,31 @@ const props = defineProps({
 // ** Data **
 const addingPrice = ref<boolean>(false);
 
+// ** Computed **
+const formattedPrices = computed<any>(() => {
+  const app = props.selectedParking.prices.filter((price) => price.appPrice);
+  const prices = props.selectedParking.prices.filter(
+    (price) => !price.appPrice
+  );
+
+  return {
+    prices,
+    app,
+  };
+});
+
 // ** Methods **
+const formatOpeningHours = (hours: string[]): any => {
+  if (hours[0] === "0" && hours[1] === "24") {
+    return "24 hours";
+  } else {
+    return `${hours[0]} - ${hours[1]}`;
+  }
+};
+
 const openDirections = (): void => {
   window.open(
-    `https://www.google.com/maps/dir/?api=1&destination=${props.selectedParking.formattedAddress}`,
+    `https://www.google.com/maps/dir/?api=1&destination=${props.selectedParking.formattedAddress}`
   );
 };
 </script>

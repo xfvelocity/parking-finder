@@ -61,7 +61,7 @@ const initMap = async (): Promise<void> => {
     "idle",
     debounce(async () => {
       await mapMoved();
-    }, 500),
+    }, 500)
   );
 
   map.addListener("click", () => {
@@ -86,7 +86,14 @@ const addMarker = (lat: number, lng: number, location: any): void => {
   } else {
     content = document.createElement("img");
     content.classList.add("map-icon");
-    const src = getImageUrl("icons/parking.svg");
+    let src;
+
+    if (location.type === "ncp") {
+      src = getImageUrl("icons/ncp.svg");
+    } else {
+      src = getImageUrl("icons/parking.svg");
+    }
+
     content.src = src;
   }
 
@@ -113,7 +120,7 @@ const mapMoved = async (firstLoad: boolean = false): Promise<void> => {
       {
         lat: mapCoords.lat(),
         lng: mapCoords.lng(),
-      },
+      }
     );
 
     mapStore.mapZoom = map.getZoom() || 13;
@@ -123,7 +130,7 @@ const mapMoved = async (firstLoad: boolean = false): Promise<void> => {
         bounds.getNorthEast().lat(),
         bounds.getNorthEast().lng(),
         bounds.getSouthWest().lat(),
-        bounds.getSouthWest().lng(),
+        bounds.getSouthWest().lng()
       );
 
       mapStore.location = {
@@ -155,26 +162,26 @@ const getItems = async (): Promise<void> => {
 
   if (hours > 0) {
     res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/map?lat=${mapStore.location.position.lat}&lng=${mapStore.location.position.lng}&hours=${mapStore.filters.hours}`,
+      `${import.meta.env.VITE_API_URL}/api/map?lat=${mapStore.location.position.lat}&lng=${mapStore.location.position.lng}&hours=${mapStore.filters.hours}`
     );
   } else {
     res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/map?lat=${mapStore.location.position.lat}&lng=${mapStore.location.position.lng}&radius=${mapArea.value}`,
+      `${import.meta.env.VITE_API_URL}/api/map?lat=${mapStore.location.position.lat}&lng=${mapStore.location.position.lng}&radius=${mapArea.value}`
     );
   }
 
   res?.data?.forEach((d: any) => {
-    addMarker(d.location.latitude, d.location.longitude, d);
+    addMarker(d.location.coordinates[1], d.location.coordinates[0], d);
   });
 };
 
 const distanceExceedsThreshold = (
   from: MapPosition,
-  to: MapPosition,
+  to: MapPosition
 ): boolean => {
   const distance = google.maps.geometry.spherical.computeDistanceBetween(
     from,
-    to,
+    to
   );
 
   distanceMovedSinceUpdate.value += distance;
@@ -204,14 +211,14 @@ watch(
     map.setZoom(15);
 
     await refreshMarkers();
-  },
+  }
 );
 
 watch(
   () => mapStore.filters.hours,
   async () => {
     await refreshMarkers();
-  },
+  }
 );
 </script>
 
@@ -237,6 +244,8 @@ watch(
   }
 
   &-icon {
+    height: 28px;
+    width: 28px;
     box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.1);
   }
 }

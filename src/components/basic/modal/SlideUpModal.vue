@@ -1,12 +1,23 @@
 <template>
-  <div v-if="modelValue" class="slide-up-modal">
-    <slot />
+  <div
+    v-if="isOpen"
+    class="slide-up-modal"
+    :class="{
+      'slide-up-modal-full': height === '100%',
+      'slide-up-modal-lower': !modelValue,
+    }"
+  >
+    <template v-if="modelValue">
+      <slot />
+    </template>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ref, watch } from "vue";
+
 // ** Props **
-defineProps({
+const props = defineProps({
   modelValue: {
     type: Boolean,
     default: false,
@@ -17,8 +28,25 @@ defineProps({
   },
 });
 
+// ** Data **
+const isOpen = ref<boolean>(props.modelValue);
+
 // ** Emits **
 defineEmits(["update:modelValue"]);
+
+// ** Watchers **
+watch(
+  () => props.modelValue,
+  () => {
+    if (props.modelValue) {
+      isOpen.value = true;
+    } else {
+      setTimeout(() => {
+        isOpen.value = false;
+      }, 500);
+    }
+  }
+);
 </script>
 
 <style lang="scss" scoped>
@@ -32,6 +60,14 @@ defineEmits(["update:modelValue"]);
   animation: extendHeight 0.5s forwards;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+
+  &-full {
+    border-radius: 0 !important;
+  }
+
+  &-lower {
+    animation: lowerHeight 0.5s forwards;
+  }
 }
 
 @keyframes extendHeight {
@@ -40,6 +76,15 @@ defineEmits(["update:modelValue"]);
   }
   to {
     height: v-bind(height);
+  }
+}
+
+@keyframes lowerHeight {
+  from {
+    height: v-bind(height);
+  }
+  to {
+    height: 0;
   }
 }
 </style>
