@@ -30,17 +30,20 @@
 </template>
 
 <script lang="ts" setup>
+import type { AddPrices, Parking } from "@/types/map.types";
+
 import { PropType, ref } from "vue";
+import { hourOptions } from "@/composables/generic";
+import axios from "axios";
 
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 import Select from "@/components/basic/inputs/Select.vue";
 import CustomButton from "@/components/basic/button/CustomButton.vue";
-import axios from "axios";
 
 // ** Props **
 const props = defineProps({
   selectedParking: {
-    type: Object as PropType<any>,
+    type: Object as PropType<Parking>,
     default: null,
   },
 });
@@ -50,26 +53,12 @@ const emits = defineEmits(["close"]);
 
 // ** Data **
 const isSubmitLoading = ref<boolean>(false);
-const prices = ref<any[]>([
+const prices = ref<AddPrices[]>([
   {
     hours: 1,
     price: 0,
   },
 ]);
-const hourOptions = [
-  {
-    text: "1 hour",
-    value: 1,
-  },
-  {
-    text: "2 hours",
-    value: 2,
-  },
-  {
-    text: "3 hours",
-    value: 3,
-  },
-];
 
 // ** Methods **
 const addPrice = (): void => {
@@ -83,10 +72,10 @@ const submitPrices = async (): Promise<void> => {
   isSubmitLoading.value = true;
 
   await axios.post(
-    `${import.meta.env.VITE_API_URL}/api/add-prices/${props.selectedParking.id}`,
+    `${import.meta.env.VITE_API_URL}/api/add-prices/${props.selectedParking._id}`,
     {
       prices: prices.value,
-    },
+    }
   );
 
   setTimeout(() => {

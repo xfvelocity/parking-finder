@@ -65,7 +65,7 @@
         <div class="mb-2">
           <h5>Info</h5>
 
-          <ul>
+          <ul v-if="hasValidHours">
             <li
               v-for="(openingTime, i) in Object.keys(
                 selectedParking.info.openingHours
@@ -78,7 +78,9 @@
 
               {{
                 formatOpeningHours(
-                  selectedParking.info.openingHours[openingTime]
+                  selectedParking.info.openingHours[
+                    openingTime as keyof ParkingHours
+                  ]
                 )
               }}
             </li>
@@ -96,7 +98,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, type PropType } from "vue";
+import type { Parking, ParkingPrice, ParkingHours } from "@/types/map.types";
+
+import { computed, ref, watch, type PropType } from "vue";
 
 import Icon from "@/components/basic/icon/Icon.vue";
 import CustomButton from "@/components/basic/button/CustomButton.vue";
@@ -106,7 +110,7 @@ import SlideUpModal from "@/components/basic/modal/SlideUpModal.vue";
 // ** Props **
 const props = defineProps({
   selectedParking: {
-    type: Object as PropType<any>,
+    type: Object as PropType<Parking>,
     default: null,
   },
   showChevron: {
@@ -119,7 +123,16 @@ const props = defineProps({
 const addingPrice = ref<boolean>(false);
 
 // ** Computed **
-const formattedPrices = computed<any>(() => {
+const hasValidHours = computed<boolean>(() => {
+  return Object.values(props.selectedParking.info.openingHours).some(
+    (x: any) => x[0]
+  );
+});
+
+const formattedPrices = computed<{
+  prices: ParkingPrice[];
+  app: ParkingPrice[];
+}>(() => {
   const app = props.selectedParking.prices.filter(
     (price: any) => price.appPrice
   );
@@ -148,9 +161,16 @@ const formatOpeningHours = (hours: string[]): string => {
 
 const openDirections = (): void => {
   window.open(
-    `https://www.google.com/maps/dir/?api=1&destination=${props.selectedParking.formattedAddress}`
+    `https://www.google.com/maps/dir/?api=1&destination=${props.selectedParking.address}`
   );
 };
+
+// ** Watchers **
+watch(props.selectedParking, () => {
+  if (!props.selectedParking) {
+    addingPrice.value = false;
+  }
+});
 </script>
 
 <style lang="scss" scoped>

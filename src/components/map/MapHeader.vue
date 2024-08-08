@@ -29,13 +29,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { MapLocation, MapLocationResult } from "@/types/map.types";
+import type { SelectOption } from "@/types/app.types";
 
 import { ref, watch } from "vue";
 import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
 import { searchLocation } from "@/composables/here";
-import { debounce } from "@/composables/generic";
+import { debounce, hourOptions } from "@/composables/generic";
 
 import Icon from "@/components/basic/icon/Icon.vue";
 import Select from "@/components/basic/inputs/Select.vue";
@@ -58,12 +58,7 @@ const mapStore = useMapStore();
 const { location, filters } = storeToRefs(mapStore);
 
 const locationSearch = ref<string>(location.value.name);
-const timeOptions = [
-  { text: "Any", value: 0 },
-  { text: "1 hour", value: 1 },
-  { text: "2 hour", value: 2 },
-  { text: "3 hour", value: 3 },
-];
+const timeOptions: SelectOption[] = [{ text: "Any", value: 0 }, ...hourOptions];
 
 // ** Methods **
 const onLocationSearch = debounce(async (value: string): Promise<void> => {
@@ -96,7 +91,7 @@ watch(location, () => {
   }
 
   :deep(.select) {
-    width: 100px;
+    width: 150px;
   }
 }
 </style>

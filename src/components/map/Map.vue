@@ -237,7 +237,7 @@ watch(
     background: white;
     padding: 3px 15px;
     font-size: 10px;
-    border-radius: 20px;
+    border-radius: 5px;
     border: 2px solid map-get($colours, "cheap");
     color: map-get($colours, "cheap");
     font-weight: 600;

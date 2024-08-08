@@ -31,3 +31,48 @@ export interface MapStore {
   bounds: MapBounds;
   mapZoom: number;
 }
+
+export interface ParkingPrice {
+  hours: number;
+  originalHours: string;
+  price: number;
+  appPrice: boolean;
+}
+
+export interface ParkingLocation {
+  type: string;
+  coordinates: number[];
+}
+
+export interface ParkingHours {
+  monday: string[];
+  tuesday: string[];
+  wednesday: string[];
+  thursday: string[];
+  friday: string[];
+  saturday: string[];
+  sunday: string[];
+}
+
+export interface ParkingInfo {
+  disabledSpaces: number;
+  spaces: number;
+  openingHours: ParkingHours;
+}
+
+export interface Parking {
+  address: string;
+  info: ParkingInfo;
+  location: ParkingLocation;
+  name: string;
+  placeId: string;
+  prices: ParkingPrice[];
+  rating: number;
+  type: string;
+  _id: string;
+}
+
+export interface AddPrices {
+  price: number;
+  hours: number;
+}
