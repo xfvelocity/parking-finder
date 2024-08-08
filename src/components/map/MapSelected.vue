@@ -5,7 +5,7 @@
     @update:model-value="$emit('update:selectedParking', null)"
   >
     <div class="map-selected">
-      <div class="map-selected-header">
+      <div class="map-selected-header pt-2">
         <Icon
           src="chevron-left"
           fill="grey"
@@ -15,10 +15,10 @@
         <h4>{{ selectedParking.name }}</h4>
       </div>
 
-      <hr class="divider" />
+      <hr class="divider my-4" />
 
       <div>
-        <h5>Prices</h5>
+        <h5 class="mb-2">Prices</h5>
 
         <ul v-if="selectedParking.prices.length">
           <li v-for="(price, i) in formattedPrices.prices" :key="i">
@@ -40,9 +40,9 @@
       </div>
 
       <template v-if="formattedPrices.app.length">
-        <hr class="divider" />
+        <hr class="divider my-4" />
 
-        <h5>App Prices</h5>
+        <h5 class="mb-2">App Prices</h5>
 
         <ul>
           <li v-for="(price, i) in formattedPrices.app" :key="i">
@@ -60,10 +60,10 @@
       />
 
       <div v-if="selectedParking.info && !addingPrice">
-        <hr class="divider" />
+        <hr class="divider my-4" />
 
-        <div class="mb-2">
-          <h5>Info</h5>
+        <div>
+          <h5 class="mb-2">Info</h5>
 
           <ul v-if="hasValidHours">
             <li
@@ -166,11 +166,14 @@ const openDirections = (): void => {
 };
 
 // ** Watchers **
-watch(props.selectedParking, () => {
-  if (!props.selectedParking) {
-    addingPrice.value = false;
+watch(
+  () => props.selectedParking,
+  () => {
+    if (!props.selectedParking) {
+      addingPrice.value = false;
+    }
   }
-});
+);
 </script>
 
 <style lang="scss" scoped>

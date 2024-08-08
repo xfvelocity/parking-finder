@@ -10,11 +10,13 @@
 
     <TextInput
       v-model="locationSearch"
+      id="locationSearch"
       label="Location"
       icon="search"
       placeholder="Search for a location"
       select-on-focus
       @focus="emits('toggle:modal', true)"
+      @update:clear="clearInput"
       @update:modelValue="onLocationSearch"
     />
 
@@ -57,10 +59,21 @@ const mapStore = useMapStore();
 
 const { location, filters } = storeToRefs(mapStore);
 
+const input = ref<HTMLInputElement>();
 const locationSearch = ref<string>(location.value.name);
 const timeOptions: SelectOption[] = [{ text: "Any", value: 0 }, ...hourOptions];
 
 // ** Methods **
+const clearInput = (): void => {
+  emits("toggle:modal", true);
+
+  const locationSearch = document.querySelector(
+    "#locationSearch input"
+  ) as HTMLInputElement;
+
+  locationSearch?.focus();
+};
+
 const onLocationSearch = debounce(async (value: string): Promise<void> => {
   const results = await searchLocation(value);
 
@@ -74,7 +87,7 @@ watch(location, () => {
 
 <style lang="scss" scoped>
 .map-header {
-  padding: 10px;
+  padding: 15px 10px;
   display: flex;
   align-items: center;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.05);

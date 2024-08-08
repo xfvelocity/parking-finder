@@ -38,6 +38,7 @@ const markers = ref<any[]>([]);
 const selectedParking = ref<any>();
 const distanceMovedSinceUpdate = ref<number>(0);
 const mapArea = ref<number>(0);
+const searchZoom = ref<number>(15);
 
 // ** Methods **
 const initMap = async (): Promise<void> => {
@@ -61,6 +62,17 @@ const initMap = async (): Promise<void> => {
     "idle",
     debounce(async () => {
       await mapMoved();
+    }, 500)
+  );
+
+  map.addListener(
+    "zoom_changed",
+    debounce(async () => {
+      const currentZoom = map.getZoom() || 17;
+
+      if (searchZoom.value > currentZoom) {
+        await refreshMarkers();
+      }
     }, 500)
   );
 
@@ -170,6 +182,8 @@ const getItems = async (): Promise<void> => {
     );
   }
 
+  searchZoom.value = map.getZoom() || 15;
+
   res?.data?.forEach((d: any) => {
     addMarker(d.location.coordinates[1], d.location.coordinates[0], d);
   });
@@ -246,7 +260,7 @@ watch(
   &-icon {
     height: 28px;
     width: 28px;
-    box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
   }
 }
 </style>

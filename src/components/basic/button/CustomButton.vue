@@ -54,7 +54,7 @@ defineProps({
 
 <style lang="scss" scoped>
 .button {
-  height: 30px;
+  height: 35px;
   width: 100%;
   border-radius: 5px;
   font-weight: 500;

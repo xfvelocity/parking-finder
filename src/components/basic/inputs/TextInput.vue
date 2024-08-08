@@ -25,7 +25,7 @@
       class="input-close"
       src="close"
       :size="8"
-      @click="$emit('update:modelValue', '')"
+      @click="clearInput"
     />
   </div>
 </template>
@@ -78,6 +78,7 @@ const emit = defineEmits([
   "keydown.enter",
   "focus",
   "blur",
+  "update:clear",
 ]);
 
 // ** Data **
@@ -85,6 +86,11 @@ const isActive = ref<boolean>(false);
 const textInput = ref<HTMLInputElement>();
 
 // ** Methods **
+const clearInput = (): void => {
+  emit("update:modelValue", "");
+  emit("update:clear");
+};
+
 const onFocus = (event: FocusEvent): void => {
   emit("focus", event);
   isActive.value = true;
