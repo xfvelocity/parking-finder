@@ -81,19 +81,17 @@ const initMap = async (): Promise<void> => {
   });
 };
 
-const addMarker = (lat: number, lng: number, location: any): void => {
+const addMarker = (lat: number, lng: number, location: Parking): void => {
   let content;
 
   if (mapStore.filters?.hours) {
     content = document.createElement("div");
     content.classList.add("map-item");
-    const text = location.prices
-      .map((price: any) => {
-        if (price.hours === mapStore.filters.hours) {
-          return price.price;
-        }
-      })
-      .filter((item: any) => item)[0];
+
+    const sortedArray = location.prices.sort((a, b) => a.hours - b.hours);
+    const text = sortedArray.filter((x) => x.hours >= mapStore.filters.hours)[0]
+      .price;
+
     content.innerHTML = `£${text.toFixed(2)}` || "";
   } else {
     content = document.createElement("img");
