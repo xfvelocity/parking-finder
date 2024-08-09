@@ -190,11 +190,16 @@ const formatOpeningHours = (hours: string[]): string => {
 };
 
 const checkMatchingHours = (): void => {
-  const sortedArray =
-    props.selectedParking?.prices.sort((a, b) => a.hours - b.hours) || [];
+  if (mapStore.filters.hours && props.selectedParking) {
+    const sortedArray =
+      props.selectedParking?.prices.sort((a, b) => a.hours - b.hours) || [];
 
-  selectedHours.value =
-    sortedArray.filter((x) => x.hours >= mapStore.filters.hours)[0]?.hours || 0;
+    selectedHours.value = sortedArray.filter(
+      (x) => x.hours >= mapStore.filters.hours
+    )[0]?.hours;
+  } else {
+    selectedHours.value = 0;
+  }
 };
 
 const openDirections = (): void => {
