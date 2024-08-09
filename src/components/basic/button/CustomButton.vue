@@ -13,15 +13,17 @@
   >
     <Icon v-if="icon" class="mr-1" :src="icon" :size="14" />
 
-    <slot />
+    <span :class="`text-${textColour}}`">
+      <slot />
+    </span>
 
-    <Loading v-if="loading" class="ml-1" colour="white" :size="14" />
+    <LoadingSpinner v-if="loading" class="ml-1" colour="white" :size="14" />
   </button>
 </template>
 
 <script lang="ts" setup>
 import Icon from "@/components/basic/icon/Icon.vue";
-import Loading from "@/components/basic/loading/Loading.vue";
+import LoadingSpinner from "@/components/basic/loading/LoadingSpinner.vue";
 
 // ** Props **
 defineProps({

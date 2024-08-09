@@ -4,8 +4,8 @@
     height="100%"
     @update:model-value="$emit('update:selectedParking', null)"
   >
-    <div class="map-selected">
-      <div class="map-selected-header pt-2">
+    <div v-if="selectedParking" class="map-selected">
+      <div class="map-selected-header p-4">
         <Icon
           src="chevron-left"
           fill="grey"
@@ -15,80 +15,80 @@
         <h4>{{ selectedParking.name }}</h4>
       </div>
 
-      <hr class="divider my-4" />
-
-      <div>
-        <h5 class="mb-2">Prices</h5>
-
-        <ul v-if="selectedParking.prices.length">
-          <li v-for="(price, i) in formattedPrices.prices" :key="i">
-            <div>{{ price.hours }} hours</div>
-
-            <div>£{{ price.price.toFixed(2) }}</div>
-          </li>
-        </ul>
-
-        <div v-else-if="!addingPrice" class="map-selected-price-add">
-          <p>No prices added</p>
-          <p
-            class="map-selected-price-add-btn hover"
-            @click="addingPrice = true"
-          >
-            Add prices
-          </p>
-        </div>
-      </div>
-
-      <template v-if="formattedPrices.app.length">
-        <hr class="divider my-4" />
-
-        <h5 class="mb-2">App Prices</h5>
-
-        <ul>
-          <li v-for="(price, i) in formattedPrices.app" :key="i">
-            <div>{{ price.hours }} hours</div>
-
-            <div>£{{ price.price.toFixed(2) }}</div>
-          </li>
-        </ul>
-      </template>
-
-      <AddPrices
-        v-if="addingPrice"
-        :selected-parking="selectedParking"
-        @close="addingPrice = false"
-      />
-
-      <div v-if="selectedParking.info && !addingPrice">
-        <hr class="divider my-4" />
-
+      <div class="map-selected-content p-4">
         <div>
-          <h5 class="mb-2">Info</h5>
+          <h5 class="mb-2">Prices</h5>
 
-          <ul v-if="hasValidHours">
-            <li
-              v-for="(openingTime, i) in Object.keys(
-                selectedParking.info.openingHours
-              )"
-              :key="i"
-            >
-              <span class="text-transform-capitalize">
-                {{ openingTime }}:
-              </span>
+          <ul v-if="selectedParking.prices.length">
+            <li v-for="(price, i) in formattedPrices.prices" :key="i">
+              <div>{{ price.hours }} hours</div>
 
-              {{
-                formatOpeningHours(
-                  selectedParking.info.openingHours[
-                    openingTime as keyof ParkingHours
-                  ]
-                )
-              }}
+              <div>£{{ price.price.toFixed(2) }}</div>
             </li>
           </ul>
+
+          <div v-else-if="!addingPrice" class="map-selected-price-add">
+            <p>No prices added</p>
+            <p
+              class="map-selected-price-add-btn hover"
+              @click="addingPrice = true"
+            >
+              Add prices
+            </p>
+          </div>
+        </div>
+
+        <template v-if="formattedPrices.app.length">
+          <hr class="divider my-4" />
+
+          <h5 class="mb-2">App Prices</h5>
+
+          <ul>
+            <li v-for="(price, i) in formattedPrices.app" :key="i">
+              <div>{{ price.hours }} hours</div>
+
+              <div>£{{ price.price.toFixed(2) }}</div>
+            </li>
+          </ul>
+        </template>
+
+        <AddPrices
+          v-if="addingPrice"
+          :selected-parking="selectedParking"
+          @close="addingPrice = false"
+        />
+
+        <div v-if="selectedParking.info && !addingPrice">
+          <hr class="divider my-4" />
+
+          <div>
+            <h5 class="mb-2">Info</h5>
+
+            <ul v-if="hasValidHours">
+              <li
+                v-for="(openingTime, i) in Object.keys(
+                  selectedParking.info.openingHours
+                )"
+                :key="i"
+              >
+                <span class="text-transform-capitalize">
+                  {{ openingTime }}:
+                </span>
+
+                {{
+                  formatOpeningHours(
+                    selectedParking.info.openingHours[
+                      openingTime as keyof ParkingHours
+                    ]
+                  )
+                }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
-      <div v-if="!addingPrice" class="mt-auto">
+      <div v-if="!addingPrice" class="map-selected-button mt-auto px-4 py-2">
         <CustomButton icon="directions" @click="openDirections">
           Directions
         </CustomButton>
@@ -110,7 +110,7 @@ import SlideUpModal from "@/components/basic/modal/SlideUpModal.vue";
 // ** Props **
 const props = defineProps({
   selectedParking: {
-    type: Object as PropType<Parking>,
+    type: [Object, null] as PropType<Parking | null>,
     default: null,
   },
   showChevron: {
@@ -124,7 +124,7 @@ const addingPrice = ref<boolean>(false);
 
 // ** Computed **
 const hasValidHours = computed<boolean>(() => {
-  return Object.values(props.selectedParking.info.openingHours).some(
+  return Object.values(props.selectedParking?.info?.openingHours || {}).some(
     (x: any) => x[0]
   );
 });
@@ -133,12 +133,10 @@ const formattedPrices = computed<{
   prices: ParkingPrice[];
   app: ParkingPrice[];
 }>(() => {
-  const app = props.selectedParking.prices.filter(
-    (price: any) => price.appPrice
-  );
-  const prices = props.selectedParking.prices.filter(
-    (price: any) => !price.appPrice
-  );
+  const app =
+    props.selectedParking?.prices.filter((price: any) => price.appPrice) || [];
+  const prices =
+    props.selectedParking?.prices.filter((price: any) => !price.appPrice) || [];
 
   return {
     prices,
@@ -161,7 +159,7 @@ const formatOpeningHours = (hours: string[]): string => {
 
 const openDirections = (): void => {
   window.open(
-    `https://www.google.com/maps/dir/?api=1&destination=${props.selectedParking.address}`
+    `https://www.google.com/maps/dir/?api=1&destination=${props.selectedParking?.address}`
   );
 };
 
@@ -178,7 +176,6 @@ watch(
 
 <style lang="scss" scoped>
 .map-selected {
-  padding: 15px 20px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -187,6 +184,15 @@ watch(
     display: grid;
     align-items: center;
     grid-template-columns: 30px 1fr 30px;
+    border-bottom: 1px solid map-get($colours, "border");
+  }
+
+  &-content {
+    overflow-y: auto;
+  }
+
+  &-button {
+    border-top: 1px solid map-get($colours, "border");
   }
 
   h4 {

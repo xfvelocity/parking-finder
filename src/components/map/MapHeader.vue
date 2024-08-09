@@ -1,32 +1,36 @@
 <template>
   <div class="map-header">
-    <Icon
-      v-if="isLocationOpen"
-      class="map-header-icon hover"
-      src="chevron-left"
-      fill="grey"
-      @click="emits('toggle:modal', false)"
-    />
+    <div class="map-header-content">
+      <Icon
+        v-if="isLocationOpen"
+        class="map-header-icon hover"
+        src="chevron-left"
+        fill="grey"
+        @click="emits('toggle:modal', false)"
+      />
 
-    <TextInput
-      v-model="locationSearch"
-      id="locationSearch"
-      label="Location"
-      icon="search"
-      placeholder="Search for a location"
-      select-on-focus
-      @focus="emits('toggle:modal', true)"
-      @update:clear="clearInput"
-      @update:modelValue="onLocationSearch"
-    />
+      <TextInput
+        v-model="locationSearch"
+        id="locationSearch"
+        label="Location"
+        icon="search"
+        placeholder="Search for a location"
+        select-on-focus
+        @focus="emits('toggle:modal', true)"
+        @update:clear="clearInput"
+        @update:modelValue="onLocationSearch"
+      />
 
-    <Select
-      :model-value="filters.hours"
-      class="home-header-time"
-      icon="time"
-      :options="timeOptions"
-      @update:modelValue="filters.hours = $event.value"
-    />
+      <Select
+        :model-value="filters.hours"
+        class="home-header-time"
+        icon="time"
+        :options="timeOptions"
+        @update:modelValue="filters.hours = $event.value"
+      />
+    </div>
+
+    <LoadingBar v-if="loading" />
   </div>
 </template>
 
@@ -42,6 +46,7 @@ import { debounce, hourOptions } from "@/composables/generic";
 import Icon from "@/components/basic/icon/Icon.vue";
 import Select from "@/components/basic/inputs/Select.vue";
 import TextInput from "@/components/basic/inputs/TextInput.vue";
+import LoadingBar from "@/components/basic/loading/LoadingBar.vue";
 
 // ** Props **
 defineProps({
@@ -57,9 +62,8 @@ const emits = defineEmits(["toggle:modal", "location:search"]);
 // ** Data **
 const mapStore = useMapStore();
 
-const { location, filters } = storeToRefs(mapStore);
+const { location, filters, loading } = storeToRefs(mapStore);
 
-const input = ref<HTMLInputElement>();
 const locationSearch = ref<string>(location.value.name);
 const timeOptions: SelectOption[] = [{ text: "Any", value: 0 }, ...hourOptions];
 
@@ -87,11 +91,14 @@ watch(location, () => {
 
 <style lang="scss" scoped>
 .map-header {
-  padding: 15px 10px;
-  display: flex;
-  align-items: center;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.05);
   z-index: 10;
+
+  &-content {
+    padding: 15px 10px;
+    display: flex;
+    align-items: center;
+  }
 
   &-icon {
     margin-right: 10px;

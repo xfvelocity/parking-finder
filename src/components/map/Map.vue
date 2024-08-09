@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { MapPosition } from "@/types/map.types";
+import type { MapPosition, Parking } from "@/types/map.types";
 
 import { ref, onMounted, watch, PropType } from "vue";
 import { debounce, getImageUrl, calculateArea } from "@/composables/generic";
@@ -34,8 +34,8 @@ const mapStore = useMapStore();
 let map: google.maps.Map;
 let mapController: AbortController = new AbortController();
 const hereMap = ref<HTMLDivElement>();
-const markers = ref<any[]>([]);
-const selectedParking = ref<any>();
+const markers = ref<google.maps.marker.AdvancedMarkerElement[]>([]);
+const selectedParking = ref<Parking | null>(null);
 const distanceMovedSinceUpdate = ref<number>(0);
 const mapArea = ref<number>(0);
 const searchZoom = ref<number>(15);
@@ -159,10 +159,14 @@ const mapMoved = async (firstLoad: boolean = false): Promise<void> => {
 };
 
 const refreshMarkers = async (): Promise<void> => {
-  markers.value.forEach((marker) => marker.setMap(null));
+  mapStore.loading = true;
+
+  markers.value.forEach((marker) => (marker as any).setMap(null));
   markers.value = [];
 
   await getItems();
+
+  mapStore.loading = false;
 };
 
 const getItems = async (): Promise<void> => {
@@ -223,6 +227,7 @@ watch(
   async () => {
     map.setCenter(props.location);
     map.setZoom(15);
+    selectedParking.value = null;
 
     await refreshMarkers();
   }

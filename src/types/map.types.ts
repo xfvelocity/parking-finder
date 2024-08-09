@@ -30,6 +30,7 @@ export interface MapStore {
   filters: MapFilters;
   bounds: MapBounds;
   mapZoom: number;
+  loading: boolean;
 }
 
 export interface ParkingPrice {

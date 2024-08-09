@@ -20,6 +20,7 @@ export const useMapStore = defineStore("map", {
       hours: 0,
     },
     mapZoom: 13,
+    loading: false,
   }),
   persist: true,
 });
