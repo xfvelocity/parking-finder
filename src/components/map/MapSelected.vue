@@ -20,7 +20,13 @@
           <h5 class="mb-2">Prices</h5>
 
           <ul v-if="selectedParking.prices.length">
-            <li v-for="(price, i) in formattedPrices.prices" :key="i">
+            <li
+              v-for="(price, i) in formattedPrices.prices"
+              :key="i"
+              :class="{
+                'text-cheap text-fw-600': selectedHours === price.hours,
+              }"
+            >
               <div>{{ price.hours }} hours</div>
 
               <div>£{{ price.price.toFixed(2) }}</div>
@@ -44,7 +50,13 @@
           <h5 class="mb-2">App Prices</h5>
 
           <ul>
-            <li v-for="(price, i) in formattedPrices.app" :key="i">
+            <li
+              v-for="(price, i) in formattedPrices.app"
+              :key="i"
+              :class="{
+                'text-cheap text-fw-600': selectedHours === price.hours,
+              }"
+            >
               <div>{{ price.hours }} hours</div>
 
               <div>£{{ price.price.toFixed(2) }}</div>
@@ -63,6 +75,22 @@
 
           <div>
             <h5 class="mb-2">Info</h5>
+
+            <p v-if="selectedParking.info.spaces" class="flex-between">
+              Spaces: <span>{{ selectedParking.info.spaces }}</span>
+            </p>
+            <p
+              v-if="selectedParking.info.disabledSpaces"
+              class="mt-1 flex-between"
+            >
+              Disabled spaces:
+              <span>{{ selectedParking.info.disabledSpaces }}</span>
+            </p>
+          </div>
+          <hr class="divider my-4" />
+
+          <div>
+            <h5 class="mb-2">Opening hours</h5>
 
             <ul v-if="hasValidHours">
               <li
@@ -101,6 +129,7 @@
 import type { Parking, ParkingPrice, ParkingHours } from "@/types/map.types";
 
 import { computed, ref, watch, type PropType } from "vue";
+import { useMapStore } from "@/stores/map";
 
 import Icon from "@/components/basic/icon/Icon.vue";
 import CustomButton from "@/components/basic/button/CustomButton.vue";
@@ -120,7 +149,10 @@ const props = defineProps({
 });
 
 // ** Data **
+const mapStore = useMapStore();
+
 const addingPrice = ref<boolean>(false);
+const selectedHours = ref<number>(0);
 
 // ** Computed **
 const hasValidHours = computed<boolean>(() => {
@@ -157,6 +189,14 @@ const formatOpeningHours = (hours: string[]): string => {
   }
 };
 
+const checkMatchingHours = (): void => {
+  const sortedArray =
+    props.selectedParking?.prices.sort((a, b) => a.hours - b.hours) || [];
+
+  selectedHours.value =
+    sortedArray.filter((x) => x.hours >= mapStore.filters.hours)[0]?.hours || 0;
+};
+
 const openDirections = (): void => {
   window.open(
     `https://www.google.com/maps/dir/?api=1&destination=${props.selectedParking?.address}`
@@ -170,6 +210,8 @@ watch(
     if (!props.selectedParking) {
       addingPrice.value = false;
     }
+
+    checkMatchingHours();
   }
 );
 </script>

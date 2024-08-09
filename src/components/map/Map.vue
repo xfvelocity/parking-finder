@@ -234,6 +234,8 @@ watch(
 watch(
   () => mapStore.filters.hours,
   async () => {
+    selectedParking.value = null;
+
     await refreshMarkers();
   }
 );
