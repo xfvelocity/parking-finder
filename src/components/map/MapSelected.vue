@@ -116,7 +116,7 @@
         </div>
       </div>
 
-      <div v-if="!addingPrice" class="map-selected-button mt-auto px-4 py-2">
+      <div v-if="!addingPrice" class="map-selected-button mt-auto px-4 py-3">
         <CustomButton icon="directions" @click="openDirections">
           Directions
         </CustomButton>

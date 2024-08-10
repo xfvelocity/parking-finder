@@ -45,18 +45,20 @@
       v-if="isSelectActive && (showOptions.length || noResults)"
       class="select-items"
     >
-      <template v-if="showOptions.length">
-        <div
-          v-for="(option, i) in showOptions"
-          :key="i"
-          class="select-items-item"
-          @click="optionSelected(option)"
-        >
-          {{ option.text }}
-        </div>
-      </template>
+      <div class="select-items-content">
+        <template v-if="showOptions.length">
+          <div
+            v-for="(option, i) in showOptions"
+            :key="i"
+            class="select-items-item"
+            @click="optionSelected(option)"
+          >
+            {{ option.text }}
+          </div>
+        </template>
 
-      <p v-else-if="noResults" class="text-center">No results</p>
+        <p v-else-if="noResults" class="text-center">No results</p>
+      </div>
     </div>
   </div>
 </template>
@@ -232,7 +234,8 @@ watch(
 <style lang="scss" scoped>
 .select {
   position: relative;
-  font-size: 10px;
+  font-size: 12px;
+  z-index: 10;
 
   &-toggle {
     display: flex;
@@ -257,13 +260,17 @@ watch(
     position: absolute;
     background: white;
     width: 100%;
-    padding: 10px 0;
-    box-shadow: 1px 4px 4px rgba(0, 0, 0, 0.4);
-    z-index: 10;
     margin-top: 2px;
+    box-shadow: 1px 4px 4px rgba(0, 0, 0, 0.4);
+    border: 1px solid map-get($colours, "border");
     color: black;
-    max-height: 200px;
-    overflow-y: auto;
+    border-radius: 5px;
+    overflow-y: hidden;
+
+    &-content {
+      overflow-y: auto;
+      max-height: 200px;
+    }
 
     &-item {
       cursor: pointer;

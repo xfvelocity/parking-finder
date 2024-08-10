@@ -254,11 +254,11 @@ watch(
 .map {
   &-item {
     background: white;
-    padding: 3px 15px;
+    padding: 5px 15px;
     font-size: 10px;
-    border-radius: 5px;
-    border: 2px solid map-get($colours, "cheap");
-    color: map-get($colours, "cheap");
+    border-radius: 10px;
+    border: 2px solid map-get($colours, "border");
+    color: map-get($colours, "black");
     font-weight: 600;
   }
 

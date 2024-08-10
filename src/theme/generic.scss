@@ -24,6 +24,10 @@ body {
   }
 }
 
+.safe-area-top {
+  padding-top: var(--ion-safe-area-top) !important;
+}
+
 .hover {
   cursor: pointer;
 

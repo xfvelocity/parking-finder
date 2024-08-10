@@ -1,11 +1,12 @@
 <template>
-  <div class="map-header">
+  <div class="map-header bg-background safe-area-top">
     <div class="map-header-content">
       <Icon
         v-if="isLocationOpen"
         class="map-header-icon hover"
         src="chevron-left"
         fill="grey"
+        :size="14"
         @click="emits('toggle:modal', false)"
       />
 
@@ -95,7 +96,7 @@ watch(location, () => {
   z-index: 10;
 
   &-content {
-    padding: 15px 10px;
+    padding: 20px 10px;
     display: flex;
     align-items: center;
   }
@@ -111,7 +112,7 @@ watch(location, () => {
   }
 
   :deep(.select) {
-    width: 150px;
+    width: 160px;
   }
 }
 </style>
