@@ -78,7 +78,7 @@ button {
 
 @each $name, $colour in $colours {
   .icon {
-    &--#{$name} {
+    &-#{$name} {
       path {
         fill: #{$colour};
       }

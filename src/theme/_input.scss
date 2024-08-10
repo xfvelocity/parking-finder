@@ -3,12 +3,12 @@ $translateY: 24px;
 .input {
   position: relative;
   border: 1px solid map-get($colours, "border");
-  border-radius: 5px;
+  border-radius: 10px;
   margin-top: calc($translateY - 20px);
   background: white;
   display: flex;
   align-items: center;
-  height: 30px;
+  height: 35px;
   padding: 5px;
 
   label {

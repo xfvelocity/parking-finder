@@ -8,25 +8,32 @@
       />
     </template>
 
-    <Map :location="updatedLocation.position" />
+    <div class="home">
+      <MapHours
+        :selected-hour="filters.hours"
+        @selected:hour="filters.hours = $event"
+      />
 
-    <div v-if="isLocationOpen" class="home-location-modal">
-      <div class="home-header-results">
-        <ul>
-          <li
-            v-for="(result, i) in mapResults"
-            :key="i"
-            class="hover"
-            @click="selectLocation(result)"
-          >
-            <Icon class="mr-1" src="location-pin" :size="18" />
+      <Map :location="updatedLocation.position" />
 
-            <div>
-              <h5>{{ result.title }}</h5>
-              <p>{{ result.desc }}</p>
-            </div>
-          </li>
-        </ul>
+      <div v-if="isLocationOpen" class="home-location-modal">
+        <div class="home-header-results">
+          <ul>
+            <li
+              v-for="(result, i) in mapResults"
+              :key="i"
+              class="hover"
+              @click="selectLocation(result)"
+            >
+              <Icon class="mr-1" src="location-pin" :size="18" />
+
+              <div>
+                <h5>{{ result.title }}</h5>
+                <p>{{ result.desc }}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </PageLayout>
@@ -37,14 +44,18 @@ import type { MapLocation, MapLocationResult } from "@/types/map.types";
 
 import { ref } from "vue";
 import { useMapStore } from "@/stores/map";
+import { storeToRefs } from "pinia";
 
 import PageLayout from "@/components/page-layout/PageLayout.vue";
 import Map from "@/components/map/Map.vue";
 import MapHeader from "@/components/map/MapHeader.vue";
 import Icon from "@/components/basic/icon/Icon.vue";
+import MapHours from "@/components/map/MapHours.vue";
 
 // ** Data **
 const mapStore = useMapStore();
+
+const { filters } = storeToRefs(mapStore);
 
 const isLocationOpen = ref<boolean>(false);
 const updatedLocation = ref<MapLocation>({ ...mapStore.location });
@@ -70,6 +81,9 @@ const selectLocation = (result: MapLocationResult): void => {
 
 <style lang="scss" scoped>
 .home {
+  position: relative;
+  height: 100%;
+
   &-location-modal {
     position: absolute;
     left: 0;

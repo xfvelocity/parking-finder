@@ -21,14 +21,6 @@
         @update:clear="clearInput"
         @update:modelValue="onLocationSearch"
       />
-
-      <Select
-        :model-value="filters.hours"
-        class="home-header-time"
-        icon="time"
-        :options="timeOptions"
-        @update:modelValue="filters.hours = $event.value"
-      />
     </div>
 
     <LoadingBar v-if="loading" />
@@ -45,7 +37,6 @@ import { searchLocation } from "@/composables/here";
 import { debounce, hourOptions } from "@/composables/generic";
 
 import Icon from "@/components/basic/icon/Icon.vue";
-import Select from "@/components/basic/inputs/Select.vue";
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 import LoadingBar from "@/components/basic/loading/LoadingBar.vue";
 
@@ -63,10 +54,9 @@ const emits = defineEmits(["toggle:modal", "location:search"]);
 // ** Data **
 const mapStore = useMapStore();
 
-const { location, filters, loading } = storeToRefs(mapStore);
+const { location, loading } = storeToRefs(mapStore);
 
 const locationSearch = ref<string>(location.value.name);
-const timeOptions: SelectOption[] = [{ text: "Any", value: 0 }, ...hourOptions];
 
 // ** Methods **
 const clearInput = (): void => {
@@ -96,7 +86,7 @@ watch(location, () => {
   z-index: 10;
 
   &-content {
-    padding: 20px 10px;
+    padding: 10px;
     display: flex;
     align-items: center;
   }

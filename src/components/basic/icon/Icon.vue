@@ -1,7 +1,7 @@
 <template>
   <inline-svg
     class="icon"
-    :class="{ 'icon-colour': fill }"
+    :class="{ [`icon-${fill}`]: fill }"
     :src="getImageUrl(`icons/${src}.svg`)"
     :height="size"
     :width="size"
@@ -30,12 +30,3 @@ defineProps({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.icon-colour {
-  :deep(path),
-  :deep(rect) {
-    fill: v-bind(fill) !important;
-  }
-}
-</style>
