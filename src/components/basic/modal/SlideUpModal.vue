@@ -52,6 +52,7 @@ watch(
 <style lang="scss" scoped>
 .slide-up-modal {
   position: absolute;
+  z-index: 2;
   left: 0;
   bottom: 0;
   height: v-bind(height);

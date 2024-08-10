@@ -38,7 +38,7 @@ defineProps({
 <style lang="scss" scoped>
 .map-hours {
   position: absolute;
-  z-index: 10;
+  z-index: 1;
   top: 0;
   width: 100%;
   display: flex;
