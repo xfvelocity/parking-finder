@@ -16,7 +16,7 @@
 
       <Map :location="updatedLocation.position" />
 
-      <div v-if="isLocationOpen" class="home-location-modal">
+      <SlideUpModal v-model="isLocationOpen" height="100%">
         <div class="home-header-results">
           <ul>
             <li
@@ -34,7 +34,7 @@
             </li>
           </ul>
         </div>
-      </div>
+      </SlideUpModal>
     </div>
   </PageLayout>
 </template>
@@ -51,6 +51,7 @@ import Map from "@/components/map/Map.vue";
 import MapHeader from "@/components/map/MapHeader.vue";
 import Icon from "@/components/basic/icon/Icon.vue";
 import MapHours from "@/components/map/MapHours.vue";
+import SlideUpModal from "@/components/basic/modal/SlideUpModal.vue";
 
 // ** Data **
 const mapStore = useMapStore();

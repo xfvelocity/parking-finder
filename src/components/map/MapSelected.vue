@@ -117,7 +117,7 @@
     </IonContent>
 
     <IonFooter v-if="!addingPrice">
-      <div class="map-selected-button px-4 py-3">
+      <div class="map-selected-button px-4 pt-3 pb-5">
         <CustomButton icon="directions" @click="openDirections">
           Directions
         </CustomButton>

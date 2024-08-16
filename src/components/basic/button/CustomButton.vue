@@ -13,9 +13,7 @@
   >
     <Icon v-if="icon" class="mr-1" :src="icon" :size="14" />
 
-    <span :class="`text-${textColour}}`">
-      <slot />
-    </span>
+    <slot />
 
     <LoadingSpinner v-if="loading" class="ml-1" colour="white" :size="14" />
   </button>
@@ -41,7 +39,7 @@ defineProps({
   },
   textColour: {
     type: String,
-    default: "whtite",
+    default: "white",
   },
   disabled: {
     type: Boolean,
