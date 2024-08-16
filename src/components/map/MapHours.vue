@@ -55,7 +55,7 @@ defineProps({
     background: map-get($colours, "background");
     border: 1px solid map-get($colours, "border");
     color: rgb(140, 140, 140);
-    border-radius: 5px;
+    border-radius: 7px;
     font-size: 10px;
     white-space: nowrap;
   }

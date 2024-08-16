@@ -59,7 +59,7 @@ defineProps({
   height: 35px;
   width: 100%;
   border-radius: 5px;
-  font-weight: 500;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -86,7 +86,7 @@ watch(location, () => {
   z-index: 10;
 
   &-content {
-    padding: 10px;
+    padding: 15px;
     display: flex;
     align-items: center;
   }

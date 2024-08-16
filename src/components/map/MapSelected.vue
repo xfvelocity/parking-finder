@@ -1,20 +1,19 @@
 <template>
-  <SlideUpModal
-    :model-value="!!selectedParking"
-    height="100%"
-    @update:model-value="$emit('update:selectedParking', null)"
+  <IonModal
+    class="map-selected"
+    :is-open="!!selectedParking"
+    :initial-breakpoint="1"
+    :breakpoints="[0, 1]"
+    handle
+    @ion-breakpoint-did-change="$emit('update:selectedParking', null)"
   >
-    <div v-if="selectedParking" class="map-selected">
-      <div class="map-selected-header p-4">
-        <Icon
-          src="chevron-left"
-          fill="grey"
-          @click="$emit('update:selectedParking', null)"
-        />
-
-        <h4>{{ selectedParking.name }}</h4>
+    <IonHeader>
+      <div class="map-selected-header pt-5 pb-3">
+        <h4>{{ selectedParking?.name }}</h4>
       </div>
+    </IonHeader>
 
+    <IonContent v-if="selectedParking">
       <div class="map-selected-content p-4">
         <div>
           <h5 class="mb-2">Prices</h5>
@@ -24,7 +23,7 @@
               v-for="(price, i) in formattedPrices.prices"
               :key="i"
               :class="{
-                'text-cheap text-fw-600': selectedHours === price.hours,
+                'text-fw-600': selectedHours === price.hours,
               }"
             >
               <div>{{ price.hours }} hours</div>
@@ -54,7 +53,7 @@
               v-for="(price, i) in formattedPrices.app"
               :key="i"
               :class="{
-                'text-cheap text-fw-600': selectedHours === price.hours,
+                'text-fw-600': selectedHours === price.hours,
               }"
             >
               <div>{{ price.hours }} hours</div>
@@ -115,14 +114,16 @@
           </div>
         </div>
       </div>
+    </IonContent>
 
-      <div v-if="!addingPrice" class="map-selected-button mt-auto px-4 py-3">
+    <IonFooter v-if="!addingPrice">
+      <div class="map-selected-button px-4 py-3">
         <CustomButton icon="directions" @click="openDirections">
           Directions
         </CustomButton>
       </div>
-    </div>
-  </SlideUpModal>
+    </IonFooter>
+  </IonModal>
 </template>
 
 <script lang="ts" setup>
@@ -131,10 +132,9 @@ import type { Parking, ParkingPrice, ParkingHours } from "@/types/map.types";
 import { computed, ref, watch, type PropType } from "vue";
 import { useMapStore } from "@/stores/map";
 
-import Icon from "@/components/basic/icon/Icon.vue";
+import { IonModal, IonContent, IonHeader, IonFooter } from "@ionic/vue";
 import CustomButton from "@/components/basic/button/CustomButton.vue";
 import AddPrices from "@/components/add-prices/AddPrices.vue";
-import SlideUpModal from "@/components/basic/modal/SlideUpModal.vue";
 
 // ** Props **
 const props = defineProps({
@@ -223,19 +223,8 @@ watch(
 
 <style lang="scss" scoped>
 .map-selected {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-
   &-header {
-    display: grid;
-    align-items: center;
-    grid-template-columns: 30px 1fr 30px;
     border-bottom: 1px solid map-get($colours, "border");
-  }
-
-  &-content {
-    overflow-y: auto;
   }
 
   &-button {
