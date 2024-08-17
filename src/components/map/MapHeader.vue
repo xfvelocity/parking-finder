@@ -3,7 +3,7 @@
     <div class="map-header-content">
       <Icon
         v-if="isLocationOpen"
-        class="map-header-icon hover"
+        class="map-header-icon hover mb-2"
         src="chevron-left"
         fill="grey"
         :size="14"
@@ -43,11 +43,11 @@ import { storeToRefs } from "pinia";
 import { searchLocation, searchName } from "@/composables/here";
 import { debounce } from "@/composables/generic";
 import { Geolocation } from "@capacitor/geolocation";
+import { useUserStore } from "@/stores/user";
 
 import Icon from "@/components/basic/icon/Icon.vue";
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 import LoadingBar from "@/components/basic/loading/LoadingBar.vue";
-import { useUserStore } from "@/stores/user";
 
 // ** Props **
 defineProps({

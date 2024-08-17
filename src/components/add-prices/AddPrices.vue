@@ -34,7 +34,7 @@ import type { AddPrices, Parking } from "@/types/map.types";
 
 import { PropType, ref } from "vue";
 import { hourOptions } from "@/composables/generic";
-import axios from "axios";
+import { api } from "@/api/api";
 
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 import Select from "@/components/basic/inputs/Select.vue";
@@ -71,11 +71,13 @@ const addPrice = (): void => {
 const submitPrices = async (): Promise<void> => {
   isSubmitLoading.value = true;
 
-  await axios.post(
-    `${import.meta.env.VITE_API_URL}/api/add-prices/${props.selectedParking._id}`,
+  await api(
+    "POST",
+    `add-prices/${props.selectedParking._id}`,
     {
       prices: prices.value,
-    }
+    },
+    true
   );
 
   setTimeout(() => {

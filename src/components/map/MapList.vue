@@ -1,6 +1,6 @@
 <template>
   <IonModal
-    :is-open="true"
+    :is-open="modelValue"
     :initial-breakpoint="0.09"
     :breakpoints="[0.09, 0.95]"
     :backdrop-breakpoint="0.9"
@@ -51,7 +51,7 @@ import LoadingSpinner from "@/components/basic/loading/LoadingSpinner.vue";
 defineProps({
   modelValue: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   items: {
     type: Object as PropType<any[]>,

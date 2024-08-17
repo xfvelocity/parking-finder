@@ -8,7 +8,7 @@
     />
 
     <MapList
-      :model-value="true"
+      :model-value="!isLocationOpen"
       :items="items"
       @selected:item="selectedParking = $event"
     />
@@ -22,17 +22,21 @@ import { ref, onMounted, watch, PropType } from "vue";
 import { debounce, getImageUrl, calculateArea } from "@/composables/generic";
 import { useMapStore } from "@/stores/map";
 import { searchName } from "@/composables/here";
-import axios from "axios";
+import { useUserStore } from "@/stores/user";
+import { api } from "@/api/api";
 
 import MapSelected from "@/components/map/MapSelected.vue";
 import MapList from "@/components/map/MapList.vue";
-import { useUserStore } from "@/stores/user";
 
 // ** Props **
 const props = defineProps({
   location: {
     type: Object as PropType<MapPosition>,
     default: () => ({}),
+  },
+  isLocationOpen: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -183,18 +187,13 @@ const getItems = async (): Promise<void> => {
   mapController.abort();
   mapController = new AbortController();
 
-  let res;
   const hours = mapStore.filters.hours;
+  const params = `?lat=${mapStore.location.position.lat}&lng=${mapStore.location.position.lng}&radius=${mapArea.value}`;
 
-  if (hours > 0) {
-    res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/map?lat=${mapStore.location.position.lat}&lng=${mapStore.location.position.lng}&hours=${mapStore.filters.hours}`
-    );
-  } else {
-    res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/map?lat=${mapStore.location.position.lat}&lng=${mapStore.location.position.lng}&radius=${mapArea.value}`
-    );
-  }
+  const res = await api(
+    "GET",
+    hours > 0 ? `map${params}&hours=${mapStore.filters.hours}` : `map${params}`
+  );
 
   searchZoom.value = map.getZoom() || 15;
 

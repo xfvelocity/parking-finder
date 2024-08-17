@@ -2,9 +2,9 @@
 
 <script lang="ts" setup>
 import { useUserStore } from "@/stores/user";
-import axios from "axios";
-import { watch } from "vue";
+import { onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { api } from "@/api/api";
 
 // ** Data **
 const route = useRoute();
@@ -17,13 +17,7 @@ const verifyEmail = async (): Promise<void> => {
   const { code, uuid } = route.query;
 
   if (code && uuid) {
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_URL}/api/email-verify`,
-      {
-        code,
-        uuid,
-      }
-    );
+    const res = await api("POST", "email-verify", { code, uuid });
 
     if (res?.data?.accessToken) {
       userStore.accessToken = res?.data?.accessToken;
@@ -36,5 +30,5 @@ const verifyEmail = async (): Promise<void> => {
   await router.push({ name: "Home" });
 };
 
-watch(route, verifyEmail, { immediate: true });
+onMounted(verifyEmail);
 </script>

@@ -15,7 +15,10 @@
         @selected:hour="filters.hours = $event"
       />
 
-      <Map :location="updatedLocation.position" />
+      <Map
+        :is-location-open="isLocationOpen"
+        :location="updatedLocation.position"
+      />
 
       <SlideUpModal v-model="isLocationOpen" height="100%">
         <div class="home-header-results">
