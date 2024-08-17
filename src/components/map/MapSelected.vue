@@ -10,6 +10,12 @@
     <IonHeader>
       <div class="map-selected-header pt-5 pb-3">
         <h4>{{ selectedParking?.name }}</h4>
+
+        <Rating
+          v-if="selectedParking?.rating"
+          class="mt-1 mx-auto"
+          :rating="selectedParking?.rating"
+        />
       </div>
     </IonHeader>
 
@@ -135,6 +141,7 @@ import { useMapStore } from "@/stores/map";
 import { IonModal, IonContent, IonHeader, IonFooter } from "@ionic/vue";
 import CustomButton from "@/components/basic/button/CustomButton.vue";
 import AddPrices from "@/components/add-prices/AddPrices.vue";
+import Rating from "@/components/basic/rating/Rating.vue";
 
 // ** Props **
 const props = defineProps({
