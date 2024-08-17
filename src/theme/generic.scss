@@ -24,6 +24,22 @@ body {
   }
 }
 
+.text-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  @for $i from 2 through 5 {
+    &-#{$i} {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: $i;
+      line-clamp: $i;
+      -webkit-box-orient: vertical;
+    }
+  }
+}
+
 .safe-area-top {
   padding-top: var(--ion-safe-area-top) !important;
 }

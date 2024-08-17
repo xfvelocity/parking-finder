@@ -6,6 +6,12 @@
       :selected-parking="selectedParking"
       @update:selectedParking="selectedParking = $event"
     />
+
+    <MapList
+      :model-value="true"
+      :items="items"
+      @selected:item="selectedParking = $event"
+    />
   </div>
 </template>
 
@@ -19,6 +25,7 @@ import { searchName } from "@/composables/here";
 import axios from "axios";
 
 import MapSelected from "@/components/map/MapSelected.vue";
+import MapList from "@/components/map/MapList.vue";
 
 // ** Props **
 const props = defineProps({
@@ -39,6 +46,7 @@ const selectedParking = ref<Parking | null>(null);
 const distanceMovedSinceUpdate = ref<number>(0);
 const mapArea = ref<number>(0);
 const searchZoom = ref<number>(15);
+const items = ref<Parking[]>([]);
 
 // ** Methods **
 const initMap = async (): Promise<void> => {
@@ -51,6 +59,7 @@ const initMap = async (): Promise<void> => {
     streetViewControl: false,
     mapTypeControl: false,
     fullscreenControl: false,
+    zoomControl: false,
     mapId: import.meta.env.VITE_GOOGLE_MAP_ID,
   });
 
@@ -185,6 +194,8 @@ const getItems = async (): Promise<void> => {
   }
 
   searchZoom.value = map.getZoom() || 15;
+
+  items.value = res?.data;
 
   res?.data?.forEach((d: any) => {
     addMarker(d.location.coordinates[1], d.location.coordinates[0], d);

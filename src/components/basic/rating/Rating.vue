@@ -5,15 +5,15 @@
       :key="star"
       src="star"
       fill="yellow-darken-4"
-      :size="12"
+      :size="size"
     />
-    <Icon v-if="halfStar" src="star-half" fill="yellow-darken-4" :size="12" />
+    <Icon v-if="halfStar" src="star-half" fill="yellow-darken-4" :size="size" />
     <Icon
       v-for="star in emptyStars"
       :key="star"
       src="star-empty"
       fill="yellow-darken-4"
-      :size="12"
+      :size="size"
     />
   </div>
 </template>
@@ -28,6 +28,10 @@ const props = defineProps({
   rating: {
     type: Number,
     required: true,
+  },
+  size: {
+    type: Number,
+    default: 12,
   },
 });
 
