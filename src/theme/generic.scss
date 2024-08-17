@@ -10,6 +10,13 @@ ion-header {
   box-shadow: none !important;
 }
 
+ion-modal {
+  &::part(content) {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+}
+
 .text {
   &-center {
     text-align: center;

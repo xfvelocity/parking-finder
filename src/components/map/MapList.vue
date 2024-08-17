@@ -28,7 +28,7 @@
               <Rating v-if="item.rating" :rating="item.rating" :size="8" />
             </div>
 
-            <p class="text-ellipsis">{{ item.address }}</p>
+            <p>{{ distanceFromCurrentLocation(item) }}</p>
           </div>
         </template>
       </div>
@@ -41,6 +41,7 @@ import type { PropType } from "vue";
 
 import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
+import { useUserStore } from "@/stores/user";
 
 import { IonModal, IonContent, IonHeader } from "@ionic/vue";
 import Rating from "@/components/basic/rating/Rating.vue";
@@ -62,9 +63,26 @@ defineProps({
 const emits = defineEmits(["update:modelValue", "selected:item"]);
 
 // ** Data **
+const userStore = useUserStore();
 const mapStore = useMapStore();
 
 const { loading } = storeToRefs(mapStore);
+
+const distanceFromCurrentLocation = (item: any): string | null => {
+  if (userStore.currentLocation.name) {
+    const distance = google.maps.geometry.spherical.computeDistanceBetween(
+      userStore.currentLocation.position,
+      {
+        lng: item.location.coordinates[0],
+        lat: item.location.coordinates[1],
+      }
+    );
+
+    return `${(distance / 1000).toFixed(1)}km away`;
+  } else {
+    return null;
+  }
+};
 </script>
 
 <style lang="scss" scoped>

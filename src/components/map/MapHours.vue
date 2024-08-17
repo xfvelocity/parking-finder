@@ -3,8 +3,10 @@
     <div
       v-for="(hour, i) in hourOptions"
       :key="i"
-      class="map-hours-item"
-      :class="{ 'bg-white text-primary': selectedHour === hour.value }"
+      class="map-hours-item bg-white"
+      :class="{
+        'text-primary border-primary': selectedHour === hour.value,
+      }"
       @click="
         $emit('selected:hour', selectedHour === hour.value ? 0 : hour.value)
       "
@@ -52,7 +54,6 @@ defineProps({
     display: flex;
     align-items: center;
     padding: 5px 15px;
-    background: map-get($colours, "background");
     border: 1px solid map-get($colours, "border");
     color: rgb(140, 140, 140);
     border-radius: 7px;

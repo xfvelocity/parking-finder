@@ -49,6 +49,7 @@ const distanceMovedSinceUpdate = ref<number>(0);
 const mapArea = ref<number>(0);
 const searchZoom = ref<number>(15);
 const items = ref<Parking[]>([]);
+const currentLocationMarker = ref<google.maps.marker.AdvancedMarkerElement>();
 
 // ** Methods **
 const initMap = async (): Promise<void> => {
@@ -243,17 +244,23 @@ watch(
     await refreshMarkers();
 
     if (userStore.currentLocation.name) {
+      if (currentLocationMarker.value) {
+        (currentLocationMarker.value as any).setMap(null);
+        currentLocationMarker.value = undefined;
+      }
+
       const content = document.createElement("div");
       content.className = "map-item-current";
 
-      new google.maps.marker.AdvancedMarkerElement({
-        title: "Current location",
-        content: content,
-        map: map,
-        position: {
-          ...userStore.currentLocation.position,
-        },
-      });
+      currentLocationMarker.value =
+        new google.maps.marker.AdvancedMarkerElement({
+          title: "Current location",
+          content: content,
+          map: map,
+          position: {
+            ...userStore.currentLocation.position,
+          },
+        });
     }
   }
 );
@@ -283,10 +290,9 @@ watch(
     background: white;
     padding: 5px 15px;
     font-size: 10px;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 2px solid map-get($colours, "border");
     color: map-get($colours, "black");
-    font-weight: 600;
 
     &-current {
       width: 14px;
