@@ -4,6 +4,12 @@ import { defineStore } from "pinia";
 
 export const useUserStore = defineStore("user", {
   state: (): UserStore => ({
+    accessToken: "",
+    user: {
+      email: "",
+      emailVerified: false,
+      uuid: "",
+    },
     currentLocation: {
       name: "",
       position: {
