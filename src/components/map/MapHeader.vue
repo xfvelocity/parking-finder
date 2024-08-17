@@ -21,6 +21,15 @@
         @update:clear="clearInput"
         @update:modelValue="onLocationSearch"
       />
+
+      <div class="map-header-location">
+        <Icon
+          src="location-arrow"
+          :size="12"
+          :fill="usingCurrentLocation ? 'primary' : 'grey-darken-1'"
+          @click="getCurrentLocation"
+        />
+      </div>
     </div>
 
     <LoadingBar v-if="loading" />
@@ -28,17 +37,17 @@
 </template>
 
 <script lang="ts" setup>
-import type { SelectOption } from "@/types/app.types";
-
 import { ref, watch } from "vue";
 import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
-import { searchLocation } from "@/composables/here";
-import { debounce, hourOptions } from "@/composables/generic";
+import { searchLocation, searchName } from "@/composables/here";
+import { debounce } from "@/composables/generic";
+import { Geolocation } from "@capacitor/geolocation";
 
 import Icon from "@/components/basic/icon/Icon.vue";
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 import LoadingBar from "@/components/basic/loading/LoadingBar.vue";
+import { useUserStore } from "@/stores/user";
 
 // ** Props **
 defineProps({
@@ -49,16 +58,42 @@ defineProps({
 });
 
 // ** Emits **
-const emits = defineEmits(["toggle:modal", "location:search"]);
+const emits = defineEmits(["toggle:modal", "location:search", "set:location"]);
 
 // ** Data **
 const mapStore = useMapStore();
+const userStore = useUserStore();
 
-const { location, loading } = storeToRefs(mapStore);
+const { location, loading, usingCurrentLocation } = storeToRefs(mapStore);
 
 const locationSearch = ref<string>(location.value.name);
 
 // ** Methods **
+const getCurrentLocation = async () => {
+  const coordinates = await Geolocation.getCurrentPosition();
+
+  const { latitude, longitude } = coordinates.coords;
+  const name = await searchName(latitude, longitude);
+
+  userStore.currentLocation = {
+    name,
+    position: {
+      lat: latitude,
+      lng: longitude,
+    },
+  };
+
+  if (!usingCurrentLocation.value) {
+    emits("set:location", {
+      title: name,
+      position: {
+        lat: latitude,
+        lng: longitude,
+      },
+    });
+  }
+};
+
 const clearInput = (): void => {
   emits("toggle:modal", true);
 
@@ -88,7 +123,20 @@ watch(location, () => {
   &-content {
     padding: 15px;
     display: flex;
+    align-items: flex-end;
+  }
+
+  &-location {
+    background: white;
+    border-radius: 10px;
+    height: 35px;
+    min-width: 35px;
+    padding-right: 1px;
+    border: 1px solid map-get($colours, "border");
+
+    display: flex;
     align-items: center;
+    justify-content: center;
   }
 
   &-icon {
@@ -98,11 +146,7 @@ watch(location, () => {
 
   .input {
     width: 100%;
-    margin-right: 10px;
-  }
-
-  :deep(.select) {
-    width: 160px;
+    margin-right: 5px;
   }
 }
 </style>

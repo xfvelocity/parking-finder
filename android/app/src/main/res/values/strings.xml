@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">PintFinder</string>
-    <string name="title_activity_main">PintFinder</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">Parking Finder</string>
+    <string name="title_activity_main">Parking Finder</string>
+    <string name="package_name">com.parking.finder</string>
+    <string name="custom_url_scheme">com.parking.finder</string>
 </resources>

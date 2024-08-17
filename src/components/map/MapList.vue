@@ -1,34 +1,36 @@
 <template>
   <IonModal
     :is-open="true"
-    :initial-breakpoint="0.06"
-    :breakpoints="[0.06, 0.95]"
+    :initial-breakpoint="0.09"
+    :breakpoints="[0.09, 0.95]"
     :backdrop-breakpoint="0.9"
     :backdrop-dismiss="false"
   >
     <IonHeader>
-      <div class="map-list-header pt-4 pb-3">
+      <div class="map-list-header py-4">
         <h4 class="text-center">{{ items.length }} Parking Locations</h4>
       </div>
     </IonHeader>
 
     <IonContent>
-      <div class="map-list p-2 pb-10">
-        <LoadingSpinner v-if="loading" />
+      <div class="map-list p-4 pb-10">
+        <LoadingSpinner v-if="loading" class="my-2" :size="24" />
 
-        <div
-          v-for="(item, i) in items"
-          :key="i"
-          class="map-list-item bg-background mb-2 p-2 hover"
-          @click="$emit('selected:item', item)"
-        >
-          <div class="map-list-item-header">
-            <h5 class="mr-1">{{ item.name }}</h5>
-            <Rating :rating="item.rating" :size="8" />
+        <template v-else>
+          <div
+            v-for="(item, i) in items"
+            :key="i"
+            class="map-list-item bg-background mb-2 p-3 hover"
+            @click="$emit('selected:item', item)"
+          >
+            <div class="map-list-item-header">
+              <h5 class="mr-1">{{ item.name }}</h5>
+              <Rating v-if="item.rating" :rating="item.rating" :size="8" />
+            </div>
+
+            <p class="text-ellipsis">{{ item.address }}</p>
           </div>
-
-          <p class="text-ellipsis">{{ item.address }}</p>
-        </div>
+        </template>
       </div>
     </IonContent>
   </IonModal>

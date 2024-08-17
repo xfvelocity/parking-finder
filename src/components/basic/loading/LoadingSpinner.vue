@@ -1,6 +1,6 @@
 <template>
   <div class="loading">
-    <span class="text-center">
+    <div class="text-center">
       <svg
         class="loading-icon"
         :class="`icon-stroke-${colour}`"
@@ -16,7 +16,7 @@
           stroke-width="5"
         />
       </svg>
-    </span>
+    </div>
   </div>
 </template>
 
@@ -29,7 +29,7 @@ defineProps({
   },
   colour: {
     type: String,
-    default: "black",
+    default: "grey-darken-2",
   },
 });
 </script>

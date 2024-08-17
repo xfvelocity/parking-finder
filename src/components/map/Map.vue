@@ -26,6 +26,7 @@ import axios from "axios";
 
 import MapSelected from "@/components/map/MapSelected.vue";
 import MapList from "@/components/map/MapList.vue";
+import { useUserStore } from "@/stores/user";
 
 // ** Props **
 const props = defineProps({
@@ -37,6 +38,7 @@ const props = defineProps({
 
 // ** Data **
 const mapStore = useMapStore();
+const userStore = useUserStore();
 
 let map: google.maps.Map;
 let mapController: AbortController = new AbortController();
@@ -239,6 +241,20 @@ watch(
     selectedParking.value = null;
 
     await refreshMarkers();
+
+    if (userStore.currentLocation.name) {
+      const content = document.createElement("div");
+      content.className = "map-item-current";
+
+      new google.maps.marker.AdvancedMarkerElement({
+        title: "Current location",
+        content: content,
+        map: map,
+        position: {
+          ...userStore.currentLocation.position,
+        },
+      });
+    }
   }
 );
 
@@ -271,12 +287,40 @@ watch(
     border: 2px solid map-get($colours, "border");
     color: map-get($colours, "black");
     font-weight: 600;
+
+    &-current {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid white;
+      background-color: map-get($colours, "blue-darken-1");
+      box-shadow: 0 0 0 0 map-get($colours, "blue-darken-1");
+      transform: scale(1);
+      animation: pulse 3s infinite;
+    }
   }
 
   &-icon {
     height: 28px;
     width: 28px;
     border-radius: 4px;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(25, 105, 255, 0.6);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 20px rgba(25, 105, 255, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(25, 105, 255, 0);
   }
 }
 </style>

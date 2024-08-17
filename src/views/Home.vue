@@ -5,6 +5,7 @@
         :is-location-open="isLocationOpen"
         @toggle:modal="isLocationOpen = $event"
         @location:search="updateLocation"
+        @set:location="selectLocation"
       />
     </template>
 

@@ -1,5 +1,6 @@
 import { MapStore } from "@/types/map.types";
 import { defineStore } from "pinia";
+import { useUserStore } from "./user";
 
 export const useMapStore = defineStore("map", {
   state: (): MapStore => ({
@@ -22,5 +23,15 @@ export const useMapStore = defineStore("map", {
     mapZoom: 13,
     loading: false,
   }),
+  getters: {
+    usingCurrentLocation(): boolean {
+      const userStore = useUserStore();
+
+      return (
+        userStore.currentLocation.position.lat === this.location.position.lat &&
+        userStore.currentLocation.position.lng === this.location.position.lng
+      );
+    },
+  },
   persist: true,
 });

@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.parking.finder;
 
 import com.getcapacitor.BridgeActivity;
 
