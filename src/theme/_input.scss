@@ -1,4 +1,4 @@
-$translateY: 24px;
+$translateY: 20px;
 
 .input {
   position: relative;
@@ -40,10 +40,6 @@ $translateY: 24px;
     &:focus {
       outline: none;
     }
-  }
-
-  &-close {
-    margin-right: 5px;
   }
 
   &-icon {

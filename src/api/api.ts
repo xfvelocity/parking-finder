@@ -1,12 +1,12 @@
 import { useUserStore } from "@/stores/user";
 import axios from "axios";
 
-export const api = async (
+export const api = async <T = any>(
   method: string,
   url: string,
   data: any = {},
   auth: boolean = false
-): Promise<any> => {
+): Promise<T> => {
   let res: any;
   let config: any = {};
 
@@ -38,11 +38,10 @@ export const api = async (
     if (res?.status !== 200) {
       throw new Error((res?.response || res).data || "Something went wrong");
     }
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
 
-    // TODO: Add error handling
-    return e;
+    res = { error: e?.response?.data || e };
   }
 
   return res;

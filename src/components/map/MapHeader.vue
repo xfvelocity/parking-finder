@@ -14,9 +14,10 @@
         v-model="locationSearch"
         id="locationSearch"
         label="Location"
-        icon="search"
+        prepend-icon="search"
         placeholder="Search for a location"
         select-on-focus
+        close-button
         @focus="emits('toggle:modal', true)"
         @update:clear="clearInput"
         @update:modelValue="onLocationSearch"

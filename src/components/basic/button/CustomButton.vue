@@ -9,6 +9,7 @@
         hover: !disabled,
       },
     ]"
+    :type="type"
     :disabled="disabled || loading"
   >
     <Icon v-if="icon" class="mr-1" :src="icon" :size="14" />
@@ -20,6 +21,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { PropType } from "vue";
+
 import Icon from "@/components/basic/icon/Icon.vue";
 import LoadingSpinner from "@/components/basic/loading/LoadingSpinner.vue";
 
@@ -48,6 +51,10 @@ defineProps({
   loading: {
     type: Boolean,
     default: false,
+  },
+  type: {
+    type: String as PropType<"button" | "submit" | "reset">,
+    default: "button",
   },
 });
 </script>

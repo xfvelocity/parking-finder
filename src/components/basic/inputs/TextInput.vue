@@ -2,18 +2,28 @@
   <div
     class="input"
     :class="{
-      'input-icon': icon,
+      'input-icon': prependIcon || appendIcon,
       'input-populated': modelValue,
       'input-active': isActive,
     }"
   >
-    <Icon v-if="icon" :src="icon" :fill="iconColour" />
+    <Icon
+      v-if="prependIcon"
+      :src="prependIcon"
+      :fill="prependIconColour"
+      @click="$emit('click:prepend')"
+    />
+
     <slot name="prepend" />
 
     <input
       ref="textInput"
       :value="modelValue"
       :placeholder="placeholder"
+      :type="type"
+      :autocomplete="autocomplete"
+      :required="required"
+      :name="name"
       @input="emitValue"
       @focus="onFocus"
       @blur="onBlur"
@@ -21,12 +31,24 @@
     />
 
     <Icon
+      v-if="appendIcon"
+      class="hover mr-1"
+      :src="appendIcon"
+      :fill="appendIconColour"
+      @click="$emit('click:append')"
+    />
+
+    <Icon
       v-if="modelValue && clearButton"
-      class="input-close"
+      class="mr-1"
       src="close"
       :size="10"
       @click="clearInput"
     />
+
+    <label v-if="label">
+      {{ label }}
+    </label>
   </div>
 </template>
 
@@ -58,17 +80,41 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  icon: {
+  prependIcon: {
     type: String,
     default: "",
   },
-  iconColour: {
+  prependIconColour: {
+    type: String,
+    default: "",
+  },
+  appendIcon: {
+    type: String,
+    default: "",
+  },
+  appendIconColour: {
     type: String,
     default: "",
   },
   clearButton: {
     type: Boolean,
-    default: true,
+    default: false,
+  },
+  type: {
+    type: String,
+    default: "text",
+  },
+  autocomplete: {
+    type: String,
+    default: "off",
+  },
+  required: {
+    type: Boolean,
+    default: false,
+  },
+  name: {
+    type: String,
+    default: "",
   },
 });
 
@@ -79,6 +125,8 @@ const emit = defineEmits([
   "focus",
   "blur",
   "update:clear",
+  "click:prepend",
+  "click:append",
 ]);
 
 // ** Data **
