@@ -97,6 +97,18 @@ button {
   margin: 10px 0;
 }
 
+.center {
+  @include center;
+
+  &-horizontal {
+    @include center(true, false);
+  }
+
+  &-vertical {
+    @include center(false, true);
+  }
+}
+
 @each $prop,
   $abbrev in (color: text-, background-color: bg-, border-color: border-)
 {

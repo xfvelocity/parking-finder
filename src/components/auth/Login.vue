@@ -27,7 +27,7 @@
         @click:append="showPassword = !showPassword"
       />
 
-      <CustomButton type="submit"> Login </CustomButton>
+      <CustomButton type="submit" :loading="loading"> Login </CustomButton>
     </form>
 
     <p class="mt-4">
@@ -56,6 +56,7 @@ const emits = defineEmits(["change", "login"]);
 const userStore = useUserStore();
 
 const showPassword = ref<boolean>(false);
+const loading = ref<boolean>(false);
 const loginForm = ref<LoginForm>({
   email: "",
   password: "",
@@ -64,6 +65,8 @@ const loginForm = ref<LoginForm>({
 // ** Methods **
 const login = async (e: any): Promise<void> => {
   e.preventDefault();
+
+  loading.value = true;
 
   const res = await api("POST", "login", loginForm.value);
 
@@ -79,6 +82,8 @@ const login = async (e: any): Promise<void> => {
 
     emits("login", res?.data);
   }
+
+  loading.value = false;
 };
 </script>
 

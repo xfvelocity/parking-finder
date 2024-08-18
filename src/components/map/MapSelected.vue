@@ -131,7 +131,7 @@
     </IonFooter>
   </IonModal>
 
-  <AuthModal v-model="isAuthModalOpen" />
+  <AuthModal v-model="isAuthModalOpen" @login:success="addingPrice = true" />
 </template>
 
 <script lang="ts" setup>

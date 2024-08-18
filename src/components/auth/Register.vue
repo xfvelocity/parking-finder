@@ -35,7 +35,7 @@
         @click:append="showPassword = !showPassword"
       />
 
-      <CustomButton type="submit"> Register </CustomButton>
+      <CustomButton type="submit" :loading="loading"> Register </CustomButton>
     </form>
 
     <p class="mt-4">
@@ -61,6 +61,7 @@ const emits = defineEmits(["change", "register"]);
 
 // ** Data **
 const showPassword = ref<boolean>(false);
+const loading = ref<boolean>(false);
 const registerForm = ref<RegisterForm>({
   name: "",
   email: "",
@@ -70,6 +71,8 @@ const registerForm = ref<RegisterForm>({
 // ** Methods **
 const register = async (e: any): Promise<void> => {
   e.preventDefault();
+
+  loading.value = true;
 
   const res = await api("POST", "register", registerForm.value);
 
@@ -82,6 +85,8 @@ const register = async (e: any): Promise<void> => {
 
     emits("register", res?.data);
   }
+
+  loading.value = false;
 };
 </script>
 
