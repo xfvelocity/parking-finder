@@ -1,5 +1,10 @@
 <template>
-  <div class="register p-4">
+  <div class="register text-center p-4">
+    <h5>Register</h5>
+    <p class="register-desc mt-1 mb-3">
+      Please register an account to add prices to a parking location.
+    </p>
+
     <form @submit="register">
       <TextInput
         v-model="registerForm.name"
@@ -32,6 +37,13 @@
 
       <CustomButton type="submit"> Register </CustomButton>
     </form>
+
+    <p class="mt-4">
+      Already got an account?
+      <span class="text-primary text-underline hover" @click="$emit('change')">
+        Login
+      </span>
+    </p>
   </div>
 </template>
 
@@ -43,6 +55,9 @@ import { api } from "@/api/api";
 
 import CustomButton from "@/components/basic/button/CustomButton.vue";
 import TextInput from "@/components/basic/inputs/TextInput.vue";
+
+// ** Emits **
+const emits = defineEmits(["change", "register"]);
 
 // ** Data **
 const showPassword = ref<boolean>(false);
@@ -65,13 +80,18 @@ const register = async (e: any): Promise<void> => {
       password: "",
     };
 
-    console.log("success");
+    emits("register", res?.data);
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .register {
+  &-desc {
+    max-width: 200px;
+    margin: 0 auto;
+  }
+
   form {
     display: flex;
     flex-direction: column;

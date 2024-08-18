@@ -18,11 +18,16 @@
 
     <p class="add-location-price-add hover mt-1" @click="addPrice">Add price</p>
 
-    <div class="mt-auto">
+    <div class="mt-4">
       <CustomButton :loading="isSubmitLoading" @click="submitPrices">
         Submit
       </CustomButton>
-      <CustomButton class="mt-1" :disabled="isSubmitLoading" outlined>
+      <CustomButton
+        class="mt-1"
+        :disabled="isSubmitLoading"
+        outlined
+        @click="$emit('close')"
+      >
         Cancel
       </CustomButton>
     </div>
@@ -106,6 +111,7 @@ const submitPrices = async (): Promise<void> => {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
       width: 100%;
 
       :deep(.select) {

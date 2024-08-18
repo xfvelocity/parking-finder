@@ -1,5 +1,10 @@
 <template>
-  <div class="login p-4">
+  <div class="login text-center p-4">
+    <h5>Login</h5>
+    <p class="login-desc mt-1 mb-3">
+      Please login to your account to add prices to a parking location.
+    </p>
+
     <form @submit="login">
       <TextInput
         v-model="loginForm.email"
@@ -22,8 +27,15 @@
         @click:append="showPassword = !showPassword"
       />
 
-      <CustomButton type="submit"> Log in </CustomButton>
+      <CustomButton type="submit"> Login </CustomButton>
     </form>
+
+    <p class="mt-4">
+      Haven't got an account?
+      <span class="text-primary text-underline hover" @click="$emit('change')">
+        Sign up
+      </span>
+    </p>
   </div>
 </template>
 
@@ -36,6 +48,9 @@ import { useUserStore } from "@/stores/user";
 
 import CustomButton from "@/components/basic/button/CustomButton.vue";
 import TextInput from "@/components/basic/inputs/TextInput.vue";
+
+// ** Emits **
+const emits = defineEmits(["change", "login"]);
 
 // ** Data **
 const userStore = useUserStore();
@@ -61,12 +76,19 @@ const login = async (e: any): Promise<void> => {
     if (res?.data?.emailVerified) {
       userStore.setLoggedInUser(res?.data);
     }
+
+    emits("login", res?.data);
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .login {
+  &-desc {
+    max-width: 200px;
+    margin: 0 auto;
+  }
+
   form {
     display: flex;
     flex-direction: column;

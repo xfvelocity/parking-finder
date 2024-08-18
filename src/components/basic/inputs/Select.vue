@@ -84,7 +84,6 @@ const props = defineProps({
   label: {
     type: String,
     default: "",
-    required: true,
   },
   placeholder: {
     type: String,

@@ -42,7 +42,7 @@
             <p>No prices added</p>
             <p
               class="map-selected-price-add-btn hover"
-              @click="addingPrice = true"
+              @click="toggleAddPrices"
             >
               Add prices
             </p>
@@ -130,6 +130,8 @@
       </div>
     </IonFooter>
   </IonModal>
+
+  <AuthModal v-model="isAuthModalOpen" />
 </template>
 
 <script lang="ts" setup>
@@ -137,11 +139,13 @@ import type { Parking, ParkingPrice, ParkingHours } from "@/types/map.types";
 
 import { computed, ref, watch, type PropType } from "vue";
 import { useMapStore } from "@/stores/map";
+import { useUserStore } from "@/stores/user";
 
 import { IonModal, IonContent, IonHeader, IonFooter } from "@ionic/vue";
 import CustomButton from "@/components/basic/button/CustomButton.vue";
 import AddPrices from "@/components/add-prices/AddPrices.vue";
 import Rating from "@/components/basic/rating/Rating.vue";
+import AuthModal from "@/components/auth/AuthModal.vue";
 
 // ** Props **
 const props = defineProps({
@@ -157,9 +161,11 @@ const props = defineProps({
 
 // ** Data **
 const mapStore = useMapStore();
+const userStore = useUserStore();
 
 const addingPrice = ref<boolean>(false);
 const selectedHours = ref<number>(0);
+const isAuthModalOpen = ref<boolean>(false);
 
 // ** Computed **
 const hasValidHours = computed<boolean>(() => {
@@ -184,6 +190,13 @@ const formattedPrices = computed<{
 });
 
 // ** Methods **
+const toggleAddPrices = (): void => {
+  if (userStore.accessToken) {
+    addingPrice.value = true;
+  } else {
+    isAuthModalOpen.value = true;
+  }
+};
 const formatOpeningHours = (hours: string[]): string => {
   if (hours.length) {
     if (hours[0] === "00:00" && hours[1] === "24:00") {
