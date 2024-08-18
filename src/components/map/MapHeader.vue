@@ -13,7 +13,6 @@
       <TextInput
         v-model="locationSearch"
         id="locationSearch"
-        label="Location"
         prepend-icon="search"
         placeholder="Search for a location"
         select-on-focus
