@@ -22,12 +22,13 @@ export const useUserStore = defineStore("user", {
   }),
   actions: {
     setLoggedInUser(response: ApiLoginSuccess): void {
-      this.accessToken = response.accessToken;
+      this.accessToken = response?.accessToken || "";
+
       this.user = {
-        uuid: response.uuid,
-        name: response.name,
-        email: response.email,
-        emailVerified: true,
+        uuid: response?.uuid || "",
+        name: response?.name || "",
+        email: response?.email || "",
+        emailVerified: response?.emailVerified || false,
       };
     },
   },

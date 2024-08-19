@@ -55,11 +55,14 @@ import { api } from "@/api/api";
 
 import CustomButton from "@/components/basic/button/CustomButton.vue";
 import TextInput from "@/components/basic/inputs/TextInput.vue";
+import { useUserStore } from "@/stores/user";
 
 // ** Emits **
 const emits = defineEmits(["change", "register"]);
 
 // ** Data **
+const userStore = useUserStore();
+
 const showPassword = ref<boolean>(false);
 const loading = ref<boolean>(false);
 const registerForm = ref<RegisterForm>({
@@ -77,6 +80,8 @@ const register = async (e: any): Promise<void> => {
   const res = await api("POST", "register", registerForm.value);
 
   if (!res?.error) {
+    userStore.setLoggedInUser(res?.data);
+
     registerForm.value = {
       name: "",
       email: "",

@@ -18,10 +18,10 @@
           @register="handleResults"
         />
 
-        <div v-if="authType === AUTH_TYPE.EMAIL_SENT" class="text-center">
-          <h5 class="mb-1">Email sent!</h5>
-          <p>A verification link has been sent to your email</p>
-        </div>
+        <EmailVerification
+          v-if="authType === AUTH_TYPE.EMAIL_SENT"
+          @verified="handleResults"
+        />
       </div>
     </IonContent>
   </IonModal>
@@ -34,6 +34,7 @@ import { AUTH_TYPE } from "@/content/enums";
 import { IonModal, IonContent } from "@ionic/vue";
 import Login from "@/components/auth/Login.vue";
 import Register from "@/components/auth/Register.vue";
+import EmailVerification from "@/components/auth/EmailVerification.vue";
 
 // ** Props **
 defineProps({
