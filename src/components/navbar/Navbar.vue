@@ -1,7 +1,7 @@
 <template>
   <IonHeader>
     <IonToolbar>
-      <h3 class="ion-text-center">Parking Finder</h3>
+      <h3 class="ion-text-center">Cheap Spotr</h3>
     </IonToolbar>
   </IonHeader>
 </template>

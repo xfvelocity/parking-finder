@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "com.parking.finder",
-  appName: "Parking Finder",
+  appId: "com.cheap.spot",
+  appName: "Cheap Spot",
   webDir: "dist",
 };
 

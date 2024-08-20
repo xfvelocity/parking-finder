@@ -1,6 +1,5 @@
 {
-  "name": "parking-finder",
-  "description": "Parking Finder",
+  "name": "cheap-spot",
   "private": true,
   "version": "1.0.0",
   "type": "module",

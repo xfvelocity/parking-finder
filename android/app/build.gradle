@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.parking.finder"
+    namespace "com.cheap.spot"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.parking.finder"
+        applicationId "com.cheap.spot"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
