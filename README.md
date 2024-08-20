@@ -1,1 +1,1 @@
-# Cheap Spot
+# CheapSpot

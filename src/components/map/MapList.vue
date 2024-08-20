@@ -1,39 +1,29 @@
 <template>
-  <IonModal
-    :is-open="modelValue"
-    :initial-breakpoint="0.09"
-    :breakpoints="[0.09, 0.95]"
-    :backdrop-breakpoint="0.9"
-    :backdrop-dismiss="false"
-  >
-    <IonHeader>
-      <div class="map-list-header py-4">
-        <h4 class="text-center">{{ items.length }} Parking Locations</h4>
-      </div>
-    </IonHeader>
+  <DragModal :is-open="modelValue">
+    <template #header>
+      <h4 class="text-center">{{ items.length }} Parking Locations</h4>
+    </template>
 
-    <IonContent>
-      <div class="map-list p-4 pb-10">
-        <LoadingSpinner v-if="loading" class="my-2" :size="24" />
+    <div class="map-list p-4 pb-10">
+      <LoadingSpinner v-if="loading" class="my-2" :size="24" />
 
-        <template v-else>
-          <div
-            v-for="(item, i) in items"
-            :key="i"
-            class="map-list-item bg-background mb-2 p-3 hover"
-            @click="$emit('selected:item', item)"
-          >
-            <div class="map-list-item-header">
-              <h5 class="mr-1">{{ item.name }}</h5>
-              <Rating v-if="item.rating" :rating="item.rating" :size="8" />
-            </div>
-
-            <p>{{ distanceFromCurrentLocation(item) }}</p>
+      <template v-else>
+        <div
+          v-for="(item, i) in items"
+          :key="i"
+          class="map-list-item bg-background mb-2 p-3 hover"
+          @click="$emit('selected:item', item)"
+        >
+          <div class="map-list-item-header">
+            <h5 class="mr-1">{{ item.name }}</h5>
+            <Rating v-if="item.rating" :rating="item.rating" :size="8" />
           </div>
-        </template>
-      </div>
-    </IonContent>
-  </IonModal>
+
+          <p>{{ distanceFromCurrentLocation(item) }}</p>
+        </div>
+      </template>
+    </div>
+  </DragModal>
 </template>
 
 <script lang="ts" setup>
@@ -43,9 +33,9 @@ import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/user";
 
-import { IonModal, IonContent, IonHeader } from "@ionic/vue";
 import Rating from "@/components/basic/rating/Rating.vue";
 import LoadingSpinner from "@/components/basic/loading/LoadingSpinner.vue";
+import DragModal from "@/components/basic/modal/DragModal.vue";
 
 // ** Props **
 defineProps({
@@ -86,15 +76,11 @@ const distanceFromCurrentLocation = (item: any): string | null => {
 </script>
 
 <style lang="scss" scoped>
+h4 {
+  font-size: 14px;
+}
+
 .map-list {
-  &-header {
-    border-bottom: 1px solid map-get($colours, "border");
-
-    h4 {
-      font-size: 14px;
-    }
-  }
-
   &-item {
     border-radius: 10px;
 

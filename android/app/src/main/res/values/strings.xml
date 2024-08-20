@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Cheap Spot</string>
-    <string name="title_activity_main">Cheap Spot</string>
+    <string name="app_name">CheapSpot</string>
+    <string name="title_activity_main">CheapSpot</string>
     <string name="package_name">com.cheap.spot</string>
     <string name="custom_url_scheme">com.cheap.spot</string>
 </resources>

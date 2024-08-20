@@ -8,6 +8,8 @@
     </IonContent>
 
     <!-- <Footer /> -->
+
+    <Snackbar />
   </IonPage>
 </template>
 
@@ -16,4 +18,5 @@ import { IonPage, IonContent } from "@ionic/vue";
 
 import Navbar from "@/components/navbar/Navbar.vue";
 import Footer from "@/components/footer/Footer.vue";
+import Snackbar from "@/components/basic/snackbar/Snackbar.vue";
 </script>
