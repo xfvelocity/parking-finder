@@ -17,7 +17,7 @@ defineProps({
   },
   height: {
     type: Number,
-    default: 1,
+    default: 3,
   },
   progressColour: {
     type: String,

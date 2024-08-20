@@ -1,5 +1,5 @@
 <template>
-  <div class="map-hours py-1 px-1">
+  <div class="map-hours py-1 px-2">
     <div
       v-for="(hour, i) in hourOptions"
       :key="i"
@@ -39,13 +39,9 @@ defineProps({
 
 <style lang="scss" scoped>
 .map-hours {
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  width: 100%;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 3px;
   overflow-x: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -55,7 +51,7 @@ defineProps({
     align-items: center;
     padding: 5px 15px;
     border: 1px solid map-get($colours, "border");
-    color: rgb(140, 140, 140);
+    color: map-get($colours, "grey");
     border-radius: 7px;
     font-size: 10px;
     white-space: nowrap;

@@ -1,38 +1,36 @@
 <template>
-  <div class="map-header bg-background safe-area-top">
-    <div class="map-header-content">
+  <LoadingBar v-if="loading" />
+
+  <div class="map-header">
+    <Icon
+      v-if="isLocationOpen"
+      class="map-header-icon hover mb-2"
+      src="chevron-left"
+      fill="grey"
+      :size="14"
+      @click="emits('toggle:modal', false)"
+    />
+
+    <TextInput
+      v-model="locationSearch"
+      id="locationSearch"
+      prepend-icon="search"
+      placeholder="Search for a location"
+      select-on-focus
+      close-button
+      @focus="emits('toggle:modal', true)"
+      @update:clear="clearInput"
+      @update:modelValue="onLocationSearch"
+    />
+
+    <div class="map-header-location">
       <Icon
-        v-if="isLocationOpen"
-        class="map-header-icon hover mb-2"
-        src="chevron-left"
-        fill="grey"
-        :size="14"
-        @click="emits('toggle:modal', false)"
+        src="location-arrow"
+        :size="12"
+        :fill="usingCurrentLocation ? 'primary' : 'grey-darken-1'"
+        @click="getCurrentLocation"
       />
-
-      <TextInput
-        v-model="locationSearch"
-        id="locationSearch"
-        prepend-icon="search"
-        placeholder="Search for a location"
-        select-on-focus
-        close-button
-        @focus="emits('toggle:modal', true)"
-        @update:clear="clearInput"
-        @update:modelValue="onLocationSearch"
-      />
-
-      <div class="map-header-location">
-        <Icon
-          src="location-arrow"
-          :size="12"
-          :fill="usingCurrentLocation ? 'primary' : 'grey-darken-1'"
-          @click="getCurrentLocation"
-        />
-      </div>
     </div>
-
-    <LoadingBar v-if="loading" />
   </div>
 </template>
 
@@ -117,14 +115,9 @@ watch(location, () => {
 
 <style lang="scss" scoped>
 .map-header {
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.05);
-  z-index: 10;
-
-  &-content {
-    padding: 15px;
-    display: flex;
-    align-items: flex-end;
-  }
+  padding: 10px 10px 2px 10px;
+  display: flex;
+  align-items: flex-end;
 
   &-location {
     background: white;

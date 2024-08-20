@@ -1,19 +1,22 @@
 <template>
   <PageLayout>
-    <template #header>
-      <MapHeader
-        :is-location-open="isLocationOpen"
-        @toggle:modal="isLocationOpen = $event"
-        @location:search="updateLocation"
-        @set:location="selectLocation"
-      />
-    </template>
+    <template #header> </template>
 
     <div class="home">
-      <MapHours
-        :selected-hour="filters.hours"
-        @selected:hour="filters.hours = $event"
-      />
+      <div class="home-header safe-area-top">
+        <MapHeader
+          :is-location-open="isLocationOpen"
+          @toggle:modal="isLocationOpen = $event"
+          @location:search="updateLocation"
+          @set:location="selectLocation"
+        />
+
+        <MapHours
+          v-if="!isLocationOpen"
+          :selected-hour="filters.hours"
+          @selected:hour="filters.hours = $event"
+        />
+      </div>
 
       <Map
         :is-location-open="isLocationOpen"
@@ -100,6 +103,12 @@ const selectLocation = (result: MapLocationResult): void => {
   }
 
   &-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 3;
+
     &-results {
       width: 100%;
       margin-top: 5px;
