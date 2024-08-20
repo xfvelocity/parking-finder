@@ -1,6 +1,6 @@
 <template>
   <div class="map-container">
-    <div ref="hereMap" class="map" />
+    <div ref="hereMap" class="map" tabindex="-1" />
 
     <MapSelected
       :selected-parking="selectedParking"

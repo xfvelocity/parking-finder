@@ -1,7 +1,5 @@
 <template>
   <PageLayout>
-    <template #header> </template>
-
     <div class="home">
       <LoadingBar v-if="loading" />
 

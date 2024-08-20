@@ -1,9 +1,8 @@
 <template>
   <IonPage>
-    <Navbar v-if="!$slots.header" />
-    <slot v-else name="header" />
+    <slot name="header" />
 
-    <IonContent>
+    <IonContent :force-overscroll="false">
       <slot />
     </IonContent>
 
@@ -16,7 +15,6 @@
 <script setup lang="ts">
 import { IonPage, IonContent } from "@ionic/vue";
 
-import Navbar from "@/components/navbar/Navbar.vue";
 import Footer from "@/components/footer/Footer.vue";
 import Snackbar from "@/components/basic/snackbar/Snackbar.vue";
 </script>

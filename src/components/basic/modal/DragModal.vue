@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      v-if="backdropBreakpoint === currentBreakpoint"
+      v-if="backdropBreakpoint === parseFloat(currentBreakpoint.toFixed(1))"
       class="drag-modal-backdrop"
       @click="handleBackdropClick"
     />
