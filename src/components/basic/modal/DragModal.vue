@@ -1,16 +1,24 @@
 <template>
-  <div v-show="isOpen" class="drag-modal" ref="dragModal">
-    <IonHeader ref="dragModalHeader">
-      <div class="drag-modal-icon mt-2" />
+  <div>
+    <div
+      v-if="backdropBreakpoint === currentBreakpoint"
+      class="drag-modal-backdrop"
+      @click="handleBackdropClick"
+    />
 
-      <div v-if="$slots.header" class="drag-modal-header py-4">
-        <slot name="header" />
-      </div>
-    </IonHeader>
+    <div v-show="isOpen" class="drag-modal" ref="dragModal">
+      <IonHeader ref="dragModalHeader">
+        <div class="drag-modal-icon mt-2" />
 
-    <IonContent>
-      <slot />
-    </IonContent>
+        <div v-if="$slots.header" class="drag-modal-header py-4">
+          <slot name="header" />
+        </div>
+      </IonHeader>
+
+      <IonContent>
+        <slot />
+      </IonContent>
+    </div>
   </div>
 </template>
 
@@ -46,6 +54,10 @@ const props = defineProps({
   fixedWhenFull: {
     type: Boolean,
     default: false,
+  },
+  backdropBreakpoint: {
+    type: Number,
+    default: undefined,
   },
 });
 
@@ -102,6 +114,14 @@ const handleMouseDown = (event: MouseEvent | TouchEvent): void => {
     resize,
     false
   );
+};
+
+const handleBackdropClick = (): void => {
+  if (props.breakpoints.includes(0)) {
+    emits("close");
+  } else {
+    snapToBreakpoint(props.initialBreakpoint);
+  }
 };
 
 const addEventListeners = (): void => {
@@ -233,6 +253,16 @@ watch(
 
   &-header {
     border-bottom: 1px solid map-get($colours, "border");
+  }
+
+  &-backdrop {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 9;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
   }
 
   &-icon {
