@@ -3,6 +3,8 @@
     <template #header> </template>
 
     <div class="home">
+      <LoadingBar v-if="loading" />
+
       <div class="home-header safe-area-top">
         <MapHeader
           :is-location-open="isLocationOpen"
@@ -59,11 +61,12 @@ import MapHeader from "@/components/map/MapHeader.vue";
 import Icon from "@/components/basic/icon/Icon.vue";
 import MapHours from "@/components/map/MapHours.vue";
 import SlideUpModal from "@/components/basic/modal/SlideUpModal.vue";
+import LoadingBar from "@/components/basic/loading/LoadingBar.vue";
 
 // ** Data **
 const mapStore = useMapStore();
 
-const { filters } = storeToRefs(mapStore);
+const { filters, loading } = storeToRefs(mapStore);
 
 const isLocationOpen = ref<boolean>(false);
 const updatedLocation = ref<MapLocation>({ ...mapStore.location });

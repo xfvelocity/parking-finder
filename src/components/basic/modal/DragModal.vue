@@ -250,6 +250,7 @@ watch(
   width: 100%;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
+  box-shadow: 0 4px 4px 4px rgba(0, 0, 0, 0.2);
 
   &-header {
     border-bottom: 1px solid map-get($colours, "border");

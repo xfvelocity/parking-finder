@@ -1,6 +1,4 @@
 <template>
-  <LoadingBar v-if="loading" />
-
   <div class="map-header">
     <Icon
       v-if="isLocationOpen"
@@ -26,7 +24,7 @@
     <div class="map-header-location">
       <Icon
         src="location-arrow"
-        :size="12"
+        :size="14"
         :fill="usingCurrentLocation ? 'primary' : 'grey-darken-1'"
         @click="getCurrentLocation"
       />
@@ -45,7 +43,6 @@ import { useUserStore } from "@/stores/user";
 
 import Icon from "@/components/basic/icon/Icon.vue";
 import TextInput from "@/components/basic/inputs/TextInput.vue";
-import LoadingBar from "@/components/basic/loading/LoadingBar.vue";
 
 // ** Props **
 defineProps({
@@ -62,7 +59,7 @@ const emits = defineEmits(["toggle:modal", "location:search", "set:location"]);
 const mapStore = useMapStore();
 const userStore = useUserStore();
 
-const { location, loading, usingCurrentLocation } = storeToRefs(mapStore);
+const { location, usingCurrentLocation } = storeToRefs(mapStore);
 
 const locationSearch = ref<string>(location.value.name);
 
@@ -115,17 +112,20 @@ watch(location, () => {
 
 <style lang="scss" scoped>
 .map-header {
-  padding: 10px 10px 2px 10px;
+  padding: 10px 10px 5px 10px;
   display: flex;
   align-items: flex-end;
 
   &-location {
     background: white;
     border-radius: 10px;
-    height: 35px;
-    min-width: 35px;
+    height: 40px;
+    min-width: 40px;
     padding-right: 1px;
     border: 1px solid map-get($colours, "border");
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.2),
+      0 -1px 0px rgba(0, 0, 0, 0.02);
 
     display: flex;
     align-items: center;
@@ -139,7 +139,11 @@ watch(location, () => {
 
   .input {
     width: 100%;
-    margin-right: 5px;
+    margin-right: 10px;
+    height: 40px;
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.1),
+      0 -1px 0px rgba(0, 0, 0, 0.01);
   }
 }
 </style>

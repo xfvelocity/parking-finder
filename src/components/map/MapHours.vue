@@ -5,7 +5,7 @@
       :key="i"
       class="map-hours-item bg-white"
       :class="{
-        'text-primary border-primary': selectedHour === hour.value,
+        'text-primary border-primary text-fw-600': selectedHour === hour.value,
       }"
       @click="
         $emit('selected:hour', selectedHour === hour.value ? 0 : hour.value)
@@ -13,8 +13,8 @@
     >
       <Icon
         class="mr-1"
-        src="time"
-        :fill="selectedHour === hour.value ? 'primary' : 'grey'"
+        src="clock"
+        :fill="selectedHour === hour.value ? 'primary' : 'grey-darken-1'"
         :size="10"
       />
 
@@ -41,7 +41,7 @@ defineProps({
 .map-hours {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 5px;
   overflow-x: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -49,12 +49,15 @@ defineProps({
   &-item {
     display: flex;
     align-items: center;
-    padding: 5px 15px;
+    padding: 6px 15px;
     border: 1px solid map-get($colours, "border");
-    color: map-get($colours, "grey");
-    border-radius: 7px;
+    border-radius: 20px;
     font-size: 10px;
     white-space: nowrap;
+    color: map-get($colours, "grey-darken-1");
+    box-shadow:
+      0 1px 2px rgba(60, 64, 67, 0.25),
+      0 1px 3px 1px rgba(60, 64, 67, 0.1);
   }
 }
 </style>
