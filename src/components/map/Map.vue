@@ -116,6 +116,8 @@ const addMarker = (lat: number, lng: number, location: Parking): void => {
 
     if (location.type === "ncp") {
       src = getImageUrl("icons/ncp.svg");
+    } else if (location.prices.length) {
+      src = getImageUrl("icons/parking-price.svg");
     } else {
       src = getImageUrl("icons/parking.svg");
     }
