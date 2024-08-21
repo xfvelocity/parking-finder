@@ -9,7 +9,7 @@
   >
     <IonHeader>
       <div class="map-selected-header pt-5 pb-3">
-        <h4>{{ selectedParking?.name }}</h4>
+        <h3>{{ selectedParking?.name }}</h3>
 
         <Rating
           v-if="selectedParking?.rating"
@@ -22,7 +22,7 @@
     <IonContent v-if="selectedParking">
       <div class="map-selected-content p-4">
         <div>
-          <h5 class="mb-2">Prices</h5>
+          <h4 class="mb-2">Prices</h4>
 
           <ul v-if="selectedParking.prices.length">
             <li
@@ -52,7 +52,7 @@
         <template v-if="formattedPrices.app.length">
           <hr class="divider my-4" />
 
-          <h5 class="mb-2">App Prices</h5>
+          <h4 class="mb-2">App Prices</h4>
 
           <ul>
             <li
@@ -79,7 +79,7 @@
           <hr class="divider my-4" />
 
           <div>
-            <h5 class="mb-2">Info</h5>
+            <h4 class="mb-2">Info</h4>
 
             <p v-if="selectedParking.info.spaces" class="flex-between">
               Spaces: <span>{{ selectedParking.info.spaces }}</span>
@@ -95,7 +95,7 @@
           <hr class="divider my-4" />
 
           <div>
-            <h5 class="mb-2">Opening hours</h5>
+            <h4 class="mb-2">Opening hours</h4>
 
             <ul v-if="hasValidHours">
               <li
@@ -123,7 +123,7 @@
     </IonContent>
 
     <IonFooter v-if="!addingPrice">
-      <div class="map-selected-button px-4 pt-3 pb-5">
+      <div class="map-selected-button p-4 safe-area-bottom">
         <CustomButton icon="directions" @click="openDirections">
           Directions
         </CustomButton>
@@ -251,14 +251,9 @@ watch(
     border-top: 1px solid map-get($colours, "border");
   }
 
-  h4 {
-    font-size: 14px;
+  h3 {
     grid-column-start: 2;
     text-align: center;
-  }
-
-  h5 {
-    font-size: 14px;
   }
 
   &-price-add {

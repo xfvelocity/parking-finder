@@ -61,9 +61,9 @@ defineProps({
 
 <style lang="scss" scoped>
 .button {
-  height: 35px;
+  height: 40px;
   width: 100%;
-  border-radius: 5px;
+  border-radius: 10px;
   font-weight: 600;
   display: flex;
   align-items: center;

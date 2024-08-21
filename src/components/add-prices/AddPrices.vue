@@ -9,9 +9,7 @@
         <Select v-model="price.hours" :options="hourOptions" />
 
         <TextInput v-model="price.price" select-on-focus :clear-button="false">
-          <template #prepend>
-            <span class="currency">£</span>
-          </template>
+          <template #prepend> £ </template>
         </TextInput>
       </div>
     </div>
@@ -95,10 +93,6 @@ const submitPrices = async (): Promise<void> => {
 </script>
 
 <style lang="scss" scoped>
-.currency {
-  font-size: 10px;
-}
-
 .add-location {
   &-content {
     height: 100%;

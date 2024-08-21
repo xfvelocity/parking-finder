@@ -279,7 +279,7 @@ watch(
       font-size: 12px;
 
       &:hover {
-        background: rgb(238, 238, 238);
+        background: map-get($colours, "grey-lighten-5");
       }
 
       &:not(:last-child) {

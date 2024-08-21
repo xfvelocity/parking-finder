@@ -55,8 +55,14 @@ ion-modal {
   }
 }
 
-.safe-area-top {
-  padding-top: var(--ion-safe-area-top) !important;
+.safe-area {
+  &-top {
+    padding-top: var(--ion-safe-area-top);
+  }
+
+  &-bottom {
+    padding-bottom: var(--ion-safe-area-bottom);
+  }
 }
 
 .hover {
@@ -77,9 +83,32 @@ ion-modal {
 h1,
 h2,
 h3,
+h4 {
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 18px;
+}
+
+h2 {
+  font-size: 16px;
+}
+
+h3 {
+  font-size: 14px;
+}
+
+h4 {
+  font-size: 12px;
+}
+
+h1,
+h2,
+h3,
 h4,
-h5,
-p {
+p,
+li {
   margin: 0;
   color: map-get($colours, "grey-darken-2");
 }

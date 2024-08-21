@@ -1,6 +1,6 @@
 <template>
   <div class="email-verification text-center">
-    <h5 class="mb-1">Email sent!</h5>
+    <h2 class="mb-1">Email sent!</h2>
     <p>A verification link has been sent to your email</p>
 
     <input

@@ -1,6 +1,6 @@
 <template>
   <div class="login text-center p-4">
-    <h5>Login</h5>
+    <h2>Login</h2>
     <p class="login-desc mt-1 mb-3">
       Please login to your account to add prices to a parking location.
     </p>

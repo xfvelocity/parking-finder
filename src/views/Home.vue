@@ -48,7 +48,7 @@
               <Icon class="mr-2" src="location-pin" fill="grey" :size="22" />
 
               <div>
-                <h5>{{ result.title }}</h5>
+                <h4>{{ result.title }}</h4>
                 <p>{{ result.desc }}</p>
               </div>
             </li>
@@ -126,7 +126,7 @@ const selectLocation = (result: MapLocationResult): void => {
     bottom: 0;
     width: 100%;
     height: calc(100vh - 54px);
-    background-color: white;
+    background: white;
     animation: extendHeight 0.5s forwards;
   }
 
@@ -152,26 +152,16 @@ const selectLocation = (result: MapLocationResult): void => {
         list-style: none;
 
         li {
-          font-size: 10px;
-          color: rgb(100, 100, 100);
           padding: 15px;
           display: flex;
           align-items: center;
-
-          h5 {
-            font-size: 12px;
-          }
-
-          p {
-            font-size: 10px;
-          }
 
           &:last-child {
             padding-bottom: 10px;
           }
 
           &:not(:last-child) {
-            border-bottom: 1px solid #e9eaf2;
+            border-bottom: 1px solid map-get($colours, "border");
           }
         }
       }

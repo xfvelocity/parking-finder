@@ -15,7 +15,7 @@
           @click="$emit('selected:item', item)"
         >
           <div class="map-list-item-header">
-            <h5 class="mr-1">{{ item.name }}</h5>
+            <h4 class="mr-1">{{ item.name }}</h4>
             <Rating v-if="item.rating" :rating="item.rating" :size="8" />
           </div>
 
@@ -76,10 +76,6 @@ const distanceFromCurrentLocation = (item: any): string | null => {
 </script>
 
 <style lang="scss" scoped>
-h4 {
-  font-size: 14px;
-}
-
 .map-list {
   &-item {
     border-radius: 10px;
@@ -87,10 +83,6 @@ h4 {
     &-header {
       display: flex;
       align-items: center;
-    }
-
-    h5 {
-      font-size: 12px;
     }
   }
 }

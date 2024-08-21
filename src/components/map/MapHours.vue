@@ -18,7 +18,7 @@
         :size="10"
       />
 
-      {{ hour.text }}
+      <p>{{ hour.text }}</p>
     </div>
   </div>
 </template>
@@ -52,12 +52,15 @@ defineProps({
     padding: 6px 15px;
     border: 1px solid map-get($colours, "border");
     border-radius: 20px;
-    font-size: 10px;
     white-space: nowrap;
     color: map-get($colours, "grey-darken-1");
     box-shadow:
       0 1px 2px rgba(60, 64, 67, 0.25),
       0 1px 3px 1px rgba(60, 64, 67, 0.1);
+
+    p {
+      font-size: 10px;
+    }
   }
 }
 </style>

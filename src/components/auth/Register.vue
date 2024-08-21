@@ -1,6 +1,6 @@
 <template>
   <div class="register text-center p-4">
-    <h5>Register</h5>
+    <h2>Register</h2>
     <p class="register-desc mt-1 mb-3">
       Please register an account to add prices to a parking location.
     </p>
