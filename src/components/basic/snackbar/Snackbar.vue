@@ -2,11 +2,11 @@
   <div
     v-if="isSnackbarOpen"
     class="snackbar p-2"
-    :class="`bg-${snackbar.background}`"
+    :class="` bg-${snackbar.background}`"
   >
     <Icon v-if="snackbar.icon" class="mr-2" :src="snackbar.icon" fill="white" />
 
-    <p>{{ snackbar.text }}</p>
+    <p class="text-white">{{ snackbar.text }}</p>
   </div>
 </template>
 

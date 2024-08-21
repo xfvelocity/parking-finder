@@ -6,7 +6,7 @@ export interface SelectOption {
 export interface ConfigSnackbar {
   text: string;
   background: string;
-  icon: string;
+  icon?: string;
 }
 
 export interface ConfigStore {

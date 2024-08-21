@@ -1,3 +1,4 @@
+import { useConfigStore } from "@/stores/config";
 import { useUserStore } from "@/stores/user";
 import axios from "axios";
 
@@ -9,6 +10,8 @@ export const api = async <T = any>(
 ): Promise<T> => {
   let res: any;
   let config: any = {};
+
+  const configStore = useConfigStore();
 
   try {
     if (auth) {
@@ -40,6 +43,12 @@ export const api = async <T = any>(
     }
   } catch (e: any) {
     console.error(e);
+
+    configStore.snackbar = {
+      text: e?.response?.data || e,
+      icon: "exclamation",
+      background: "red-darken-2",
+    };
 
     res = { error: e?.response?.data || e };
   }

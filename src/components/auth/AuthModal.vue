@@ -63,6 +63,8 @@ const handleResults = (result: any): void => {
 
 <style lang="scss" scoped>
 .auth-modal {
+  --height: auto;
+
   &-content {
     width: 300px;
   }
