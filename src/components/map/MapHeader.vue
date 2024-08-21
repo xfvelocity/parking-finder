@@ -15,8 +15,8 @@
       placeholder="Search for a location.."
       clear-button
       @focus="emits('toggle:modal', true)"
-      @update:clear="location.name = ''"
-      @update:modelValue="onLocationSearch"
+      @update:clear="clearInput"
+      @update:modelValue="emits('location:search', $event)"
     />
 
     <div class="map-header-location">
@@ -34,8 +34,7 @@
 import { ref, watch } from "vue";
 import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
-import { searchLocation, searchName } from "@/composables/here";
-import { debounce } from "@/composables/generic";
+import { searchName } from "@/composables/here";
 import { Geolocation } from "@capacitor/geolocation";
 import { useUserStore } from "@/stores/user";
 
@@ -87,13 +86,18 @@ const getCurrentLocation = async () => {
   }
 };
 
-const onLocationSearch = debounce(async (value: string): Promise<void> => {
-  if (value.length > 2) {
-    const results = await searchLocation(value);
+const clearInput = (): void => {
+  location.value.name = "";
+  emits("location:search", "");
 
-    emits("location:search", results);
+  if (props.isLocationOpen) {
+    const locationSearch = document.querySelector(
+      "#locationSearch input"
+    ) as HTMLInputElement;
+
+    locationSearch?.focus();
   }
-}, 500);
+};
 
 watch(location, () => {
   locationSearch.value = location.value.name;
