@@ -42,7 +42,7 @@
       v-if="modelValue && clearButton"
       class="mr-1"
       src="close"
-      :size="10"
+      :size="12"
       @click="clearInput"
     />
 

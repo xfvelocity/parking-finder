@@ -161,12 +161,9 @@ const mapMoved = async (firstLoad: boolean = false): Promise<void> => {
         bounds.getSouthWest().lng()
       );
 
-      mapStore.location = {
-        name: await searchName(mapCoords.lat(), mapCoords.lng()),
-        position: {
-          lat: mapCoords.lat(),
-          lng: mapCoords.lng(),
-        },
+      mapStore.location.position = {
+        lat: mapCoords.lat(),
+        lng: mapCoords.lng(),
       };
 
       await refreshMarkers();

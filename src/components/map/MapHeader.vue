@@ -4,20 +4,18 @@
       v-if="isLocationOpen"
       class="map-header-icon hover mb-2"
       src="chevron-left"
-      fill="grey"
-      :size="14"
+      fill="grey-darken-2"
+      :size="16"
       @click="emits('toggle:modal', false)"
     />
 
     <TextInput
       v-model="locationSearch"
       id="locationSearch"
-      prepend-icon="search"
-      placeholder="Search for a location"
-      select-on-focus
-      close-button
+      placeholder="Search for a location.."
+      clear-button
       @focus="emits('toggle:modal', true)"
-      @update:clear="clearInput"
+      @update:clear="location.name = ''"
       @update:modelValue="onLocationSearch"
     />
 
@@ -45,7 +43,7 @@ import Icon from "@/components/basic/icon/Icon.vue";
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 
 // ** Props **
-defineProps({
+const props = defineProps({
   isLocationOpen: {
     type: Boolean,
     default: false,
@@ -89,20 +87,12 @@ const getCurrentLocation = async () => {
   }
 };
 
-const clearInput = (): void => {
-  emits("toggle:modal", true);
-
-  const locationSearch = document.querySelector(
-    "#locationSearch input"
-  ) as HTMLInputElement;
-
-  locationSearch?.focus();
-};
-
 const onLocationSearch = debounce(async (value: string): Promise<void> => {
-  const results = await searchLocation(value);
+  if (value.length > 2) {
+    const results = await searchLocation(value);
 
-  emits("location:search", results);
+    emits("location:search", results);
+  }
 }, 500);
 
 watch(location, () => {
@@ -124,8 +114,8 @@ watch(location, () => {
     padding-right: 1px;
     border: 1px solid map-get($colours, "border");
     box-shadow:
-      0 2px 4px rgba(0, 0, 0, 0.2),
-      0 -1px 0px rgba(0, 0, 0, 0.02);
+      0 2px 4px rgba(0, 0, 0, 0.1),
+      0 -1px 0px rgba(0, 0, 0, 0.01);
 
     display: flex;
     align-items: center;

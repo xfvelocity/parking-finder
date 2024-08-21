@@ -23,25 +23,27 @@
         :location="updatedLocation.position"
       />
 
-      <SlideUpModal v-model="isLocationOpen" height="100%">
-        <div class="home-header-results">
-          <ul>
-            <li
-              v-for="(result, i) in mapResults"
-              :key="i"
-              class="hover"
-              @click="selectLocation(result)"
-            >
-              <Icon class="mr-1" src="location-pin" :size="18" />
+      <div v-if="isLocationOpen" class="home-header-results p-2 pt-10">
+        <p v-if="!mapResults.length" class="mt-3 text-center px-8">
+          No locations found, please update your search and try again.
+        </p>
 
-              <div>
-                <h5>{{ result.title }}</h5>
-                <p>{{ result.desc }}</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </SlideUpModal>
+        <ul>
+          <li
+            v-for="(result, i) in mapResults"
+            :key="i"
+            class="hover"
+            @click="selectLocation(result)"
+          >
+            <Icon class="mr-2" src="location-pin" fill="grey" :size="22" />
+
+            <div>
+              <h5>{{ result.title }}</h5>
+              <p>{{ result.desc }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </PageLayout>
 </template>
@@ -111,8 +113,13 @@ const selectLocation = (result: MapLocationResult): void => {
     z-index: 3;
 
     &-results {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
       width: 100%;
-      margin-top: 5px;
+      z-index: 2;
+      background: white;
 
       ul {
         padding: 0;
@@ -126,7 +133,10 @@ const selectLocation = (result: MapLocationResult): void => {
           display: flex;
           align-items: center;
 
-          h5,
+          h5 {
+            font-size: 12px;
+          }
+
           p {
             font-size: 10px;
           }

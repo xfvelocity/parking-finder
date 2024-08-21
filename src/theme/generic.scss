@@ -81,13 +81,14 @@ h4,
 h5,
 p {
   margin: 0;
+  color: map-get($colours, "grey-darken-2");
 }
 
 p,
 label,
 li,
 button {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .divider {
