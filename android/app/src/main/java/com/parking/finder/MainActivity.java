@@ -1,4 +1,4 @@
-package com.cheap.spot;
+package com.parking.finder;
 
 import com.getcapacitor.BridgeActivity;
 

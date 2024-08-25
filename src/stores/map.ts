@@ -18,7 +18,10 @@ export const useMapStore = defineStore("map", {
       right_corner_longitude: 0,
     },
     filters: {
-      hours: 0,
+      dateTime: {
+        from: "",
+        to: "",
+      },
     },
     mapZoom: 13,
     loading: false,

@@ -18,7 +18,7 @@
         :location="updatedLocation.position"
       />
 
-      <TimePicker v-model="timeSelectOpen" />
+      <TimePicker v-model="timeSelectOpen" @search="searchWithDate" />
 
       <div class="home-location">
         <Icon
@@ -121,6 +121,13 @@ const getCurrentLocation = async () => {
       },
     });
   }
+};
+
+const searchWithDate = (from: string, to: string): void => {
+  mapStore.filters.dateTime = {
+    from,
+    to,
+  };
 };
 
 const updateLocation = debounce(async (term: string): Promise<void> => {

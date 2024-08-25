@@ -15,7 +15,12 @@ export interface MapLocation {
 }
 
 export interface MapFilters {
-  hours: number;
+  dateTime: MapFiltersDateTime;
+}
+
+export interface MapFiltersDateTime {
+  from: string;
+  to: string;
 }
 
 export interface MapBounds {

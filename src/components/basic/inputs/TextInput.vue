@@ -32,7 +32,7 @@
 
     <Icon
       v-if="modelValue && clearButton"
-      class="mr-1"
+      class="mr-2"
       src="close"
       :size="12"
       @click="clearInput"

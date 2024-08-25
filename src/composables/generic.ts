@@ -45,6 +45,30 @@ export const calculateArea = (
   return Math.ceil(Math.sqrt(area / Math.PI));
 };
 
+export const getCurrentTime = (addHour?: boolean): string => {
+  const now = new Date();
+
+  const timezoneOffset = now.getTimezoneOffset() * 60000;
+
+  const localTime = new Date(now.getTime() - timezoneOffset);
+
+  if (
+    localTime.getMinutes() > 0 ||
+    localTime.getSeconds() > 0 ||
+    localTime.getMilliseconds() > 0
+  ) {
+    localTime.setHours(localTime.getHours() + 1);
+  }
+
+  localTime.setMinutes(0, 0, 0);
+
+  if (addHour) {
+    localTime.setHours(localTime.getHours() + 1);
+  }
+
+  return localTime.toISOString();
+};
+
 export const hourOptions: SelectOption[] = [
   { text: "1 hour", value: 1 },
   { text: "2 hours", value: 2 },
