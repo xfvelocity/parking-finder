@@ -37,11 +37,9 @@
       :value="fromDate"
       presentation="date-time"
       mode="md"
-      locale="en-GB"
       :min="getCurrentTime()"
-      hour-cycle="h12"
       prefer-wheel
-      minuteValues=""
+      minuteValues="0"
       @ion-change="fromDate = $event.detail.value?.toString() || ''"
     />
 
