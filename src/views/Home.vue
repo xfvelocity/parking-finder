@@ -9,12 +9,7 @@
           @toggle:modal="isLocationOpen = $event"
           @location:search="updateLocation"
           @set:location="selectLocation"
-        />
-
-        <MapHours
-          v-if="!isLocationOpen"
-          :selected-hour="filters.hours"
-          @selected:hour="filters.hours = $event"
+          @toggle:time-select="timeSelectOpen = true"
         />
       </div>
 
@@ -23,13 +18,24 @@
         :location="updatedLocation.position"
       />
 
+      <TimePicker v-model="timeSelectOpen" />
+
+      <div class="home-location">
+        <Icon
+          src="location-arrow"
+          :size="14"
+          :fill="usingCurrentLocation ? 'primary' : 'grey-darken-1'"
+          @click="getCurrentLocation"
+        />
+      </div>
+
       <div v-if="isLocationOpen" class="home-header-results">
         <LoadingBar v-if="resultsLoading" />
 
         <div class="p-2 safe-area-top mt-10">
           <p
             v-if="!mapResults.length && !resultsLoading"
-            class="pt-3 text-center px-8"
+            class="text-center px-8"
           >
             {{
               searchTerm.length > 2
@@ -67,26 +73,56 @@ import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
 import { debounce } from "@/composables/generic";
 import { searchLocation } from "@/composables/here";
+import { Geolocation } from "@capacitor/geolocation";
+import { useUserStore } from "@/stores/user";
+import { searchName } from "@/composables/here";
 
 import PageLayout from "@/components/page-layout/PageLayout.vue";
 import Map from "@/components/map/Map.vue";
 import MapHeader from "@/components/map/MapHeader.vue";
 import Icon from "@/components/basic/icon/Icon.vue";
-import MapHours from "@/components/map/MapHours.vue";
 import LoadingBar from "@/components/basic/loading/LoadingBar.vue";
+import TimePicker from "@/components/basic/time-picker/TimePicker.vue";
 
 // ** Data **
+const userStore = useUserStore();
 const mapStore = useMapStore();
 
-const { filters, loading } = storeToRefs(mapStore);
+const { loading, usingCurrentLocation } = storeToRefs(mapStore);
 
 const isLocationOpen = ref<boolean>(false);
 const updatedLocation = ref<MapLocation>({ ...mapStore.location });
 const mapResults = ref<MapLocationResult[]>([]);
 const searchTerm = ref<string>("");
 const resultsLoading = ref<boolean>(false);
+const timeSelectOpen = ref<boolean>(false);
 
 // ** Methods **
+const getCurrentLocation = async () => {
+  const coordinates = await Geolocation.getCurrentPosition();
+
+  const { latitude, longitude } = coordinates.coords;
+  const name = await searchName(latitude, longitude);
+
+  userStore.currentLocation = {
+    name,
+    position: {
+      lat: latitude,
+      lng: longitude,
+    },
+  };
+
+  if (!usingCurrentLocation.value) {
+    selectLocation({
+      title: name,
+      position: {
+        lat: latitude,
+        lng: longitude,
+      },
+    });
+  }
+};
+
 const updateLocation = debounce(async (term: string): Promise<void> => {
   searchTerm.value = term;
 
@@ -119,6 +155,24 @@ const selectLocation = (result: MapLocationResult): void => {
 .home {
   position: relative;
   height: 100%;
+
+  &-location {
+    position: absolute;
+    z-index: 2;
+    background: white;
+    border-radius: 100%;
+    bottom: 100px;
+    right: 10px;
+    height: 40px;
+    min-width: 40px;
+    padding-right: 2px;
+    border: 1px solid map-get($colours, "border");
+    box-shadow: $box-shadow;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   &-location-modal {
     position: absolute;

@@ -1,7 +1,7 @@
 <template>
-  <DragModal :is-open="modelValue" :backdrop-breakpoint="0.9">
+  <DragModal :model-value="modelValue" :backdrop-breakpoint="0.9">
     <template #header>
-      <h4 class="text-center">{{ items.length }} Parking Locations</h4>
+      <h4>{{ items.length }} Parking Locations</h4>
     </template>
 
     <div class="map-list p-4 pb-10">

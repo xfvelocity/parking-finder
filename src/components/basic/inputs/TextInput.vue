@@ -31,19 +31,19 @@
     />
 
     <Icon
-      v-if="appendIcon"
-      class="hover mr-1"
-      :src="appendIcon"
-      :fill="appendIconColour"
-      @click="$emit('click:append')"
-    />
-
-    <Icon
       v-if="modelValue && clearButton"
       class="mr-1"
       src="close"
       :size="12"
       @click="clearInput"
+    />
+
+    <Icon
+      v-if="appendIcon"
+      class="hover mr-1"
+      :src="appendIcon"
+      :fill="appendIconColour"
+      @click="$emit('click:append')"
     />
 
     <label v-if="label">
@@ -86,7 +86,7 @@ const props = defineProps({
   },
   prependIconColour: {
     type: String,
-    default: "",
+    default: "grey-darken-1",
   },
   appendIcon: {
     type: String,
@@ -94,7 +94,7 @@ const props = defineProps({
   },
   appendIconColour: {
     type: String,
-    default: "",
+    default: "grey-darken-1",
   },
   clearButton: {
     type: Boolean,

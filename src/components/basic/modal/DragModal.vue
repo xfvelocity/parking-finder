@@ -1,25 +1,26 @@
 <template>
-  <div>
-    <div
-      v-if="backdropBreakpoint === parseFloat(currentBreakpoint.toFixed(1))"
-      class="drag-modal-backdrop"
-      @click="handleBackdropClick"
-    />
+  <div v-show="modelValue" class="drag-modal" ref="dragModal">
+    <IonHeader ref="dragModalHeader">
+      <div class="drag-modal-icon mt-2" />
 
-    <div v-show="isOpen" class="drag-modal" ref="dragModal">
-      <IonHeader ref="dragModalHeader">
-        <div class="drag-modal-icon mt-2" />
+      <div v-if="$slots.header" class="drag-modal-header text-center pt-5 pb-3">
+        <slot name="header" />
+      </div>
+    </IonHeader>
 
-        <div v-if="$slots.header" class="drag-modal-header py-4">
-          <slot name="header" />
-        </div>
-      </IonHeader>
-
-      <IonContent>
-        <slot />
-      </IonContent>
-    </div>
+    <IonContent>
+      <slot />
+    </IonContent>
   </div>
+
+  <div
+    v-if="
+      backdropBreakpoint === parseFloat(currentBreakpoint.toFixed(1)) &&
+      modelValue
+    "
+    class="drag-modal-backdrop"
+    @click="handleBackdropClick"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -31,7 +32,7 @@ import { IonContent, IonHeader } from "@ionic/vue";
 
 // ** Props **
 const props = defineProps({
-  isOpen: {
+  modelValue: {
     type: Boolean,
     default: false,
   },
@@ -59,10 +60,14 @@ const props = defineProps({
     type: Number,
     default: undefined,
   },
+  zIndex: {
+    type: Number,
+    default: 10,
+  },
 });
 
 // ** Emits **
-const emits = defineEmits(["close", "breakpoint-updated"]);
+const emits = defineEmits(["update:modelValue", "breakpoint-updated"]);
 
 // ** Data **
 const position = ref<number>(0);
@@ -81,7 +86,7 @@ watchEffect(() => {
       dragModal.value.style.height = `${contentHeight * props.initialBreakpoint}px`;
     }
 
-    if (props.isOpen && dragModal.value) {
+    if (props.modelValue && dragModal.value) {
       addEventListeners();
     } else {
       removeEventListeners();
@@ -118,7 +123,7 @@ const handleMouseDown = (event: MouseEvent | TouchEvent): void => {
 
 const handleBackdropClick = (): void => {
   if (props.breakpoints.includes(0)) {
-    emits("close");
+    emits("update:modelValue", false);
   } else {
     snapToBreakpoint(props.initialBreakpoint);
   }
@@ -149,7 +154,7 @@ const snapToBreakpoint = (breakpoint?: number): void => {
       );
 
   if (closestBreakpoint === 0) {
-    emits("close");
+    emits("update:modelValue", false);
     removeEventListeners();
 
     return;
@@ -245,7 +250,7 @@ watch(
 .drag-modal {
   background: white;
   position: fixed;
-  z-index: 10;
+  z-index: v-bind(zIndex);
   bottom: 0;
   width: 100%;
   border-top-left-radius: 15px;
@@ -259,7 +264,7 @@ watch(
   &-backdrop {
     position: fixed;
     background: rgba(0, 0, 0, 0.2);
-    z-index: 9;
+    z-index: calc(v-bind(zIndex) - 1);
     top: 0;
     left: 0;
     height: 100%;

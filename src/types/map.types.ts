@@ -5,7 +5,7 @@ export interface MapPosition {
 
 export interface MapLocationResult {
   title: string;
-  desc: string;
+  desc?: string;
   position: MapPosition;
 }
 
@@ -31,6 +31,7 @@ export interface MapStore {
   bounds: MapBounds;
   mapZoom: number;
   loading: boolean;
+  recentSearches: MapLocationResult[];
 }
 
 export interface ParkingPrice {

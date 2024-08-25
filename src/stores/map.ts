@@ -22,6 +22,7 @@ export const useMapStore = defineStore("map", {
     },
     mapZoom: 13,
     loading: false,
+    recentSearches: [],
   }),
   getters: {
     usingCurrentLocation(): boolean {
