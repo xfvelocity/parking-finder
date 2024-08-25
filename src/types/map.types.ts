@@ -20,7 +20,7 @@ export interface MapFilters {
 
 export interface MapFiltersDateTime {
   from: string;
-  to: string;
+  hours: number;
 }
 
 export interface MapBounds {

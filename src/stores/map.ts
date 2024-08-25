@@ -20,7 +20,7 @@ export const useMapStore = defineStore("map", {
     filters: {
       dateTime: {
         from: "",
-        to: "",
+        hours: 0,
       },
     },
     mapZoom: 13,
@@ -28,6 +28,9 @@ export const useMapStore = defineStore("map", {
     recentSearches: [],
   }),
   getters: {
+    usingFilter(): boolean {
+      return this.filters.dateTime.hours > 0;
+    },
     usingCurrentLocation(): boolean {
       const userStore = useUserStore();
 

@@ -123,10 +123,10 @@ const getCurrentLocation = async () => {
   }
 };
 
-const searchWithDate = (from: string, to: string): void => {
+const searchWithDate = (from: string, hours: number): void => {
   mapStore.filters.dateTime = {
     from,
-    to,
+    hours,
   };
 };
 

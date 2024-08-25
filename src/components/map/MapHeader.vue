@@ -4,17 +4,24 @@
       v-model="locationSearch"
       id="locationSearch"
       :prepend-icon="isLocationOpen ? 'chevron-left' : 'menu'"
-      append-icon="clock"
       placeholder="Where do you want to park?"
       clear-button
       @focus="emits('toggle:modal', true)"
-      @click:append="emits('toggle:time-select', true)"
       @click:prepend="
         isLocationOpen ? emits('toggle:modal', false) : openMenu()
       "
       @update:clear="clearInput"
       @update:modelValue="emits('location:search', $event)"
     />
+
+    <div class="map-header-time">
+      <Icon
+        src="clock"
+        :size="14"
+        :fill="usingFilter ? 'primary' : 'grey-darken-1'"
+        @click="emits('toggle:time-select', true)"
+      />
+    </div>
   </div>
 </template>
 
@@ -24,6 +31,7 @@ import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
 
 import TextInput from "@/components/basic/inputs/TextInput.vue";
+import Icon from "@/components/basic/icon/Icon.vue";
 
 // ** Props **
 const props = defineProps({
@@ -44,10 +52,9 @@ const emits = defineEmits([
 // ** Data **
 const mapStore = useMapStore();
 
-const { location } = storeToRefs(mapStore);
+const { location, usingFilter } = storeToRefs(mapStore);
 
 const locationSearch = ref<string>(location.value.name);
-const timeSelectOpen = ref<boolean>(false);
 
 // ** Methods **
 const openMenu = (): void => {
@@ -81,6 +88,20 @@ watch(location, () => {
   &-icon {
     margin-right: 10px;
     margin-top: 2px;
+  }
+
+  &-time {
+    background: white;
+    border-radius: 10px;
+    height: 40px;
+    min-width: 40px;
+    padding-right: 1px;
+    border: 1px solid map-get($colours, "border");
+    box-shadow: $box-shadow;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .input {
