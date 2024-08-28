@@ -5,21 +5,18 @@
     :breakpoints="[0, 0.4]"
     :backdrop-breakpoint="0.4"
     :z-index="11"
-    @update:model-value="closeModal"
+    @update:model-value="emits('update:modelValue', false)"
   >
     <template #header>
-      <h4>
-        {{
-          isToDate
-            ? "How long would you like to park?"
-            : "When would you like to park from?"
-        }}
-      </h4>
+      <h4>How long would you like to park for?</h4>
     </template>
 
     <!-- Time picker -->
-    <IonPicker v-if="isToDate" value="1">
-      <IonPickerColumn>
+    <IonPicker>
+      <IonPickerColumn
+        :value="hour"
+        @ion-change="hour = parseInt(($event.detail.value || 1).toString())"
+      >
         <IonPickerColumnOption
           v-for="(opt, i) in hourOptions"
           :value="opt.value"
@@ -30,41 +27,19 @@
       </IonPickerColumn>
     </IonPicker>
 
-    <!-- Date picker -->
-    <IonDatetime
-      v-else
-      class="mx-auto"
-      :value="fromDate"
-      presentation="date-time"
-      mode="md"
-      :min="getCurrentTime()"
-      prefer-wheel
-      minuteValues="0"
-      @ion-change="fromDate = $event.detail.value?.toString() || ''"
-    />
-
     <div class="time-picker-buttons p-4">
-      <template v-if="!isToDate">
-        <CustomButton :height="25" outlined @click="skip"> Skip </CustomButton>
+      <CustomButton outlined @click="clear"> Clear </CustomButton>
 
-        <CustomButton @click="isToDate = true"> Next </CustomButton>
-      </template>
-
-      <CustomButton v-else @click="searchDate"> Search </CustomButton>
+      <CustomButton @click="searchDate"> Search </CustomButton>
     </div>
   </DragModal>
 </template>
 
 <script lang="ts" setup>
 import { ref, watch } from "vue";
-import { getCurrentTime, hourOptions } from "@/composables/generic";
+import { hourOptions } from "@/composables/generic";
 
-import {
-  IonDatetime,
-  IonPicker,
-  IonPickerColumn,
-  IonPickerColumnOption,
-} from "@ionic/vue";
+import { IonPicker, IonPickerColumn, IonPickerColumnOption } from "@ionic/vue";
 import DragModal from "@/components/basic/modal/DragModal.vue";
 import CustomButton from "@/components/basic/button/CustomButton.vue";
 
@@ -74,11 +49,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  currentFromDate: {
-    type: String,
-    default: "",
-  },
-  currentToHour: {
+  currentHour: {
     type: Number,
     default: 0,
   },
@@ -88,38 +59,25 @@ const props = defineProps({
 const emits = defineEmits(["update:modelValue", "search"]);
 
 // ** Data **
-const fromDate = ref<string>("");
-const toHour = ref<number>(1);
-const isToDate = ref<boolean>(false);
+const hour = ref<number>(1);
 
 // ** Methods **
 const searchDate = (): void => {
-  emits("search", fromDate.value, toHour.value);
+  emits("search", hour.value);
   emits("update:modelValue", false);
-
-  isToDate.value = false;
 };
 
-const closeModal = (): void => {
+const clear = (): void => {
+  hour.value = 1;
+  emits("search", 0);
   emits("update:modelValue", false);
-  isToDate.value = false;
-};
-
-const skip = (): void => {
-  isToDate.value = true;
-  fromDate.value = "";
 };
 
 // ** Watchers **
 watch(
-  [
-    () => props.currentFromDate,
-    () => props.currentToHour,
-    () => props.modelValue,
-  ],
+  [() => props.currentHour, () => props.modelValue],
   () => {
-    fromDate.value = props.currentFromDate || getCurrentTime();
-    toHour.value = props.currentToHour || 1;
+    hour.value = props.currentHour || 1;
   },
   { immediate: true }
 );
