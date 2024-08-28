@@ -1,5 +1,5 @@
 {
-  "name": "cheap-spot",
+  "name": "parking-finder",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -10,7 +10,9 @@
     "prettier": "prettier . --write",
     "sync": "ionic capacitor sync",
     "open:android": "ionic capacitor open android",
-    "open:ios": "ionic capacitor open ios"
+    "open:ios": "ionic capacitor open ios",
+    "run:ios": "ionic capacitor run ios -l --external",
+    "run:android": "ionic capacitor run android -l --external"
   },
   "dependencies": {
     "@capacitor/android": "6.1.2",

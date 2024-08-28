@@ -7,6 +7,11 @@
     <div class="map-list p-4 pb-10">
       <LoadingSpinner v-if="loading" class="my-2" :size="24" />
 
+      <p v-else-if="!items.length" class="text-center">
+        No parking locations found. Try changing your filters or moving
+        location.
+      </p>
+
       <template v-else>
         <div
           v-for="(item, i) in items"

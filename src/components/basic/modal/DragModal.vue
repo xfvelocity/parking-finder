@@ -14,10 +14,7 @@
   </div>
 
   <div
-    v-if="
-      backdropBreakpoint === parseFloat(currentBreakpoint.toFixed(1)) &&
-      modelValue
-    "
+    v-if="backdropBreakpoint === currentBreakpoint && modelValue"
     class="drag-modal-backdrop"
     @click="handleBackdropClick"
   />

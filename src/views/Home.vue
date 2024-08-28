@@ -35,7 +35,7 @@
         <div class="p-2 safe-area-top mt-10">
           <p
             v-if="!mapResults.length && !resultsLoading"
-            class="text-center px-8"
+            class="text-center pt-3 px-8"
           >
             {{
               searchTerm.length > 2

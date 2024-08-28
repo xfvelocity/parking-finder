@@ -31,9 +31,9 @@
 		<string>armv7</string>
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to shopw you relevant search results</string>
+	<string>We need your location to show you relevant search results</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>We need your location to shopw you relevant search results</string>
+	<string>We need your location to show you relevant search results</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

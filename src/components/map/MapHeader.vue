@@ -4,6 +4,7 @@
       v-model="locationSearch"
       id="locationSearch"
       :prepend-icon="isLocationOpen ? 'chevron-left' : 'menu'"
+      :prepend-icon-size="16"
       placeholder="Where do you want to park?"
       clear-button
       @focus="emits('toggle:modal', true)"
@@ -14,7 +15,7 @@
       @update:modelValue="emits('location:search', $event)"
     />
 
-    <div class="map-header-time">
+    <div v-if="!isLocationOpen" class="map-header-time">
       <Icon
         src="clock"
         :size="14"
@@ -82,7 +83,7 @@ watch(location, () => {
 
 <style lang="scss" scoped>
 .map-header {
-  padding: 10px 10px 5px 10px;
+  padding: 20px;
   display: flex;
   align-items: flex-end;
 

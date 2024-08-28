@@ -1,9 +1,9 @@
 <template>
   <DragModal
     :model-value="modelValue"
-    :initial-breakpoint="0.4"
-    :breakpoints="[0, 0.4]"
-    :backdrop-breakpoint="0.4"
+    :initial-breakpoint="0.45"
+    :breakpoints="[0, 0.45]"
+    :backdrop-breakpoint="0.45"
     :z-index="11"
     @update:model-value="emits('update:modelValue', false)"
   >

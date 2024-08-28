@@ -10,6 +10,7 @@
     <Icon
       v-if="prependIcon"
       :src="prependIcon"
+      :size="prependIconSize"
       :fill="prependIconColour"
       @click="$emit('click:prepend')"
     />
@@ -83,6 +84,10 @@ const props = defineProps({
   prependIcon: {
     type: String,
     default: "",
+  },
+  prependIconSize: {
+    type: Number,
+    default: 14,
   },
   prependIconColour: {
     type: String,
