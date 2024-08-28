@@ -29,6 +29,7 @@
 import { ref, watch } from "vue";
 import { useMapStore } from "@/stores/map";
 import { storeToRefs } from "pinia";
+import { menuController } from "@ionic/vue";
 
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 import Icon from "@/components/basic/icon/Icon.vue";
@@ -57,8 +58,8 @@ const { location, usingFilter } = storeToRefs(mapStore);
 const locationSearch = ref<string>(location.value.name);
 
 // ** Methods **
-const openMenu = (): void => {
-  console.log("openmenu");
+const openMenu = async (): Promise<void> => {
+  await menuController.open("sideMenu");
 };
 
 const clearInput = (): void => {

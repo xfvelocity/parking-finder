@@ -1,5 +1,5 @@
 <template>
-  <PageLayout>
+  <PageLayout content-id="home">
     <div class="home">
       <LoadingBar v-if="loading" />
 

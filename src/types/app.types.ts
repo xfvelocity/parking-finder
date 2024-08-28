@@ -12,3 +12,8 @@ export interface ConfigSnackbar {
 export interface ConfigStore {
   snackbar: ConfigSnackbar;
 }
+
+export interface SideMenuOption {
+  text: string;
+  routeName: string;
+}

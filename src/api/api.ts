@@ -45,7 +45,7 @@ export const api = async <T = any>(
     console.error(e);
 
     configStore.snackbar = {
-      text: e?.response?.data || e,
+      text: e?.response?.data?.message || e,
       icon: "exclamation",
       background: "red-darken-2",
     };
