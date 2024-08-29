@@ -66,7 +66,7 @@ const handleResults = (result: any): void => {
   --height: auto;
 
   &-content {
-    width: 300px;
+    width: 350px;
   }
 
   &::part(content) {

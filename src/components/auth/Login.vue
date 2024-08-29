@@ -2,7 +2,7 @@
   <div class="login text-center p-4">
     <h2>Login</h2>
     <p class="login-desc mt-1 mb-3">
-      Please login to your account to add prices to a parking location.
+      Please login to your account to add info to a parking location.
     </p>
 
     <form @submit="login">
@@ -27,7 +27,9 @@
         @click:append="showPassword = !showPassword"
       />
 
-      <CustomButton type="submit" :loading="loading"> Login </CustomButton>
+      <CustomButton type="submit" :height="35" :loading="loading">
+        Login
+      </CustomButton>
     </form>
 
     <p class="mt-4">

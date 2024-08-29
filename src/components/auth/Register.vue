@@ -2,7 +2,7 @@
   <div class="register text-center p-4">
     <h2>Register</h2>
     <p class="register-desc mt-1 mb-3">
-      Please register an account to add prices to a parking location.
+      Please register an account to add info to a parking location.
     </p>
 
     <form @submit="register">
@@ -35,7 +35,9 @@
         @click:append="showPassword = !showPassword"
       />
 
-      <CustomButton type="submit" :loading="loading"> Register </CustomButton>
+      <CustomButton type="submit" :height="35" :loading="loading">
+        Register
+      </CustomButton>
     </form>
 
     <p class="mt-4">

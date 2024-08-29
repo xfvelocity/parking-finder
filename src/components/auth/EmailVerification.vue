@@ -7,13 +7,14 @@
       id="codeInput"
       class="my-4"
       :value="code"
-      placeholder="Enter code"
       maxlength="5"
       @keydown.enter="loading ? '' : submitCode"
       @input="code = ($event.target as any)?.value || ''"
     />
 
-    <CustomButton :loading="loading" @click="submitCode"> Submit </CustomButton>
+    <CustomButton :loading="loading" :height="35" @click="submitCode">
+      Submit
+    </CustomButton>
   </div>
 </template>
 
@@ -66,7 +67,7 @@ onMounted(() => {
     background: none;
     border: none;
     border-bottom: 1px solid map-get($colours, "grey-lighten-1");
-    width: 100px;
+    width: 110px;
     height: 40px;
     text-align: center;
     outline: none;

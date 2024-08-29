@@ -8,121 +8,28 @@
     @ion-breakpoint-did-change="$emit('update:selectedParking', null)"
   >
     <IonHeader>
-      <div class="map-selected-header pt-5 pb-3">
-        <h3>{{ selectedParking?.name }}</h3>
+      <div v-if="selectedParking" class="map-selected-header pt-5 pb-3">
+        <h3>{{ selectedParking.name }}</h3>
 
         <Rating
-          v-if="selectedParking?.rating"
+          v-if="selectedParking.rating"
           class="mt-1 mx-auto"
-          :rating="selectedParking?.rating"
+          :rating="selectedParking.rating"
         />
       </div>
     </IonHeader>
 
-    <IonContent v-if="selectedParking">
-      <div class="map-selected-content p-4">
-        <div>
-          <h4 class="mb-2">Prices</h4>
-
-          <ul v-if="selectedParking.prices.length">
-            <li
-              v-for="(price, i) in formattedPrices.prices"
-              :key="i"
-              :class="{
-                'text-fw-600': selectedHours === price.hours,
-              }"
-            >
-              <div>{{ price.hours }} hours</div>
-
-              <div>£{{ price.price.toFixed(2) }}</div>
-            </li>
-          </ul>
-
-          <div v-else-if="!addingPrice" class="map-selected-price-add">
-            <p>No prices added</p>
-            <p
-              class="map-selected-price-add-btn hover"
-              @click="toggleAddPrices"
-            >
-              Add prices
-            </p>
-          </div>
-        </div>
-
-        <template v-if="formattedPrices.app.length">
-          <hr class="divider my-4" />
-
-          <h4 class="mb-2">App Prices</h4>
-
-          <ul>
-            <li
-              v-for="(price, i) in formattedPrices.app"
-              :key="i"
-              :class="{
-                'text-fw-600': selectedHours === price.hours,
-              }"
-            >
-              <div>{{ price.hours }} hours</div>
-
-              <div>£{{ price.price.toFixed(2) }}</div>
-            </li>
-          </ul>
-        </template>
-
-        <AddPrices
-          v-if="addingPrice"
-          :selected-parking="selectedParking"
-          @close="addingPrice = false"
-        />
-
-        <div v-if="selectedParking.info && !addingPrice">
-          <hr class="divider my-4" />
-
-          <div>
-            <h4 class="mb-2">Info</h4>
-
-            <p v-if="selectedParking.info.spaces" class="flex-between">
-              Spaces: <span>{{ selectedParking.info.spaces }}</span>
-            </p>
-            <p
-              v-if="selectedParking.info.disabledSpaces"
-              class="mt-1 flex-between"
-            >
-              Disabled spaces:
-              <span>{{ selectedParking.info.disabledSpaces }}</span>
-            </p>
-          </div>
-          <hr class="divider my-4" />
-
-          <div>
-            <h4 class="mb-2">Opening hours</h4>
-
-            <ul v-if="hasValidHours">
-              <li
-                v-for="(openingTime, i) in Object.keys(
-                  selectedParking.info.openingHours
-                )"
-                :key="i"
-              >
-                <span class="text-transform-capitalize">
-                  {{ openingTime }}:
-                </span>
-
-                {{
-                  formatOpeningHours(
-                    selectedParking.info.openingHours[
-                      openingTime as keyof ParkingHours
-                    ]
-                  )
-                }}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+    <IonContent>
+      <MapSelectedAddInfo v-if="addingInfo" />
+      <MapSelectedInfo
+        v-else
+        :selected-parking="selectedParking"
+        @open:authModal="isAuthModalOpen = $event"
+        @update:addingInfo="addingInfo = $event"
+      />
     </IonContent>
 
-    <IonFooter v-if="!addingPrice">
+    <IonFooter v-if="!addingInfo">
       <div class="map-selected-button p-4 safe-area-bottom">
         <CustomButton icon="directions" @click="openDirections">
           Directions
@@ -131,19 +38,19 @@
     </IonFooter>
   </IonModal>
 
-  <AuthModal v-model="isAuthModalOpen" @login:success="addingPrice = true" />
+  <AuthModal v-model="isAuthModalOpen" @login:success="addingInfo = true" />
 </template>
 
 <script lang="ts" setup>
-import type { Parking, ParkingPrice, ParkingHours } from "@/types/map.types";
+import type { Parking } from "@/types/map.types";
+import type { PropType } from "vue";
 
-import { computed, ref, watch, type PropType } from "vue";
-import { useMapStore } from "@/stores/map";
-import { useUserStore } from "@/stores/user";
+import { ref } from "vue";
 
 import { IonModal, IonContent, IonHeader, IonFooter } from "@ionic/vue";
 import CustomButton from "@/components/basic/button/CustomButton.vue";
-import AddPrices from "@/components/add-prices/AddPrices.vue";
+import MapSelectedInfo from "@/components/map/MapSelectedInfo.vue";
+import MapSelectedAddInfo from "@/components/map/MapSelectedAddInfo.vue";
 import Rating from "@/components/basic/rating/Rating.vue";
 import AuthModal from "@/components/auth/AuthModal.vue";
 
@@ -160,85 +67,15 @@ const props = defineProps({
 });
 
 // ** Data **
-const mapStore = useMapStore();
-const userStore = useUserStore();
-
-const addingPrice = ref<boolean>(false);
-const selectedHours = ref<number>(0);
+const addingInfo = ref<boolean>(false);
 const isAuthModalOpen = ref<boolean>(false);
 
-// ** Computed **
-const hasValidHours = computed<boolean>(() => {
-  return Object.values(props.selectedParking?.info?.openingHours || {}).some(
-    (x: any) => x[0]
-  );
-});
-
-const formattedPrices = computed<{
-  prices: ParkingPrice[];
-  app: ParkingPrice[];
-}>(() => {
-  const app =
-    props.selectedParking?.prices.filter((price: any) => price.appPrice) || [];
-  const prices =
-    props.selectedParking?.prices.filter((price: any) => !price.appPrice) || [];
-
-  return {
-    prices,
-    app,
-  };
-});
-
 // ** Methods **
-const toggleAddPrices = (): void => {
-  if (userStore.accessToken) {
-    addingPrice.value = true;
-  } else {
-    isAuthModalOpen.value = true;
-  }
-};
-const formatOpeningHours = (hours: string[]): string => {
-  if (hours.length) {
-    if (hours[0] === "00:00" && hours[1] === "24:00") {
-      return "24 hours";
-    } else {
-      return `${hours[0]} - ${hours[1]}`;
-    }
-  } else {
-    return "";
-  }
-};
-
-const checkMatchingHours = (): void => {
-  if (mapStore.filters.hours && props.selectedParking) {
-    const sortedArray =
-      props.selectedParking?.prices.sort((a, b) => a.hours - b.hours) || [];
-
-    selectedHours.value = sortedArray.filter(
-      (x) => x.hours >= mapStore.filters.hours
-    )[0]?.hours;
-  } else {
-    selectedHours.value = 0;
-  }
-};
-
 const openDirections = (): void => {
   window.open(
     `https://www.google.com/maps/dir/?api=1&destination=${props.selectedParking?.address}`
   );
 };
-
-// ** Watchers **
-watch(
-  () => props.selectedParking,
-  () => {
-    if (!props.selectedParking) {
-      addingPrice.value = false;
-    }
-
-    checkMatchingHours();
-  }
-);
 </script>
 
 <style lang="scss" scoped>
@@ -265,19 +102,6 @@ watch(
     &-btn {
       color: map-get($colours, "primary");
       text-decoration: underline;
-    }
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-
-    li {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 5px;
     }
   }
 }

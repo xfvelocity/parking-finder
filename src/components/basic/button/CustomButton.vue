@@ -56,12 +56,16 @@ defineProps({
     type: String as PropType<"button" | "submit" | "reset">,
     default: "button",
   },
+  height: {
+    type: Number,
+    default: 40,
+  },
 });
 </script>
 
 <style lang="scss" scoped>
 .button {
-  height: 40px;
+  height: calc(v-bind(height) * 1px);
   width: 100%;
   border-radius: 10px;
   font-weight: 600;
