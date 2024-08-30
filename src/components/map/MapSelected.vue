@@ -12,7 +12,7 @@
         <h3>{{ selectedParking.name }}</h3>
 
         <Rating
-          v-if="selectedParking.rating"
+          v-if="selectedParking.rating && !addingInfo"
           class="mt-1 mx-auto"
           :rating="selectedParking.rating"
         />
@@ -29,7 +29,13 @@
       />
     </IonContent>
 
-    <IonFooter v-if="!addingInfo">
+    <IonFooter v-if="addingInfo">
+      <div class="map-selected-button p-4 safe-area-bottom">
+        <CustomButton> Next </CustomButton>
+      </div>
+    </IonFooter>
+
+    <IonFooter v-else>
       <div class="map-selected-button p-4 safe-area-bottom">
         <CustomButton icon="directions" @click="openDirections">
           Directions

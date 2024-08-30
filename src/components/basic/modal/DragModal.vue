@@ -11,6 +11,10 @@
     <IonContent>
       <slot />
     </IonContent>
+
+    <IonFooter>
+      <slot name="footer" />
+    </IonFooter>
   </div>
 
   <div
@@ -25,7 +29,7 @@ import type { PropType } from "vue";
 
 import { ref, watchEffect, watch } from "vue";
 
-import { IonContent, IonHeader } from "@ionic/vue";
+import { IonContent, IonHeader, IonFooter } from "@ionic/vue";
 
 // ** Props **
 const props = defineProps({
@@ -249,6 +253,7 @@ watch(
   position: fixed;
   z-index: v-bind(zIndex);
   bottom: 0;
+  left: 0;
   width: 100%;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;

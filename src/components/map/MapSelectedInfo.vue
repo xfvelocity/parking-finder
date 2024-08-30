@@ -113,7 +113,7 @@ import { useMapStore } from "@/stores/map";
 const props = defineProps({
   selectedParking: {
     type: [Object, null] as PropType<Parking | null>,
-    defaukt: null,
+    default: null,
   },
 });
 

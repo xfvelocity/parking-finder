@@ -7,11 +7,6 @@ const routes: RouteRecordRaw[] = [
     name: "Home",
     component: () => import("@/views/Home.vue"),
   },
-  {
-    path: "/email-verification",
-    name: "EmailVerification",
-    component: () => import("@/views/auth/EmailVerification.vue"),
-  },
 ];
 
 const router = createRouter({

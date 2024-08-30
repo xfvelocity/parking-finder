@@ -1,7 +1,7 @@
 <template>
   <IonMenu menu-id="sideMenu" :content-id="contentId">
     <IonContent>
-      <div class="side-menu">
+      <div class="side-menu safe-area-top">
         <div class="side-menu-user mt-4 hover" @click="handleUserClick">
           <Icon class="mr-2" src="user" :size="28" />
 
