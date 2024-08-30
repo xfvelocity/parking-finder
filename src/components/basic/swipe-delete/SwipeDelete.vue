@@ -38,6 +38,8 @@ const moveTouch = (event: TouchEvent): void => {
   const currentX = event.touches[0].clientX;
   translateX.value = currentX - startX.value;
 
+  console.log(translateX.value);
+
   deleting.value = translateX.value < -100;
 };
 
@@ -48,6 +50,8 @@ const endTouch = (): void => {
   } else {
     translateX.value = 0;
   }
+
+  deleting.value = false;
 };
 </script>
 

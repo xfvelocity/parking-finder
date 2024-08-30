@@ -1,6 +1,11 @@
 <template>
   <div class="add-info-price">
-    <h3 class="mb-2 mt-4 mx-4">Add Prices</h3>
+    <div class="add-info-price-heading my-4 text-center">
+      <h3>Adding Prices</h3>
+      <p class="mt-1">
+        Please add the prices below by selecting a length of time and the price.
+      </p>
+    </div>
 
     <transition-group name="slide" tag="div">
       <SwipeDelete
@@ -10,11 +15,16 @@
         @delete="deletePrice(i)"
       >
         <div class="add-info-price-item px-4">
-          <SelectScroller v-model="price.hours" :options="hourOptions" />
+          <SelectScroller
+            v-model="price.hours"
+            teleport-to="#addPriceScroller"
+            :options="hourOptions"
+          />
 
           <TextInput
             v-model="price.price"
             select-on-focus
+            type="number"
             :clear-button="false"
           >
             <template #prepend>
@@ -25,9 +35,12 @@
       </SwipeDelete>
     </transition-group>
 
-    <div class="add-info-price-add w-100 mt-2 mr-4">
-      <Icon class="hover ml-auto" src="plus" fill="primary" @click="addPrice" />
-    </div>
+    <p
+      class="mt-4 text-primary text-center text-underline hover"
+      @click="addPrice"
+    >
+      Add another price
+    </p>
   </div>
 </template>
 
@@ -39,7 +52,6 @@ import { hourOptions } from "@/composables/generic";
 
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 import SelectScroller from "@/components/basic/inputs/SelectScroller.vue";
-import Icon from "@/components/basic/icon/Icon.vue";
 import SwipeDelete from "@/components/basic/swipe-delete/SwipeDelete.vue";
 
 // ** Data **
@@ -72,21 +84,23 @@ const deletePrice = (index: number): void => {
 </script>
 
 <style lang="scss" scoped>
-.slide-enter-active,
-.slide-leave-active {
-  transition:
-    transform 0.5s ease,
-    opacity 0.5s ease;
-}
+.slide {
+  &-enter-active,
+  &-leave-active {
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+  }
 
-.slide-enter-from {
-  transform: translateX(-100%);
-  opacity: 0;
-}
+  &-enter-from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
 
-.slide-leave-to {
-  transform: translateX(-100%);
-  opacity: 0;
+  &-leave-to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
 }
 
 .add-info {
@@ -97,6 +111,11 @@ const deletePrice = (index: number): void => {
   }
 
   &-price {
+    &-heading {
+      max-width: 240px;
+      margin: 0 auto;
+    }
+
     &-item {
       display: flex;
       align-items: center;
@@ -111,6 +130,7 @@ const deletePrice = (index: number): void => {
 
     &-add {
       display: flex;
+      align-items: center;
     }
 
     &-symbol {

@@ -29,14 +29,16 @@
       />
     </IonContent>
 
-    <IonFooter v-if="addingInfo">
-      <div class="map-selected-button p-4 safe-area-bottom">
+    <IonFooter>
+      <div id="addPriceScroller" />
+
+      <div v-if="addingInfo" class="map-selected-button p-4 safe-area-bottom">
+        <CustomButton outlined> Cancel </CustomButton>
+
         <CustomButton> Next </CustomButton>
       </div>
-    </IonFooter>
 
-    <IonFooter v-else>
-      <div class="map-selected-button p-4 safe-area-bottom">
+      <div v-else class="map-selected-button p-4 safe-area-bottom">
         <CustomButton icon="directions" @click="openDirections">
           Directions
         </CustomButton>
@@ -91,6 +93,9 @@ const openDirections = (): void => {
   }
 
   &-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     border-top: 1px solid map-get($colours, "border");
   }
 

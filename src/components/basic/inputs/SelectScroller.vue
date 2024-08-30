@@ -19,24 +19,26 @@
     </div>
   </div>
 
-  <DragModal
-    v-model="isSelectActive"
-    :breakpoints="[0, 0.3]"
-    :initial-breakpoint="0.3"
-    :backdrop-breakpoint="0.3"
-  >
-    <IonPicker>
-      <IonPickerColumn :value="selected?.value" @ionChange="optionSelected">
-        <IonPickerColumnOption
-          v-for="(opt, i) in options"
-          :value="opt.value"
-          :key="i"
-        >
-          {{ opt.text }}
-        </IonPickerColumnOption>
-      </IonPickerColumn>
-    </IonPicker>
-  </DragModal>
+  <teleport :to="teleportTo" :disabled="!teleportTo">
+    <DragModal
+      v-model="isSelectActive"
+      :breakpoints="[0, 0.3]"
+      :initial-breakpoint="0.3"
+      :backdrop-breakpoint="0.3"
+    >
+      <IonPicker>
+        <IonPickerColumn :value="selected?.value" @ionChange="optionSelected">
+          <IonPickerColumnOption
+            v-for="(opt, i) in options"
+            :value="opt.value"
+            :key="i"
+          >
+            {{ opt.text }}
+          </IonPickerColumnOption>
+        </IonPickerColumn>
+      </IonPicker>
+    </DragModal>
+  </teleport>
 </template>
 
 <script lang="ts" setup>
@@ -62,6 +64,10 @@ const props = defineProps({
     type: Array as PropType<SelectOption[]>,
     default: () => [],
     required: true,
+  },
+  teleportTo: {
+    type: String,
+    default: "",
   },
 });
 
