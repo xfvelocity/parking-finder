@@ -12,7 +12,7 @@
         <h3>{{ selectedParking.name }}</h3>
 
         <Rating
-          v-if="selectedParking.rating && !addingInfo"
+          v-if="selectedParking.rating && !editingInfo"
           class="mt-1 mx-auto"
           :rating="selectedParking.rating"
         />
@@ -20,22 +20,27 @@
     </IonHeader>
 
     <IonContent>
-      <MapSelectedAddInfo v-if="addingInfo" />
+      <MapSelectedAddInfo v-if="editingInfo" :info-type="infoType" />
       <MapSelectedInfo
         v-else
         :selected-parking="selectedParking"
         @open:authModal="isAuthModalOpen = $event"
-        @update:addingInfo="addingInfo = $event"
+        @update:addingInfo="infoType = INFO_TYPE.PRICE"
       />
     </IonContent>
 
     <IonFooter>
       <div id="addPriceScroller" />
 
-      <div v-if="addingInfo" class="map-selected-button p-4 safe-area-bottom">
-        <CustomButton outlined> Cancel </CustomButton>
+      <div v-if="editingInfo" class="map-selected-button p-4 safe-area-bottom">
+        <template v-if="infoType === INFO_TYPE.TIMES">
+          <CustomButton @click="submitChanges"> Submit </CustomButton>
+        </template>
+        <template v-else>
+          <CustomButton outlined @click="nextEditScreen"> Skip </CustomButton>
 
-        <CustomButton> Next </CustomButton>
+          <CustomButton @click="nextEditScreen"> Next </CustomButton>
+        </template>
       </div>
 
       <div v-else class="map-selected-button p-4 safe-area-bottom">
@@ -46,14 +51,18 @@
     </IonFooter>
   </IonModal>
 
-  <AuthModal v-model="isAuthModalOpen" @login:success="addingInfo = true" />
+  <AuthModal
+    v-model="isAuthModalOpen"
+    @login:success="infoType = INFO_TYPE.PRICE"
+  />
 </template>
 
 <script lang="ts" setup>
 import type { Parking } from "@/types/map.types";
 import type { PropType } from "vue";
 
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import { INFO_TYPE } from "@/content/enums";
 
 import { IonModal, IonContent, IonHeader, IonFooter } from "@ionic/vue";
 import CustomButton from "@/components/basic/button/CustomButton.vue";
@@ -75,14 +84,31 @@ const props = defineProps({
 });
 
 // ** Data **
-const addingInfo = ref<boolean>(false);
 const isAuthModalOpen = ref<boolean>(false);
+const infoType = ref<INFO_TYPE>(INFO_TYPE.VIEWING);
+
+// ** Computed **
+const editingInfo = computed<boolean>(() => {
+  return infoType.value !== INFO_TYPE.VIEWING;
+});
 
 // ** Methods **
+const submitChanges = (): void => {
+  console.log("submit");
+};
+
 const openDirections = (): void => {
   window.open(
     `https://www.google.com/maps/dir/?api=1&destination=${props.selectedParking?.address}`
   );
+};
+
+const nextEditScreen = (): void => {
+  if (infoType.value === INFO_TYPE.PRICE) {
+    infoType.value = INFO_TYPE.INFO;
+  } else if (infoType.value === INFO_TYPE.INFO) {
+    infoType.value = INFO_TYPE.TIMES;
+  }
 };
 </script>
 

@@ -37,6 +37,10 @@ $translateY: 20px;
     font-size: 12px;
     text-indent: 3px;
 
+    &::placeholder {
+      color: map-get($colours, "grey-lighten-1");
+    }
+
     &:focus {
       outline: none;
     }

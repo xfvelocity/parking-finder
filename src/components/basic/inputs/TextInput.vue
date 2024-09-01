@@ -3,7 +3,7 @@
     class="input"
     :class="{
       'input-icon': prependIcon || appendIcon,
-      'input-populated': modelValue,
+      'input-populated': modelValue || modelValue === 0 || placeholder,
       'input-active': isActive,
     }"
   >

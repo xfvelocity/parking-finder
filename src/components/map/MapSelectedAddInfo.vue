@@ -1,6 +1,6 @@
 <template>
-  <div class="add-info-price">
-    <div class="add-info-price-heading my-4 text-center">
+  <div v-if="infoType === INFO_TYPE.PRICE" class="add-info-price">
+    <div class="add-info-heading my-4">
       <h3>Adding Prices</h3>
       <p class="mt-1">
         Please add the prices below by selecting a length of time and the price.
@@ -42,17 +42,57 @@
       Add another price
     </p>
   </div>
+
+  <div v-if="infoType === INFO_TYPE.INFO" class="add-info-info p-4">
+    <div class="add-info-heading mb-4">
+      <h3>Adding Additional Info</h3>
+      <p>Please add any additional info to help users choose this carpark.</p>
+    </div>
+
+    <div>
+      <TextInput
+        v-model="info.spaces"
+        label="Spaces"
+        placeholder="Amount of parking spaces"
+        class="mb-3"
+      />
+
+      <TextInput
+        v-model="info.disabledSpaces"
+        label="Disabled spaces"
+        placeholder="Amount of disabled parking spaces"
+      />
+    </div>
+  </div>
+
+  <div v-if="infoType === INFO_TYPE.TIMES" class="add-info-time p-4">
+    <div class="add-info-heading mb-4">
+      <h3>Adding Opening Hours</h3>
+      <p>Please add opening hours to let people know when the carparks open</p>
+    </div>
+
+    <div></div>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import type { AddPrices } from "@/types/map.types";
 
-import { ref } from "vue";
+import { PropType, ref } from "vue";
 import { hourOptions } from "@/composables/generic";
+import { INFO_TYPE } from "@/content/enums";
 
 import TextInput from "@/components/basic/inputs/TextInput.vue";
 import SelectScroller from "@/components/basic/inputs/SelectScroller.vue";
 import SwipeDelete from "@/components/basic/swipe-delete/SwipeDelete.vue";
+
+// ** Props **
+const props = defineProps({
+  infoType: {
+    type: String as PropType<INFO_TYPE>,
+    default: INFO_TYPE.PRICE,
+  },
+});
 
 // ** Data **
 const prices = ref<AddPrices[]>([
@@ -69,6 +109,10 @@ const prices = ref<AddPrices[]>([
     price: 3,
   },
 ]);
+const info = ref<any>({
+  spaces: null,
+  disabledSpaces: null,
+});
 
 // ** Methods **
 const addPrice = (): void => {
@@ -110,12 +154,13 @@ const deletePrice = (index: number): void => {
     flex-direction: column;
   }
 
-  &-price {
-    &-heading {
-      max-width: 240px;
-      margin: 0 auto;
-    }
+  &-heading {
+    max-width: 240px;
+    margin: 0 auto;
+    text-align: center;
+  }
 
+  &-price {
     &-item {
       display: flex;
       align-items: center;
