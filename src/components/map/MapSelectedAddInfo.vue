@@ -21,12 +21,7 @@
             :options="hourOptions"
           />
 
-          <TextInput
-            v-model="price.price"
-            select-on-focus
-            type="number"
-            :clear-button="false"
-          >
+          <TextInput v-model="price.price" type="number" :clear-button="false">
             <template #prepend>
               <span class="add-info-price-symbol">£</span>
             </template>
@@ -37,7 +32,7 @@
 
     <p
       class="mt-4 text-primary text-center text-underline hover"
-      @click="addPrice"
+      @mousedown="addPrice"
     >
       Add another price
     </p>
@@ -54,12 +49,14 @@
         v-model="info.spaces"
         label="Spaces"
         placeholder="Amount of parking spaces"
+        type="number"
         class="mb-3"
       />
 
       <TextInput
         v-model="info.disabledSpaces"
         label="Disabled spaces"
+        type="number"
         placeholder="Amount of disabled parking spaces"
       />
     </div>
@@ -70,15 +67,13 @@
       <h3>Adding Opening Hours</h3>
       <p>Please add opening hours to let people know when the carparks open</p>
     </div>
-
-    <div></div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { AddPrices } from "@/types/map.types";
 
-import { PropType, ref } from "vue";
+import { PropType, ref, watch } from "vue";
 import { hourOptions } from "@/composables/generic";
 import { INFO_TYPE } from "@/content/enums";
 
@@ -94,19 +89,14 @@ const props = defineProps({
   },
 });
 
+// ** Emits **
+const emits = defineEmits(["update:info:disabled", "update:info:values"]);
+
 // ** Data **
 const prices = ref<AddPrices[]>([
   {
     hours: 1,
-    price: 1,
-  },
-  {
-    hours: 2,
-    price: 2,
-  },
-  {
-    hours: 3,
-    price: 3,
+    price: 0,
   },
 ]);
 const info = ref<any>({
@@ -115,7 +105,9 @@ const info = ref<any>({
 });
 
 // ** Methods **
-const addPrice = (): void => {
+const addPrice = (e: MouseEvent): void => {
+  e.preventDefault();
+
   prices.value.push({
     hours: 1,
     price: 0,
@@ -125,6 +117,17 @@ const addPrice = (): void => {
 const deletePrice = (index: number): void => {
   prices.value.splice(index, 1);
 };
+
+// ** Watchers **
+watch(
+  prices,
+  () => {
+    const isDisabled = !prices.value.every((price) => price.price);
+
+    emits("update:info:disabled", isDisabled);
+  },
+  { deep: true }
+);
 </script>
 
 <style lang="scss" scoped>

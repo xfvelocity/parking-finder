@@ -20,7 +20,12 @@
     </IonHeader>
 
     <IonContent>
-      <MapSelectedAddInfo v-if="editingInfo" :info-type="infoType" />
+      <MapSelectedAddInfo
+        v-if="editingInfo"
+        :info-type="infoType"
+        @update:info:disabled="addedInfo[infoType].disabled = $event"
+        @update:info:values="addedInfo[infoType].values = $event"
+      />
       <MapSelectedInfo
         v-else
         :selected-parking="selectedParking"
@@ -39,7 +44,12 @@
         <template v-else>
           <CustomButton outlined @click="nextEditScreen"> Skip </CustomButton>
 
-          <CustomButton @click="nextEditScreen"> Next </CustomButton>
+          <CustomButton
+            :disabled="addedInfo[infoType].disabled"
+            @click="nextEditScreen"
+          >
+            Next
+          </CustomButton>
         </template>
       </div>
 
@@ -61,7 +71,7 @@
 import type { Parking } from "@/types/map.types";
 import type { PropType } from "vue";
 
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { INFO_TYPE } from "@/content/enums";
 
 import { IonModal, IonContent, IonHeader, IonFooter } from "@ionic/vue";
@@ -70,6 +80,22 @@ import MapSelectedInfo from "@/components/map/MapSelectedInfo.vue";
 import MapSelectedAddInfo from "@/components/map/MapSelectedAddInfo.vue";
 import Rating from "@/components/basic/rating/Rating.vue";
 import AuthModal from "@/components/auth/AuthModal.vue";
+
+// ** Defaults **
+const defaultAddedInfo = {
+  [INFO_TYPE.PRICE]: {
+    values: [],
+    disabled: true,
+  },
+  [INFO_TYPE.INFO]: {
+    values: [],
+    disabled: true,
+  },
+  [INFO_TYPE.TIMES]: {
+    values: [],
+    disabled: true,
+  },
+};
 
 // ** Props **
 const props = defineProps({
@@ -86,6 +112,7 @@ const props = defineProps({
 // ** Data **
 const isAuthModalOpen = ref<boolean>(false);
 const infoType = ref<INFO_TYPE>(INFO_TYPE.VIEWING);
+const addedInfo = ref<any>({ ...defaultAddedInfo });
 
 // ** Computed **
 const editingInfo = computed<boolean>(() => {
@@ -110,6 +137,17 @@ const nextEditScreen = (): void => {
     infoType.value = INFO_TYPE.TIMES;
   }
 };
+
+// ** Watchers **
+watch(
+  () => props.selectedParking,
+  () => {
+    if (!props.selectedParking) {
+      infoType.value = INFO_TYPE.VIEWING;
+      addedInfo.value = { ...defaultAddedInfo };
+    }
+  }
+);
 </script>
 
 <style lang="scss" scoped>

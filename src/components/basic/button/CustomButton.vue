@@ -7,6 +7,7 @@
         : `text-${textColour} bg-${backgroundColour}`,
       {
         hover: !disabled,
+        disabled: disabled,
       },
     ]"
     :type="type"
