@@ -121,7 +121,7 @@ const initialTime = {
 };
 
 // ** Props **
-defineProps({
+const props = defineProps({
   infoType: {
     type: String as PropType<INFO_TYPE>,
     default: INFO_TYPE.PRICE,
@@ -175,6 +175,17 @@ watch(
     emits("update:info:disabled", isDisabled);
   },
   { deep: true }
+);
+
+watch(
+  () => props.infoType,
+  () => {
+    emits("update:info:values", {
+      prices: prices.value,
+      info: info.value,
+      times: times.value,
+    });
+  }
 );
 </script>
 

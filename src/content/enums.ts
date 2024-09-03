@@ -10,4 +10,5 @@ export enum INFO_TYPE {
   PRICE = "price",
   INFO = "info",
   TIMES = "times",
+  SUBMIT = "submit",
 }

@@ -23,8 +23,8 @@
       <MapSelectedAddInfo
         v-if="editingInfo"
         :info-type="infoType"
-        @update:info:disabled="addedInfo[infoType].disabled = $event"
-        @update:info:values="addedInfo[infoType].values = $event"
+        @update:info:disabled="addedInfoDisabled[infoType] = $event"
+        @update:info:values="info = $event"
       />
       <MapSelectedInfo
         v-else
@@ -45,7 +45,7 @@
           <CustomButton outlined @click="nextEditScreen"> Skip </CustomButton>
 
           <CustomButton
-            :disabled="addedInfo[infoType].disabled"
+            :disabled="addedInfoDisabled[infoType]"
             @click="nextEditScreen"
           >
             Next
@@ -81,22 +81,6 @@ import MapSelectedAddInfo from "@/components/map/MapSelectedAddInfo.vue";
 import Rating from "@/components/basic/rating/Rating.vue";
 import AuthModal from "@/components/auth/AuthModal.vue";
 
-// ** Defaults **
-const defaultAddedInfo = {
-  [INFO_TYPE.PRICE]: {
-    values: [],
-    disabled: true,
-  },
-  [INFO_TYPE.INFO]: {
-    values: [],
-    disabled: true,
-  },
-  [INFO_TYPE.TIMES]: {
-    values: [],
-    disabled: true,
-  },
-};
-
 // ** Props **
 const props = defineProps({
   selectedParking: {
@@ -112,7 +96,12 @@ const props = defineProps({
 // ** Data **
 const isAuthModalOpen = ref<boolean>(false);
 const infoType = ref<INFO_TYPE>(INFO_TYPE.VIEWING);
-const addedInfo = ref<any>({ ...defaultAddedInfo });
+const info = ref<any>({});
+const addedInfoDisabled = ref<any>({
+  [INFO_TYPE.PRICE]: true,
+  [INFO_TYPE.INFO]: true,
+  [INFO_TYPE.TIMES]: true,
+});
 
 // ** Computed **
 const editingInfo = computed<boolean>(() => {
@@ -121,7 +110,7 @@ const editingInfo = computed<boolean>(() => {
 
 // ** Methods **
 const submitChanges = (): void => {
-  console.log("submit");
+  console.log("submit", info.value);
 };
 
 const openDirections = (): void => {
@@ -135,6 +124,8 @@ const nextEditScreen = (): void => {
     infoType.value = INFO_TYPE.INFO;
   } else if (infoType.value === INFO_TYPE.INFO) {
     infoType.value = INFO_TYPE.TIMES;
+  } else if (infoType.value === INFO_TYPE.TIMES) {
+    infoType.value = INFO_TYPE.SUBMIT;
   }
 };
 
@@ -144,7 +135,12 @@ watch(
   () => {
     if (!props.selectedParking) {
       infoType.value = INFO_TYPE.VIEWING;
-      addedInfo.value = { ...defaultAddedInfo };
+      info.value = {};
+      addedInfoDisabled.value = {
+        [INFO_TYPE.PRICE]: true,
+        [INFO_TYPE.INFO]: true,
+        [INFO_TYPE.TIMES]: true,
+      };
     }
   }
 );
