@@ -67,6 +67,35 @@
       <h3>Adding Opening Hours</h3>
       <p>Please add opening hours to let people know when the carparks open</p>
     </div>
+
+    <div>
+      <div
+        v-for="(timeKey, i) in Object.keys(times)"
+        :key="i"
+        class="add-info-times mt-3"
+      >
+        <p class="text-transform-capitalize">{{ timeKey }}</p>
+
+        <Checkbox v-model="times[timeKey].closed" />
+
+        <div class="add-info-times-inputs">
+          <template v-if="times[timeKey].closed">
+            <SelectTwoScroller
+              v-model="times[timeKey].open"
+              teleport-to="#addPriceScroller"
+              :options="timeOptions"
+            />
+            <SelectTwoScroller
+              v-model="times[timeKey].close"
+              teleport-to="#addPriceScroller"
+              :options="timeOptions"
+            />
+          </template>
+
+          <p v-else>Closed</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -76,13 +105,23 @@ import type { AddPrices } from "@/types/map.types";
 import { PropType, ref, watch } from "vue";
 import { hourOptions } from "@/composables/generic";
 import { INFO_TYPE } from "@/content/enums";
+import { timeOptions } from "@/content/time";
 
 import TextInput from "@/components/basic/inputs/TextInput.vue";
-import SelectScroller from "@/components/basic/inputs/SelectScroller.vue";
 import SwipeDelete from "@/components/basic/swipe-delete/SwipeDelete.vue";
+import SelectScroller from "@/components/basic/inputs/SelectScroller.vue";
+import SelectTwoScroller from "@/components/basic/inputs/SelectTwoScroller.vue";
+import Checkbox from "@/components/basic/checkbox/Checkbox.vue";
+
+// ** Data **
+const initialTime = {
+  open: ["09", "00"],
+  close: ["17", "00"],
+  closed: false,
+};
 
 // ** Props **
-const props = defineProps({
+defineProps({
   infoType: {
     type: String as PropType<INFO_TYPE>,
     default: INFO_TYPE.PRICE,
@@ -102,6 +141,15 @@ const prices = ref<AddPrices[]>([
 const info = ref<any>({
   spaces: null,
   disabledSpaces: null,
+});
+const times = ref<any>({
+  monday: { ...initialTime },
+  tuesday: { ...initialTime },
+  wednesday: { ...initialTime },
+  thursday: { ...initialTime },
+  friday: { ...initialTime },
+  saturday: { ...initialTime },
+  sunday: { ...initialTime },
 });
 
 // ** Methods **
@@ -161,6 +209,29 @@ watch(
     max-width: 240px;
     margin: 0 auto;
     text-align: center;
+  }
+
+  &-times {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 110px 30px 1fr;
+
+    &-day {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    &-inputs {
+      display: flex;
+      justify-self: end;
+      gap: 5px;
+
+      :deep(.select-toggle) {
+        width: 65px;
+        height: 28px;
+      }
+    }
   }
 
   &-price {

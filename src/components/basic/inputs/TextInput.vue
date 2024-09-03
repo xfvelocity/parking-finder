@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { PropType, ref } from "vue";
 
 import Icon from "@/components/basic/icon/Icon.vue";
 
@@ -65,7 +65,7 @@ const props = defineProps({
     default: "",
   },
   modelValue: {
-    type: [String, Number],
+    type: [String, Number, null] as PropType<string | number | null>,
     default: "",
     required: true,
   },
