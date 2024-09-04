@@ -76,17 +76,17 @@
       >
         <p class="text-transform-capitalize">{{ timeKey }}</p>
 
-        <Checkbox v-model="times[timeKey].closed" />
+        <Checkbox v-model="times[timeKey].isOpen" />
 
         <div class="add-info-times-inputs">
-          <template v-if="times[timeKey].closed">
+          <template v-if="times[timeKey].isOpen">
             <SelectTwoScroller
-              v-model="times[timeKey].open"
+              v-model="times[timeKey].openingTime"
               teleport-to="#addPriceScroller"
               :options="timeOptions"
             />
             <SelectTwoScroller
-              v-model="times[timeKey].close"
+              v-model="times[timeKey].closingTime"
               teleport-to="#addPriceScroller"
               :options="timeOptions"
             />
@@ -115,9 +115,9 @@ import Checkbox from "@/components/basic/checkbox/Checkbox.vue";
 
 // ** Data **
 const initialTime = {
-  open: ["09", "00"],
-  close: ["17", "00"],
-  closed: false,
+  openingTime: ["09", "00"],
+  closingTime: ["17", "00"],
+  isOpen: false,
 };
 
 // ** Props **
@@ -176,6 +176,20 @@ watch(
   },
   { deep: true }
 );
+
+watch(
+  info,
+  () => {
+    const isDisabled = !Object.values(info.value).every(
+      (value: any) => value || value === 0
+    );
+
+    emits("update:info:disabled", isDisabled);
+  },
+  { deep: true }
+);
+
+watch(times, () => {}, { deep: true });
 
 watch(
   () => props.infoType,
