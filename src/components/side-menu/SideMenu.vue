@@ -27,7 +27,7 @@
           />
         </div>
 
-        <div class="mt-auto safe-area-bottom">
+        <div class="mt-auto pb-4 safe-area-bottom">
           <div class="side-menu-option hover">
             <a
               href="mailto:contact@parkingfinder.uk?subject=Bug Report"

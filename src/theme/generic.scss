@@ -55,13 +55,15 @@ ion-modal {
   }
 }
 
-.safe-area {
-  &-top {
-    padding-top: var(--ion-safe-area-top);
-  }
+.ios {
+  .safe-area {
+    &-top {
+      padding-top: var(--ion-safe-area-top) !important;
+    }
 
-  &-bottom {
-    padding-bottom: var(--ion-safe-area-bottom);
+    &-bottom {
+      padding-bottom: var(--ion-safe-area-bottom) !important;
+    }
   }
 }
 

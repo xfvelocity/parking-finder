@@ -18,7 +18,10 @@
   </div>
 
   <div
-    v-if="backdropBreakpoint === currentBreakpoint && modelValue"
+    v-if="
+      backdropBreakpoint?.toFixed(2) === currentBreakpoint.toFixed(2) &&
+      modelValue
+    "
     class="drag-modal-backdrop"
     @click="handleBackdropClick"
   />

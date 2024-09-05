@@ -1,9 +1,9 @@
 <template>
-  <IonApp>
+  <IonApp :class="{ ios: isPlatform('ios'), android: isPlatform('android') }">
     <IonRouterOutlet />
   </IonApp>
 </template>
 
 <script setup lang="ts">
-import { IonApp, IonRouterOutlet } from "@ionic/vue";
+import { IonApp, IonRouterOutlet, isPlatform } from "@ionic/vue";
 </script>

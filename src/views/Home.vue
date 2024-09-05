@@ -32,7 +32,7 @@
       <div v-if="isLocationOpen" class="home-header-results">
         <LoadingBar v-if="resultsLoading" />
 
-        <div class="p-2 safe-area-top mt-10">
+        <div class="safe-area-top px-2 home-header-results-content">
           <p
             v-if="!mapResults.length && !resultsLoading"
             class="text-center pt-3 px-8"
@@ -203,6 +203,10 @@ const selectLocation = (result: MapLocationResult): void => {
       width: 100%;
       z-index: 2;
       background: white;
+
+      &-content {
+        margin-top: 60px;
+      }
 
       ul {
         padding: 0;

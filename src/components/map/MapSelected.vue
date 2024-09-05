@@ -20,7 +20,7 @@
     </IonHeader>
 
     <IonContent>
-      <LoadingSpinner v-if="loading" class="mt-4" />
+      <LoadingSpinner v-if="loading" class="center" />
 
       <template v-else>
         <MapSelectedAddInfo
@@ -201,7 +201,6 @@ const nextEditScreen = (): void => {
 watch(
   () => props.selectedParkingUuid,
   async () => {
-    console.log(props.selectedParkingUuid);
     if (!props.selectedParkingUuid) {
       infoType.value = INFO_TYPE.VIEWING;
       info.value = undefined;
