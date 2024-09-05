@@ -67,7 +67,7 @@ export interface Parking {
   info: ParkingInfo;
   location: ParkingLocation;
   name: string;
-  placeId: string;
+  locationUuid: string;
   prices: ParkingPrice[];
   rating: number;
   type: string;
@@ -77,4 +77,31 @@ export interface Parking {
 export interface AddPrices {
   price: number;
   hours: number;
+}
+
+export interface NewParkingTimes {
+  monday: NewParkingTime;
+  tuesday: NewParkingTime;
+  wednesday: NewParkingTime;
+  thursday: NewParkingTime;
+  friday: NewParkingTime;
+  saturday: NewParkingTime;
+  sunday: NewParkingTime;
+}
+
+export interface NewParkingTime {
+  openingTime: string | string[];
+  closingTime: string | string[];
+  isOpen: boolean;
+}
+
+export interface NewParkingInfo {
+  disabledSpaces: number | null;
+  spaces: number | null;
+}
+
+export interface NewParking {
+  times: NewParkingTimes;
+  info: NewParkingInfo;
+  prices: AddPrices[];
 }

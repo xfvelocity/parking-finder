@@ -76,17 +76,21 @@
       >
         <p class="text-transform-capitalize">{{ timeKey }}</p>
 
-        <Checkbox v-model="times[timeKey].isOpen" />
+        <Checkbox v-model="times[timeKey as keyof NewParkingTimes].isOpen" />
 
         <div class="add-info-times-inputs">
-          <template v-if="times[timeKey].isOpen">
+          <template v-if="times[timeKey as keyof NewParkingTimes].isOpen">
             <SelectTwoScroller
-              v-model="times[timeKey].openingTime"
+              v-model="
+                times[timeKey as keyof NewParkingTimes].openingTime as string[]
+              "
               teleport-to="#addPriceScroller"
               :options="timeOptions"
             />
             <SelectTwoScroller
-              v-model="times[timeKey].closingTime"
+              v-model="
+                times[timeKey as keyof NewParkingTimes].closingTime as string[]
+              "
               teleport-to="#addPriceScroller"
               :options="timeOptions"
             />
@@ -100,7 +104,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { AddPrices } from "@/types/map.types";
+import type {
+  AddPrices,
+  NewParkingInfo,
+  NewParkingTime,
+  NewParkingTimes,
+} from "@/types/map.types";
 
 import { PropType, ref, watch } from "vue";
 import { hourOptions } from "@/composables/generic";
@@ -114,7 +123,7 @@ import SelectTwoScroller from "@/components/basic/inputs/SelectTwoScroller.vue";
 import Checkbox from "@/components/basic/checkbox/Checkbox.vue";
 
 // ** Data **
-const initialTime = {
+const initialTime: NewParkingTime = {
   openingTime: ["09", "00"],
   closingTime: ["17", "00"],
   isOpen: false,
@@ -138,11 +147,11 @@ const prices = ref<AddPrices[]>([
     price: 0,
   },
 ]);
-const info = ref<any>({
+const info = ref<NewParkingInfo>({
   spaces: null,
   disabledSpaces: null,
 });
-const times = ref<any>({
+const times = ref<NewParkingTimes>({
   monday: { ...initialTime },
   tuesday: { ...initialTime },
   wednesday: { ...initialTime },

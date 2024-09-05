@@ -39,7 +39,9 @@
 
       <div v-if="editingInfo" class="map-selected-button p-4 safe-area-bottom">
         <template v-if="infoType === INFO_TYPE.TIMES">
-          <CustomButton @click="submitChanges"> Submit </CustomButton>
+          <CustomButton :loading="submitLoading" @click="submitChanges">
+            Submit
+          </CustomButton>
         </template>
         <template v-else>
           <CustomButton outlined @click="nextEditScreen"> Skip </CustomButton>
@@ -68,11 +70,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { Parking } from "@/types/map.types";
+import type { NewParking, NewParkingTimes, Parking } from "@/types/map.types";
 import type { PropType } from "vue";
 
 import { computed, ref, watch } from "vue";
 import { INFO_TYPE } from "@/content/enums";
+import { api } from "@/api/api";
+import { useConfigStore } from "@/stores/config";
 
 import { IonModal, IonContent, IonHeader, IonFooter } from "@ionic/vue";
 import CustomButton from "@/components/basic/button/CustomButton.vue";
@@ -94,9 +98,12 @@ const props = defineProps({
 });
 
 // ** Data **
+const configStore = useConfigStore();
+
 const isAuthModalOpen = ref<boolean>(false);
 const infoType = ref<INFO_TYPE>(INFO_TYPE.VIEWING);
-const info = ref<any>({});
+const info = ref<NewParking>();
+const submitLoading = ref<boolean>(false);
 const addedInfoDisabled = ref<any>({
   [INFO_TYPE.PRICE]: true,
   [INFO_TYPE.INFO]: true,
@@ -109,8 +116,48 @@ const editingInfo = computed<boolean>(() => {
 });
 
 // ** Methods **
-const submitChanges = (): void => {
-  console.log("submit", info.value);
+const submitChanges = async (): Promise<void> => {
+  if (!info.value) {
+    return;
+  }
+
+  submitLoading.value = true;
+
+  const payload: NewParking = JSON.parse(JSON.stringify({ ...info.value }));
+
+  Object.keys(payload.times).map((key) => {
+    const time = payload.times[key as keyof NewParkingTimes];
+
+    payload.times[key as keyof NewParkingTimes] = {
+      openingTime: (time.openingTime as string[]).join(":"),
+      closingTime: (time.closingTime as string[]).join(":"),
+      isOpen: time.isOpen,
+    };
+  });
+
+  const res = await api(
+    "POST",
+    `map/${props.selectedParking?.locationUuid}/info`,
+    payload,
+    true
+  );
+
+  if (!res?.error) {
+    configStore.snackbar = {
+      text: "Info has been submitted for review",
+      background: "green",
+    };
+
+    infoType.value = INFO_TYPE.VIEWING;
+    info.value = undefined;
+    addedInfoDisabled.value = {
+      [INFO_TYPE.PRICE]: true,
+      [INFO_TYPE.INFO]: true,
+      [INFO_TYPE.TIMES]: true,
+    };
+  }
+
+  submitLoading.value = false;
 };
 
 const openDirections = (): void => {
@@ -135,7 +182,7 @@ watch(
   () => {
     if (!props.selectedParking) {
       infoType.value = INFO_TYPE.VIEWING;
-      info.value = {};
+      info.value = undefined;
       addedInfoDisabled.value = {
         [INFO_TYPE.PRICE]: true,
         [INFO_TYPE.INFO]: true,
