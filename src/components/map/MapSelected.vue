@@ -1,11 +1,11 @@
 <template>
   <IonModal
     class="map-selected"
-    :is-open="!!selectedParking"
+    :is-open="!!selectedParkingUuid"
     :initial-breakpoint="1"
     :breakpoints="[0, 1]"
     handle
-    @ion-breakpoint-did-change="$emit('update:selectedParking', null)"
+    @ion-breakpoint-did-change="emits('update:selectedParkingUuid', '')"
   >
     <IonHeader>
       <div v-if="selectedParking" class="map-selected-header pt-5 pb-3">
@@ -20,18 +20,22 @@
     </IonHeader>
 
     <IonContent>
-      <MapSelectedAddInfo
-        v-if="editingInfo"
-        :info-type="infoType"
-        @update:info:disabled="addedInfoDisabled[infoType] = $event"
-        @update:info:values="info = $event"
-      />
-      <MapSelectedInfo
-        v-else
-        :selected-parking="selectedParking"
-        @open:authModal="isAuthModalOpen = $event"
-        @update:addingInfo="infoType = INFO_TYPE.PRICE"
-      />
+      <LoadingSpinner v-if="loading" class="mt-4" />
+
+      <template v-else>
+        <MapSelectedAddInfo
+          v-if="editingInfo"
+          :info-type="infoType"
+          @update:info:disabled="addedInfoDisabled[infoType] = $event"
+          @update:info:values="info = $event"
+        />
+        <MapSelectedInfo
+          v-else
+          :selected-parking="selectedParking"
+          @open:authModal="isAuthModalOpen = $event"
+          @update:addingInfo="infoType = INFO_TYPE.PRICE"
+        />
+      </template>
     </IonContent>
 
     <IonFooter>
@@ -71,7 +75,6 @@
 
 <script lang="ts" setup>
 import type { NewParking, NewParkingTimes, Parking } from "@/types/map.types";
-import type { PropType } from "vue";
 
 import { computed, ref, watch } from "vue";
 import { INFO_TYPE } from "@/content/enums";
@@ -84,18 +87,22 @@ import MapSelectedInfo from "@/components/map/MapSelectedInfo.vue";
 import MapSelectedAddInfo from "@/components/map/MapSelectedAddInfo.vue";
 import Rating from "@/components/basic/rating/Rating.vue";
 import AuthModal from "@/components/auth/AuthModal.vue";
+import LoadingSpinner from "@/components/basic/loading/LoadingSpinner.vue";
 
 // ** Props **
 const props = defineProps({
-  selectedParking: {
-    type: [Object, null] as PropType<Parking | null>,
-    default: null,
+  selectedParkingUuid: {
+    type: String,
+    default: "",
   },
   showChevron: {
     type: Boolean,
     default: false,
   },
 });
+
+// ** Emits **
+const emits = defineEmits(["update:selectedParkingUuid"]);
 
 // ** Data **
 const configStore = useConfigStore();
@@ -104,6 +111,8 @@ const isAuthModalOpen = ref<boolean>(false);
 const infoType = ref<INFO_TYPE>(INFO_TYPE.VIEWING);
 const info = ref<NewParking>();
 const submitLoading = ref<boolean>(false);
+const selectedParking = ref<Parking>();
+const loading = ref<boolean>(false);
 const addedInfoDisabled = ref<any>({
   [INFO_TYPE.PRICE]: true,
   [INFO_TYPE.INFO]: true,
@@ -137,7 +146,7 @@ const submitChanges = async (): Promise<void> => {
 
   const res = await api(
     "POST",
-    `map/${props.selectedParking?.locationUuid}/info`,
+    `map/${props.selectedParkingUuid}/info`,
     payload,
     true
   );
@@ -162,8 +171,20 @@ const submitChanges = async (): Promise<void> => {
 
 const openDirections = (): void => {
   window.open(
-    `https://www.google.com/maps/dir/?api=1&destination=${props.selectedParking?.address}`
+    `https://www.google.com/maps/dir/?api=1&destination=${selectedParking.value?.address}`
   );
+};
+
+const getMapInfo = async (): Promise<void> => {
+  loading.value = true;
+
+  const res = await api("GET", `map/${props.selectedParkingUuid}`);
+
+  if (!res?.error) {
+    selectedParking.value = res?.data;
+  }
+
+  loading.value = false;
 };
 
 const nextEditScreen = (): void => {
@@ -178,16 +199,20 @@ const nextEditScreen = (): void => {
 
 // ** Watchers **
 watch(
-  () => props.selectedParking,
-  () => {
-    if (!props.selectedParking) {
+  () => props.selectedParkingUuid,
+  async () => {
+    console.log(props.selectedParkingUuid);
+    if (!props.selectedParkingUuid) {
       infoType.value = INFO_TYPE.VIEWING;
       info.value = undefined;
+      selectedParking.value = undefined;
       addedInfoDisabled.value = {
         [INFO_TYPE.PRICE]: true,
         [INFO_TYPE.INFO]: true,
         [INFO_TYPE.TIMES]: true,
       };
+    } else {
+      await getMapInfo();
     }
   }
 );

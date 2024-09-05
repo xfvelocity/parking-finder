@@ -65,7 +65,7 @@
         <ul>
           <li
             v-for="(openingTime, i) in Object.keys(
-              selectedParking.info.openingHours
+              selectedParking.openingHours
             )"
             :key="i"
           >
@@ -73,9 +73,7 @@
 
             {{
               formatOpeningHours(
-                selectedParking.info.openingHours[
-                  openingTime as keyof ParkingHours
-                ]
+                selectedParking.openingHours[openingTime as keyof ParkingHours]
               ) || "?"
             }}
           </li>
@@ -85,17 +83,23 @@
       <hr class="divider" />
 
       <div class="p-4 text-center">
-        <p>
-          This locations is missing information. Would you like to add some to
-          help other users?
-        </p>
+        <template v-if="selectedParking.pendingInfoByUser">
+          <p>Your added information is currently pending approval.</p>
+        </template>
 
-        <p
-          class="text-primary text-underline mt-2 hover"
-          @click="toggleAddInfo"
-        >
-          Add Parking Info
-        </p>
+        <template v-else-if="selectedParking.type !== 'ncp'">
+          <p>
+            This location is missing information. Would you like to add some to
+            help other users?
+          </p>
+
+          <p
+            class="text-primary text-underline mt-2 hover"
+            @click="toggleAddInfo"
+          >
+            Add Parking Info
+          </p>
+        </template>
       </div>
     </div>
   </div>
@@ -181,16 +185,7 @@ const formatOpeningHours = (hours: string[]): string => {
 };
 
 // ** Watchers **
-watch(
-  () => props.selectedParking,
-  () => {
-    if (!props.selectedParking) {
-      emits("update:addingInfo", false);
-    }
-
-    checkMatchingHours();
-  }
-);
+watch(() => props.selectedParking, checkMatchingHours);
 </script>
 
 <style lang="scss" scoped>

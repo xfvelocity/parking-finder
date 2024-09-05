@@ -59,19 +59,25 @@ export interface ParkingHours {
 export interface ParkingInfo {
   disabledSpaces: number;
   spaces: number;
-  openingHours: ParkingHours;
 }
 
-export interface Parking {
+export interface SimpleParking {
   address: string;
-  info: ParkingInfo;
   location: ParkingLocation;
   name: string;
-  locationUuid: string;
-  prices: ParkingPrice[];
-  rating: number;
+  uuid: string;
   type: string;
-  _id: string;
+  rating: number;
+  matchingPrice?: number;
+}
+
+export interface Parking extends SimpleParking {
+  info: ParkingInfo;
+  prices: ParkingPrice[];
+  openingHours: ParkingHours;
+  pendingInfoByUser?: boolean;
+  updatedByUuid: String;
+  updatedAt: String;
 }
 
 export interface AddPrices {

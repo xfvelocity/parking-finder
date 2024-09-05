@@ -3,25 +3,24 @@
     <div ref="hereMap" class="map" tabindex="-1" />
 
     <MapSelected
-      :selected-parking="selectedParking"
-      @update:selectedParking="selectedParking = $event"
+      :selected-parking-uuid="selectedParkingUuid"
+      @update:selectedParkingUuid="selectedParkingUuid = $event"
     />
 
     <MapList
       :model-value="!isLocationOpen"
       :items="items"
-      @selected:item="selectedParking = $event"
+      @selected:item="selectedParkingUuid = $event"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { MapPosition, Parking } from "@/types/map.types";
+import type { MapPosition, SimpleParking } from "@/types/map.types";
 
 import { ref, onMounted, watch, PropType } from "vue";
 import { debounce, getImageUrl, calculateArea } from "@/composables/generic";
 import { useMapStore } from "@/stores/map";
-import { searchName } from "@/composables/here";
 import { useUserStore } from "@/stores/user";
 import { api } from "@/api/api";
 
@@ -48,11 +47,11 @@ let map: google.maps.Map;
 let mapController: AbortController = new AbortController();
 const hereMap = ref<HTMLDivElement>();
 const markers = ref<google.maps.marker.AdvancedMarkerElement[]>([]);
-const selectedParking = ref<Parking | null>(null);
+const selectedParkingUuid = ref<string>("");
 const distanceMovedSinceUpdate = ref<number>(0);
 const mapArea = ref<number>(0);
 const searchZoom = ref<number>(15);
-const items = ref<Parking[]>([]);
+const items = ref<SimpleParking[]>([]);
 const currentLocationMarker = ref<google.maps.marker.AdvancedMarkerElement>();
 
 // ** Methods **
@@ -93,22 +92,18 @@ const initMap = async (): Promise<void> => {
   );
 
   map.addListener("click", () => {
-    selectedParking.value = null;
+    selectedParkingUuid.value = "";
   });
 };
 
-const addMarker = (lat: number, lng: number, location: Parking): void => {
+const addMarker = (lat: number, lng: number, location: SimpleParking): void => {
   let content;
 
   if (mapStore.filters?.hours) {
     content = document.createElement("div");
     content.classList.add("map-item");
 
-    const sortedArray = location.prices.sort((a, b) => a.hours - b.hours);
-    const text = sortedArray.filter((x) => x.hours >= mapStore.filters.hours)[0]
-      .price;
-
-    content.innerHTML = `£${text.toFixed(2)}` || "";
+    content.innerHTML = `£${location.matchingPrice?.toFixed(2)}` || "";
   } else {
     content = document.createElement("img");
     content.classList.add("map-icon");
@@ -116,8 +111,6 @@ const addMarker = (lat: number, lng: number, location: Parking): void => {
 
     if (location.type === "ncp") {
       src = getImageUrl("icons/ncp.svg");
-    } else if (location.prices.length) {
-      src = getImageUrl("icons/parking-price.svg");
     } else {
       src = getImageUrl("icons/parking.svg");
     }
@@ -132,7 +125,7 @@ const addMarker = (lat: number, lng: number, location: Parking): void => {
   });
 
   marker.addListener("click", () => {
-    selectedParking.value = location;
+    selectedParkingUuid.value = location.uuid;
   });
 
   markers.value.push(marker);
@@ -237,7 +230,7 @@ watch(
   async () => {
     map.setCenter(props.location);
     map.setZoom(15);
-    selectedParking.value = null;
+    selectedParkingUuid.value = "";
 
     await refreshMarkers();
 
@@ -266,7 +259,7 @@ watch(
 watch(
   () => mapStore.filters.hours,
   async () => {
-    selectedParking.value = null;
+    selectedParkingUuid.value = "";
 
     await refreshMarkers();
   }
