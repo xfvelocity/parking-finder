@@ -17,7 +17,7 @@
           v-for="(item, i) in items"
           :key="i"
           class="map-list-item bg-background mb-2 p-3 hover"
-          @click="$emit('selected:item', item)"
+          @click="$emit('selected:item', item.uuid)"
         >
           <div class="map-list-item-header">
             <h4 class="mr-1">{{ item.name }}</h4>
