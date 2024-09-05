@@ -30,6 +30,6 @@ npm-debug.log*
 /platforms
 /plugins
 /www
-
+Podfile.lock
 
 .env
