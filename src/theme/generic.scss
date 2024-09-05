@@ -108,7 +108,8 @@ h2,
 h3,
 h4,
 p,
-li {
+li,
+a {
   margin: 0;
   color: map-get($colours, "grey-darken-2");
 }
@@ -116,8 +117,13 @@ li {
 p,
 label,
 li,
-button {
+button,
+a {
   font-size: 12px;
+}
+
+a {
+  text-decoration: none;
 }
 
 .divider {

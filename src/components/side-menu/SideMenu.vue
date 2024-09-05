@@ -24,18 +24,37 @@
             v-if="!isCurrentRoute(option.routeName)"
             class="ml-auto"
             src="chevron-right"
-            :size="10"
           />
         </div>
 
-        <div
-          v-if="loggedIn"
-          class="side-menu-option mt-auto mb-4"
-          @click="logOut"
-        >
-          <p>Log out</p>
+        <div class="mt-auto safe-area-bottom">
+          <div class="side-menu-option hover">
+            <a
+              href="mailto:contact@parkingfinder.uk?subject=Bug Report"
+              target="_blank"
+            >
+              Report a bug
+            </a>
 
-          <Icon class="ml-auto" src="chevron-right" :size="10" />
+            <Icon class="ml-auto" src="send" fill="grey-darken-1" />
+          </div>
+
+          <div class="side-menu-option hover">
+            <a
+              href="mailto:contact@parkingfinder.uk?subject=Feature Request"
+              target="_blank"
+            >
+              Request a feature
+            </a>
+
+            <Icon class="ml-auto" src="send" fill="grey-darken-1" />
+          </div>
+
+          <div v-if="loggedIn" class="side-menu-option" @click="logOut">
+            <p>Log out</p>
+
+            <Icon class="ml-auto" src="signout" fill="grey-darken-1" />
+          </div>
         </div>
       </div>
     </IonContent>
@@ -118,13 +137,14 @@ const isCurrentRoute = (routeName: string): boolean => {
     padding: 15px;
     display: flex;
     align-items: center;
+    border-top: 1px solid map-get($colours, "border");
   }
 
   &-option {
     padding: 15px;
     display: flex;
     align-items: center;
-    border: 1px solid map-get($colours, "border");
+    border-top: 1px solid map-get($colours, "border");
 
     &-selected {
       p {
