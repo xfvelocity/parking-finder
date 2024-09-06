@@ -8,12 +8,7 @@
     </div>
 
     <transition-group name="slide" tag="div">
-      <SwipeDelete
-        v-for="(price, i) in prices"
-        :key="i"
-        class="mt-2"
-        @delete="deletePrice(i)"
-      >
+      <div v-for="(price, i) in prices" :key="i" class="mt-2">
         <div class="add-info-price-item px-4">
           <SelectScroller
             v-model="price.hours"
@@ -26,16 +21,22 @@
               <span class="add-info-price-symbol">£</span>
             </template>
           </TextInput>
+
+          <Icon
+            class="hover"
+            src="close"
+            fill="red-lighten-3"
+            @click="deletePrice(i)"
+          />
         </div>
-      </SwipeDelete>
+      </div>
     </transition-group>
 
-    <p
-      class="mt-4 text-primary text-center text-underline hover"
-      @mousedown="addPrice"
-    >
-      Add another price
-    </p>
+    <div class="add-info-price-add hover bg-primary" @mousedown="addPrice">
+      <Icon src="plus" :size="10" fill="white" />
+
+      <p class="ml-1 text-white text-center">Add Price</p>
+    </div>
   </div>
 
   <div v-if="infoType === INFO_TYPE.INFO" class="add-info-info p-4">
@@ -117,10 +118,10 @@ import { INFO_TYPE } from "@/content/enums";
 import { timeOptions } from "@/content/time";
 
 import TextInput from "@/components/basic/inputs/TextInput.vue";
-import SwipeDelete from "@/components/basic/swipe-delete/SwipeDelete.vue";
 import SelectScroller from "@/components/basic/inputs/SelectScroller.vue";
 import SelectTwoScroller from "@/components/basic/inputs/SelectTwoScroller.vue";
 import Checkbox from "@/components/basic/checkbox/Checkbox.vue";
+import Icon from "@/components/basic/icon/Icon.vue";
 
 // ** Data **
 const initialTime: NewParkingTime = {
@@ -284,6 +285,10 @@ watch(
     &-add {
       display: flex;
       align-items: center;
+      justify-content: center;
+      padding: 3px 0;
+      border-radius: 5px;
+      margin: 15px 20px;
     }
 
     &-symbol {
