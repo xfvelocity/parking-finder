@@ -11,7 +11,7 @@
 
   <SideMenu :content-id="contentId" />
 
-  <teleport to="body">
+  <teleport to="ion-app">
     <Snackbar />
   </teleport>
 </template>
