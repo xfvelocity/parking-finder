@@ -12,7 +12,8 @@
     "open:android": "ionic capacitor open android",
     "open:ios": "ionic capacitor open ios",
     "run:ios": "ionic capacitor run ios -l --external",
-    "run:android": "ionic capacitor run android -l --external"
+    "run:android": "ionic capacitor run android -l --external",
+    "appflow:build": "if [ \"$CI_PLATFORM\" != \"web\" ]; then npx trapeze run appflow.yml -y --$CI_PLATFORM; fi && npm run build"
   },
   "dependencies": {
     "@capacitor/android": "6.1.2",
@@ -25,6 +26,7 @@
     "@capacitor/status-bar": "6.0.1",
     "@ionic/vue": "^8.3.0",
     "@ionic/vue-router": "^8.3.0",
+    "@trapezedev/configure": "^7.0.10",
     "@types/google.maps": "^3.57.0",
     "@vueuse/core": "^11.0.3",
     "axios": "^1.7.7",
