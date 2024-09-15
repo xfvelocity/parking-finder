@@ -100,8 +100,23 @@ const addMarker = (lat: number, lng: number, location: SimpleParking): void => {
   let content;
 
   if (mapStore.filters?.hours) {
+    const priceValues = items.value.map(
+      (item) => item.matchingPrice
+    ) as number[];
+
+    const minPrice = Math.min(...priceValues);
+    const maxPrice = Math.max(...priceValues);
+
     content = document.createElement("div");
     content.classList.add("map-item");
+
+    if (location.matchingPrice === minPrice) {
+      content.classList.add("border-green-darken-1", "text-green-darken-1");
+    } else if (location.matchingPrice === maxPrice) {
+      content.classList.add("border-red-darken-1", "text-red-darken-1");
+    } else {
+      content.classList.add("border-orange-darken-1", "text-orange-darken-1");
+    }
 
     content.innerHTML = `£${location.matchingPrice?.toFixed(2)}` || "";
   } else {
@@ -281,9 +296,8 @@ watch(
     background: white;
     padding: 5px 15px;
     font-size: 10px;
-    border-radius: 5px;
-    border: 2px solid map-get($colours, "border");
-    color: map-get($colours, "black");
+    border-radius: 7px;
+    border: 1px solid;
 
     &-current {
       width: 14px;
