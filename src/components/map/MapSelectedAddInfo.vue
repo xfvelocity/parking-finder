@@ -71,26 +71,32 @@
 
     <div>
       <div
-        v-for="(timeKey, i) in Object.keys(times)"
+        v-for="(timeKey, i) in Object.keys(openingHours)"
         :key="i"
         class="add-info-times mt-3"
       >
         <p class="text-transform-capitalize">{{ timeKey }}</p>
 
-        <Checkbox v-model="times[timeKey as keyof NewParkingTimes].isOpen" />
+        <Checkbox
+          v-model="openingHours[timeKey as keyof NewParkingTimes].isOpen"
+        />
 
         <div class="add-info-times-inputs">
-          <template v-if="times[timeKey as keyof NewParkingTimes].isOpen">
+          <template
+            v-if="openingHours[timeKey as keyof NewParkingTimes].isOpen"
+          >
             <SelectTwoScroller
               v-model="
-                times[timeKey as keyof NewParkingTimes].openingTime as string[]
+                openingHours[timeKey as keyof NewParkingTimes]
+                  .openingTime as string[]
               "
               teleport-to="#addPriceScroller"
               :options="timeOptions"
             />
             <SelectTwoScroller
               v-model="
-                times[timeKey as keyof NewParkingTimes].closingTime as string[]
+                openingHours[timeKey as keyof NewParkingTimes]
+                  .closingTime as string[]
               "
               teleport-to="#addPriceScroller"
               :options="timeOptions"
@@ -152,7 +158,7 @@ const info = ref<NewParkingInfo>({
   spaces: null,
   disabledSpaces: null,
 });
-const times = ref<NewParkingTimes>({
+const openingHours = ref<NewParkingTimes>({
   monday: { ...initialTime },
   tuesday: { ...initialTime },
   wednesday: { ...initialTime },
@@ -199,7 +205,7 @@ watch(
   { deep: true }
 );
 
-watch(times, () => {}, { deep: true });
+watch(openingHours, () => {}, { deep: true });
 
 watch(
   () => props.infoType,
@@ -207,7 +213,7 @@ watch(
     emits("update:info:values", {
       prices: prices.value,
       info: info.value,
-      times: times.value,
+      openingHours: openingHours.value,
     });
   }
 );

@@ -107,7 +107,7 @@ export interface NewParkingInfo {
 }
 
 export interface NewParking {
-  times: NewParkingTimes;
+  openingHours: NewParkingTimes;
   info: NewParkingInfo;
   prices: AddPrices[];
 }

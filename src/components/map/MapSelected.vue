@@ -134,10 +134,10 @@ const submitChanges = async (): Promise<void> => {
 
   const payload: NewParking = JSON.parse(JSON.stringify({ ...info.value }));
 
-  Object.keys(payload.times).map((key) => {
-    const time = payload.times[key as keyof NewParkingTimes];
+  Object.keys(payload.openingHours).map((key) => {
+    const time = payload.openingHours[key as keyof NewParkingTimes];
 
-    payload.times[key as keyof NewParkingTimes] = {
+    payload.openingHours[key as keyof NewParkingTimes] = {
       openingTime: (time.openingTime as string[]).join(":"),
       closingTime: (time.closingTime as string[]).join(":"),
       isOpen: time.isOpen,
