@@ -147,8 +147,7 @@ const submitChanges = async (): Promise<void> => {
   const res = await api(
     "POST",
     `map/${props.selectedParkingUuid}/info`,
-    payload,
-    true
+    payload
   );
 
   if (!res?.error) {

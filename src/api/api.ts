@@ -5,25 +5,21 @@ import axios from "axios";
 export const api = async <T = any>(
   method: string,
   url: string,
-  data: any = {},
-  auth: boolean = false
+  data: any = {}
 ): Promise<T> => {
   let res: any;
   let config: any = {};
 
   const configStore = useConfigStore();
+  const userStore = useUserStore();
 
   try {
-    if (auth) {
-      const userStore = useUserStore();
-
-      config = {
-        headers: {
-          accept: "application/json",
-          Authorization: `${userStore.accessToken}`,
-        },
-      };
-    }
+    config = {
+      headers: {
+        accept: "application/json",
+        Authorization: `${userStore.accessToken || ""}`,
+      },
+    };
 
     if (method === "GET") {
       res = await axios.get(
