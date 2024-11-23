@@ -99,6 +99,9 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@/theme/variables/_colours";
+
 .select {
   position: relative;
   font-size: 12px;
@@ -107,7 +110,7 @@ watch(
     display: flex;
     align-items: center;
     padding: 5px 0;
-    border-bottom: 1px solid map-get($colours, "border");
+    border-bottom: 1px solid map.get(colours.$colours, "border");
     position: relative;
     color: black;
   }

@@ -217,16 +217,19 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@/theme/variables/_colours";
+
 .map-selected {
   &-header {
-    border-bottom: 1px solid map-get($colours, "border");
+    border-bottom: 1px solid map.get(colours.$colours, "border");
   }
 
   &-button {
     display: flex;
     align-items: center;
     gap: 10px;
-    border-top: 1px solid map-get($colours, "border");
+    border-top: 1px solid map.get(colours.$colours, "border");
   }
 
   h3 {
@@ -241,7 +244,7 @@ watch(
     margin-top: 5px;
 
     &-btn {
-      color: map-get($colours, "primary");
+      color: map.get(colours.$colours, "primary");
       text-decoration: underline;
     }
   }

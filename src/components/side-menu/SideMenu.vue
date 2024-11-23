@@ -127,28 +127,31 @@ const isCurrentRoute = (routeName: string): boolean => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@/theme/variables/_colours";
+
 .side-menu {
   display: flex;
   flex-direction: column;
   height: 100%;
 
   &-user {
-    background: map-get($colours, "background");
+    background: map.get(colours.$colours, "background");
     padding: 15px;
     display: flex;
     align-items: center;
-    border-top: 1px solid map-get($colours, "border");
+    border-top: 1px solid map.get(colours.$colours, "border");
   }
 
   &-option {
     padding: 15px;
     display: flex;
     align-items: center;
-    border-top: 1px solid map-get($colours, "border");
+    border-top: 1px solid map.get(colours.$colours, "border");
 
     &-selected {
       p {
-        color: map-get($colours, "primary");
+        color: map.get(colours.$colours, "primary");
       }
     }
   }

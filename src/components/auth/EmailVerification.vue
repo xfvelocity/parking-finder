@@ -62,11 +62,14 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@/theme/variables/_colours";
+
 .email-verification {
   input {
     background: none;
     border: none;
-    border-bottom: 1px solid map-get($colours, "grey-lighten-1");
+    border-bottom: 1px solid map.get(colours.$colours, "grey-lighten-1");
     width: 110px;
     height: 40px;
     text-align: center;

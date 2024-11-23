@@ -220,6 +220,9 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@/theme/variables/_colours";
+
 .slide {
   &-enter-active,
   &-leave-active {
@@ -300,7 +303,7 @@ watch(
     &-symbol {
       font-size: 12px;
       margin-left: 3px;
-      color: map-get($colours, "grey-darken-2");
+      color: map.get(colours.$colours, "grey-darken-2");
     }
   }
 }

@@ -251,6 +251,10 @@ watch(
 </script>
 
 <style scoped lang="scss">
+@use "sass:map";
+@use "@/theme/variables/_colours";
+@use "@/theme/mixins";
+
 .drag-modal {
   background: white;
   position: fixed;
@@ -263,7 +267,7 @@ watch(
   box-shadow: 0 4px 4px 4px rgba(0, 0, 0, 0.2);
 
   &-header {
-    border-bottom: 1px solid map-get($colours, "border");
+    border-bottom: 1px solid map.get(colours.$colours, "border");
   }
 
   &-backdrop {
@@ -280,9 +284,9 @@ watch(
     height: 5px;
     width: 36px;
     border-radius: 8px;
-    background: map-get($colours, "grey-lighten-2");
+    background: map.get(colours.$colours, "grey-lighten-2");
 
-    @include center(true, false);
+    @include mixins.center(true, false);
   }
 }
 </style>

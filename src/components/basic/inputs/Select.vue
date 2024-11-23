@@ -231,6 +231,9 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@/theme/variables/_colours";
+
 .select {
   position: relative;
   font-size: 12px;
@@ -240,7 +243,7 @@ watch(
     display: flex;
     align-items: center;
     padding: 5px 0;
-    border-bottom: 1px solid map-get($colours, "border");
+    border-bottom: 1px solid map.get(colours.$colours, "border");
     position: relative;
     color: black;
   }
@@ -261,7 +264,7 @@ watch(
     width: 100%;
     margin-top: 2px;
     box-shadow: 1px 4px 4px rgba(0, 0, 0, 0.4);
-    border: 1px solid map-get($colours, "border");
+    border: 1px solid map.get(colours.$colours, "border");
     color: black;
     border-radius: 5px;
     overflow-y: hidden;
@@ -279,11 +282,11 @@ watch(
       font-size: 12px;
 
       &:hover {
-        background: map-get($colours, "grey-lighten-5");
+        background: map.get(colours.$colours, "grey-lighten-5");
       }
 
       &:not(:last-child) {
-        border-bottom: 1px solid map-get($colours, "border");
+        border-bottom: 1px solid map.get(colours.$colours, "border");
       }
     }
   }

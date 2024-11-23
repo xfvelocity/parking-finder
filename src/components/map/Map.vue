@@ -291,6 +291,9 @@ watch(
 </style>
 
 <style lang="scss">
+@use "sass:map";
+@use "@/theme/variables/_colours";
+
 .map {
   &-item {
     background: white;
@@ -304,8 +307,8 @@ watch(
       height: 14px;
       border-radius: 50%;
       border: 1px solid white;
-      background: map-get($colours, "blue-darken-1");
-      box-shadow: 0 0 0 0 map-get($colours, "blue-darken-1");
+      background: map.get(colours.$colours, "blue-darken-1");
+      box-shadow: 0 0 0 0 map.get(colours.$colours, "blue-darken-1");
       transform: scale(1);
       animation: pulse 3s infinite;
     }

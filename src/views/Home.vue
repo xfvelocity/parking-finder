@@ -156,6 +156,10 @@ const selectLocation = (result: MapLocationResult): void => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@/theme/variables/_colours";
+@use "@/theme/variables/_styles";
+
 .home {
   position: relative;
   height: 100%;
@@ -170,8 +174,8 @@ const selectLocation = (result: MapLocationResult): void => {
     height: 40px;
     min-width: 40px;
     padding-right: 2px;
-    border: 1px solid map-get($colours, "border");
-    box-shadow: $box-shadow;
+    border: 1px solid map.get(colours.$colours, "border");
+    box-shadow: styles.$box-shadow;
 
     display: flex;
     align-items: center;
@@ -223,7 +227,7 @@ const selectLocation = (result: MapLocationResult): void => {
           }
 
           &:not(:last-child) {
-            border-bottom: 1px solid map-get($colours, "border");
+            border-bottom: 1px solid map.get(colours.$colours, "border");
           }
         }
       }

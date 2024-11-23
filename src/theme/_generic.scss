@@ -1,3 +1,7 @@
+@use "sass:map";
+@use "variables";
+@use "mixins";
+
 * {
   box-sizing: border-box;
 }
@@ -113,7 +117,7 @@ p,
 li,
 a {
   margin: 0;
-  color: map-get($colours, "grey-darken-2");
+  color: map.get(variables.$colours, "grey-darken-2");
 }
 
 p,
@@ -129,7 +133,7 @@ a {
 }
 
 .divider {
-  background: map-get($colours, "divider");
+  background: map.get(variables.$colours, "divider");
   width: 100%;
   height: 2px;
   margin: 10px 0;
@@ -142,28 +146,28 @@ a {
 }
 
 .center {
-  @include center;
+  @include mixins.center;
 
   &-horizontal {
-    @include center(true, false);
+    @include mixins.center(true, false);
   }
 
   &-vertical {
-    @include center(false, true);
+    @include mixins.center(false, true);
   }
 }
 
 @each $prop,
   $abbrev in (color: text-, background-color: bg-, border-color: border-)
 {
-  @each $name, $colour in $colours {
+  @each $name, $colour in variables.$colours {
     .#{$abbrev}#{$name} {
       #{$prop}: #{$colour} !important;
     }
   }
 }
 
-@each $name, $colour in $colours {
+@each $name, $colour in variables.$colours {
   .icon {
     &-#{$name} {
       path {

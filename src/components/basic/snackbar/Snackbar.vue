@@ -40,8 +40,10 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+@use "@/theme/mixins";
+
 .snackbar {
-  @include center(true, false);
+  @include mixins.center(true, false);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -82,6 +82,10 @@ watch(location, () => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@/theme/variables/_colours";
+@use "@/theme/variables/_styles";
+
 .map-header {
   padding: 20px;
   display: flex;
@@ -98,8 +102,8 @@ watch(location, () => {
     height: 40px;
     min-width: 40px;
     padding-right: 1px;
-    border: 1px solid map-get($colours, "border");
-    box-shadow: $box-shadow;
+    border: 1px solid map.get(colours.$colours, "border");
+    box-shadow: styles.$box-shadow;
 
     display: flex;
     align-items: center;
