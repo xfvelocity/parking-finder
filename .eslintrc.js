@@ -1,6 +1,4 @@
-/* eslint-env node */
-module.exports = {
-  root: true,
+export default {
   extends: [
     "plugin:vue/vue3-essential",
     "eslint:recommended",
@@ -10,5 +8,5 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2022,
   },
-  files: [".vue", ".js", ".ts"],
+  ignorePatterns: ["android/app/build/**", ".gitignore"],
 };

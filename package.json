@@ -14,7 +14,7 @@
     "run:android": "ionic capacitor run android -l --external",
     "appflow:build": "if [ \"$CI_PLATFORM\" != \"web\" ]; then npx trapeze run appflow.yml -y --$CI_PLATFORM; fi && npm run build",
     "prettier": "prettier . --write",
-    "lint": "vue-tsc --noEmit && eslint . --fix --ignore-pattern .gitignore",
+    "lint": "vue-tsc --noEmit && eslint . --fix",
     "prepare": "husky"
   },
   "dependencies": {
@@ -47,7 +47,7 @@
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.5.0",
     "@vue/tsconfig": "^0.7.0",
-    "eslint": "^9.26.0",
+    "eslint": "8.56.0",
     "eslint-plugin-vue": "^10.1.0",
     "husky": "^9.1.7",
     "prettier": "^3.5.3",
