@@ -13,6 +13,8 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 $RECYCLE.BIN/
 
+android/.idea/deploymentTargetSelector.xml
+
 *.log
 log.txt
 npm-debug.log*
