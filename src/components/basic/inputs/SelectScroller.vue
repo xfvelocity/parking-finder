@@ -89,12 +89,12 @@ watch(
   () => props.modelValue,
   (value) => {
     const matchingOption: SelectOption | undefined = props.options.find(
-      (option) => option.value == value
+      (option) => option.value == value,
     );
 
     selected.value = matchingOption;
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 

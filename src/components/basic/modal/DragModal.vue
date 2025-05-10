@@ -105,7 +105,7 @@ const handleMouseUp = (event: MouseEvent | TouchEvent): void => {
   document.removeEventListener(
     event?.type === "touchend" ? "touchmove" : "mousemove",
     resize,
-    false
+    false,
   );
 };
 
@@ -121,7 +121,7 @@ const handleMouseDown = (event: MouseEvent | TouchEvent): void => {
   document.addEventListener(
     event?.type === "touchstart" ? "touchmove" : "mousemove",
     resize,
-    false
+    false,
   );
 };
 
@@ -145,7 +145,7 @@ const snapToBreakpoint = (breakpoint?: number): void => {
   const contentHeight: number = props.contentHeight || window.innerHeight - 20;
 
   props.breakpoints.forEach((breakpoint) =>
-    breakpointHeights.value.push(contentHeight * breakpoint)
+    breakpointHeights.value.push(contentHeight * breakpoint),
   );
 
   const closestBreakpoint: number = breakpoint
@@ -154,7 +154,7 @@ const snapToBreakpoint = (breakpoint?: number): void => {
         Math.abs(curr - newModalHeight.value) <
         Math.abs(prev - newModalHeight.value)
           ? curr
-          : prev
+          : prev,
       );
 
   if (closestBreakpoint === 0) {
@@ -191,22 +191,22 @@ const removeEventListeners = (): void => {
   dragModalHeader.value.$el.removeEventListener(
     "mouseup",
     handleMouseUp,
-    false
+    false,
   );
   dragModalHeader.value.$el.removeEventListener(
     "mousedown",
     handleMouseDown,
-    false
+    false,
   );
   dragModalHeader.value.$el.removeEventListener(
     "touchstart",
     handleMouseDown,
-    false
+    false,
   );
   dragModalHeader.value.$el.removeEventListener(
     "touchend",
     handleMouseUp,
-    false
+    false,
   );
 
   document.removeEventListener("mousemove", resize, false);
@@ -246,7 +246,7 @@ watch(
     if (typeof value === "number" && value >= 0) {
       snapToBreakpoint(value);
     }
-  }
+  },
 );
 </script>
 

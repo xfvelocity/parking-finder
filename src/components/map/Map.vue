@@ -77,7 +77,7 @@ const initMap = async (): Promise<void> => {
     "idle",
     debounce(async () => {
       await mapMoved();
-    }, 500)
+    }, 500),
   );
 
   map.addListener(
@@ -88,7 +88,7 @@ const initMap = async (): Promise<void> => {
       if (searchZoom.value > currentZoom) {
         await refreshMarkers();
       }
-    }, 500)
+    }, 500),
   );
 
   map.addListener("click", () => {
@@ -101,7 +101,7 @@ const addMarker = (lat: number, lng: number, location: SimpleParking): void => {
 
   if (mapStore.filters?.hours) {
     const priceValues = items.value.map(
-      (item) => item.matchingPrice
+      (item) => item.matchingPrice,
     ) as number[];
 
     const minPrice = Math.min(...priceValues);
@@ -156,7 +156,7 @@ const mapMoved = async (firstLoad: boolean = false): Promise<void> => {
       {
         lat: mapCoords.lat(),
         lng: mapCoords.lng(),
-      }
+      },
     );
 
     mapStore.mapZoom = map.getZoom() || 13;
@@ -166,7 +166,7 @@ const mapMoved = async (firstLoad: boolean = false): Promise<void> => {
         bounds.getNorthEast().lat(),
         bounds.getNorthEast().lng(),
         bounds.getSouthWest().lat(),
-        bounds.getSouthWest().lng()
+        bounds.getSouthWest().lng(),
       );
 
       mapStore.location.position = {
@@ -199,7 +199,7 @@ const getItems = async (): Promise<void> => {
 
   const res = await api(
     "GET",
-    hours > 0 ? `map${params}&hours=${mapStore.filters.hours}` : `map${params}`
+    hours > 0 ? `map${params}&hours=${mapStore.filters.hours}` : `map${params}`,
   );
 
   searchZoom.value = map.getZoom() || 15;
@@ -213,11 +213,11 @@ const getItems = async (): Promise<void> => {
 
 const distanceExceedsThreshold = (
   from: MapPosition,
-  to: MapPosition
+  to: MapPosition,
 ): boolean => {
   const distance = google.maps.geometry.spherical.computeDistanceBetween(
     from,
-    to
+    to,
   );
 
   distanceMovedSinceUpdate.value += distance;
@@ -268,7 +268,7 @@ watch(
           },
         });
     }
-  }
+  },
 );
 
 watch(
@@ -277,7 +277,7 @@ watch(
     selectedParkingUuid.value = "";
 
     await refreshMarkers();
-  }
+  },
 );
 </script>
 

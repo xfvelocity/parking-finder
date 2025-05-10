@@ -45,7 +45,7 @@ watch(
         isOpen.value = false;
       }, 500);
     }
-  }
+  },
 );
 </script>
 

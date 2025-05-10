@@ -65,7 +65,7 @@
         <ul>
           <li
             v-for="(openingTime, i) in Object.keys(
-              selectedParking.openingHours
+              selectedParking.openingHours,
             )"
             :key="i"
           >
@@ -73,7 +73,7 @@
 
             {{
               formatOpeningHours(
-                selectedParking.openingHours[openingTime as keyof ParkingHours]
+                selectedParking.openingHours[openingTime as keyof ParkingHours],
               ) || "?"
             }}
           </li>
@@ -137,11 +137,11 @@ const formattedPrices = computed<{
 }>(() => {
   const app =
     props.selectedParking?.prices.filter(
-      (price: ParkingPrice) => price.appPrice
+      (price: ParkingPrice) => price.appPrice,
     ) || [];
   const prices =
     props.selectedParking?.prices.filter(
-      (price: ParkingPrice) => !price.appPrice
+      (price: ParkingPrice) => !price.appPrice,
     ) || [];
 
   return {
@@ -165,7 +165,7 @@ const checkMatchingHours = (): void => {
       props.selectedParking?.prices.sort((a, b) => a.hours - b.hours) || [];
 
     selectedHours.value = sortedArray.filter(
-      (x) => x.hours >= mapStore.filters.hours
+      (x) => x.hours >= mapStore.filters.hours,
     )[0]?.hours;
   } else {
     selectedHours.value = 0;

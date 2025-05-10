@@ -138,7 +138,7 @@ const setOptions = async (): Promise<void> => {
         .filter((option) =>
           option.text
             .toLowerCase()
-            .includes(autocompleteSearch.value.toLowerCase())
+            .includes(autocompleteSearch.value.toLowerCase()),
         )
         .slice(0, 8);
     }
@@ -215,7 +215,7 @@ watch(
     // If value isn't an object - find its matching option and get the text value
     if (typeof value !== "object") {
       const matchingOption: SelectOption | undefined = showOptions.value.find(
-        (option) => option.value == value
+        (option) => option.value == value,
       );
 
       val = matchingOption ? matchingOption.text : "";
@@ -226,7 +226,7 @@ watch(
     selected.value = val;
     autocompleteSearch.value = val;
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 

@@ -147,7 +147,7 @@ const submitChanges = async (): Promise<void> => {
   const res = await api(
     "POST",
     `map/${props.selectedParkingUuid}/info`,
-    payload
+    payload,
   );
 
   if (!res?.error) {
@@ -170,7 +170,7 @@ const submitChanges = async (): Promise<void> => {
 
 const openDirections = (): void => {
   window.open(
-    `https://www.google.com/maps/dir/?api=1&destination=${selectedParking.value?.address}`
+    `https://www.google.com/maps/dir/?api=1&destination=${selectedParking.value?.address}`,
   );
 };
 
@@ -212,7 +212,7 @@ watch(
     } else {
       await getMapInfo();
     }
-  }
+  },
 );
 </script>
 

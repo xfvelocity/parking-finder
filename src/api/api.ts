@@ -5,7 +5,7 @@ import axios from "axios";
 export const api = async <T = any>(
   method: string,
   url: string,
-  data: any = {}
+  data: any = {},
 ): Promise<T> => {
   let res: any;
   let config: any = {};
@@ -24,13 +24,13 @@ export const api = async <T = any>(
     if (method === "GET") {
       res = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/${url}`,
-        config
+        config,
       );
     } else if (method === "POST") {
       res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/${url}`,
         data,
-        config
+        config,
       );
     }
 

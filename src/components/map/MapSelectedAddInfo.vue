@@ -190,19 +190,19 @@ watch(
 
     emits("update:info:disabled", isDisabled);
   },
-  { deep: true }
+  { deep: true },
 );
 
 watch(
   info,
   () => {
     const isDisabled = !Object.values(info.value).every(
-      (value: any) => value || value === 0
+      (value: any) => value || value === 0,
     );
 
     emits("update:info:disabled", isDisabled);
   },
-  { deep: true }
+  { deep: true },
 );
 
 watch(openingHours, () => {}, { deep: true });
@@ -215,7 +215,7 @@ watch(
       info: info.value,
       openingHours: openingHours.value,
     });
-  }
+  },
 );
 </script>
 

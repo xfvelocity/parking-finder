@@ -69,7 +69,7 @@ const clearInput = (): void => {
 
   if (props.isLocationOpen) {
     const locationSearch = document.querySelector(
-      "#locationSearch input"
+      "#locationSearch input",
     ) as HTMLInputElement;
 
     locationSearch?.focus();

@@ -1,7 +1,17 @@
 import type { SelectOption } from "@/types/app.types";
 
-export const getImageUrl = (name: string): string => {
-  return new URL(`../assets/${name}`, import.meta.url).href;
+export const getImageUrl = (filename: string): string => {
+  const path = `/src/assets/${filename}`;
+  const imageModules = import.meta.glob(
+    "/src/assets/**/*.{png,jpg,jpeg,svg,webp,gif,mp4,webm}",
+    { eager: true },
+  ) as Record<string, { default: string }>;
+
+  if (imageModules[path]) {
+    return imageModules[path].default;
+  }
+
+  throw new Error(`Image not found: ${path}`);
 };
 
 export const debounce = (func: Function, delay: number) => {
@@ -20,7 +30,7 @@ export const calculateArea = (
   northeastLat: number,
   northeastLng: number,
   southwestLat: number,
-  southwestLng: number
+  southwestLng: number,
 ): number => {
   const R = 6371000; // Radius of the Earth in meters
 

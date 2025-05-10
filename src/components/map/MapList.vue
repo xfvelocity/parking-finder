@@ -70,7 +70,7 @@ const distanceFromCurrentLocation = (item: any): string | null => {
       {
         lng: item.location.coordinates[0],
         lat: item.location.coordinates[1],
-      }
+      },
     );
 
     return `${(distance / 1000).toFixed(1)}km away`;

@@ -79,7 +79,7 @@ watch(
   () => {
     hour.value = props.currentHour || 1;
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 

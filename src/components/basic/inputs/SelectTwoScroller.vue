@@ -90,7 +90,7 @@ const optionSelected = debounce((event: any, index: number): void => {
   };
   emits(
     "update:modelValue",
-    selected.value.map((selected) => selected.value)
+    selected.value.map((selected) => selected.value),
   );
 }, 300);
 
@@ -100,13 +100,13 @@ watch(
   (value) => {
     selected.value = props.options.map((option, i) => {
       const matchingOption: SelectOption | undefined = option.find(
-        (opt) => opt.value === value[i]
+        (opt) => opt.value === value[i],
       );
 
       return matchingOption;
     }) as SelectOption[];
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 
