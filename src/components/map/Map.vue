@@ -96,41 +96,53 @@ const initMap = async (): Promise<void> => {
   });
 };
 
-const addMarker = (lat: number, lng: number, location: SimpleParking): void => {
+const addNoPriceMarker = (location: SimpleParking): HTMLImageElement => {
   let content;
+
+  content = document.createElement("img");
+  content.classList.add("map-icon");
+  let src;
+
+  if (location.type === "ncp") {
+    src = getImageUrl("icons/ncp.svg");
+  } else {
+    src = getImageUrl("icons/parking.svg");
+  }
+
+  content.src = src;
+
+  return content;
+};
+
+const addMarker = (lat: number, lng: number, location: SimpleParking): void => {
+  let content: HTMLImageElement | HTMLDivElement;
 
   if (mapStore.filters?.hours) {
     const priceValues = items.value.map(
       (item) => item.matchingPrice,
     ) as number[];
 
-    const minPrice = Math.min(...priceValues);
-    const maxPrice = Math.max(...priceValues);
+    if (location.matchingPrice) {
+      const minPrice = Math.min(...priceValues);
+      const maxPrice = Math.max(...priceValues);
 
-    content = document.createElement("div");
-    content.classList.add("map-item");
+      content = document.createElement("div");
+      content.classList.add("map-item");
 
-    if (location.matchingPrice === minPrice) {
-      content.classList.add("border-green-darken-1", "text-green-darken-1");
-    } else if (location.matchingPrice === maxPrice) {
-      content.classList.add("border-red-darken-1", "text-red-darken-1");
+      if (location.matchingPrice === minPrice) {
+        content.classList.add("border-green-darken-1", "text-green-darken-1");
+      } else if (location.matchingPrice === maxPrice) {
+        content.classList.add("border-red-darken-1", "text-red-darken-1");
+      } else {
+        content.classList.add("border-orange-darken-1", "text-orange-darken-1");
+      }
+
+      content.innerHTML = `£${location.matchingPrice?.toFixed(2)}` || "";
     } else {
-      content.classList.add("border-orange-darken-1", "text-orange-darken-1");
+      content = addNoPriceMarker(location);
     }
-
-    content.innerHTML = `£${location.matchingPrice?.toFixed(2)}` || "";
   } else {
-    content = document.createElement("img");
-    content.classList.add("map-icon");
-    let src;
-
-    if (location.type === "ncp") {
-      src = getImageUrl("icons/ncp.svg");
-    } else {
-      src = getImageUrl("icons/parking.svg");
-    }
-
-    content.src = src;
+    content = addNoPriceMarker(location);
   }
 
   const marker = new google.maps.marker.AdvancedMarkerElement({
