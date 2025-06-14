@@ -185,7 +185,7 @@ const formatOpeningHours = (hours: string[]): string => {
 };
 
 // ** Watchers **
-watch(() => props.selectedParking, checkMatchingHours);
+watch(() => props.selectedParking, checkMatchingHours, { immediate: true });
 </script>
 
 <style lang="scss" scoped>
