@@ -18,14 +18,4 @@ import { IonApp, IonRouterOutlet, isPlatform } from "@ionic/vue";
 body {
   background: rgb(44, 44, 44) !important;
 }
-
-.web {
-  max-width: 390px;
-  max-height: 890px;
-  margin: 0 auto;
-
-  ion-modal {
-    --max-width: 390px;
-  }
-}
 </style>

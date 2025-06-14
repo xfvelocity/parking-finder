@@ -15,7 +15,7 @@
       @update:modelValue="emits('location:search', $event)"
     />
 
-    <div v-if="!isLocationOpen" class="map-header-time">
+    <div v-if="!isLocationOpen" class="map-header-time hover">
       <Icon
         src="clock"
         :size="14"

@@ -9,6 +9,7 @@
   >
     <Icon
       v-if="prependIcon"
+      class="hover"
       :src="prependIcon"
       :size="prependIconSize"
       :fill="prependIconColour"
@@ -33,7 +34,7 @@
 
     <Icon
       v-if="modelValue && clearButton"
-      class="mr-2"
+      class="mr-2 hover"
       src="close"
       :size="12"
       @click="clearInput"

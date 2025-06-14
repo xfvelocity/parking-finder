@@ -6,6 +6,7 @@
     :breakpoints="[0, 1]"
     handle
     @ion-breakpoint-did-change="emits('update:selectedParkingUuid', '')"
+    @did-dismiss="emits('update:selectedParkingUuid', '')"
   >
     <IonHeader>
       <div v-if="selectedParking" class="map-selected-header pt-5 pb-3">
